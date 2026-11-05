@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_theme.dart';
+import 'core/services/routes/app_routes.dart';
 
 import 'l10n/app_localizations.dart';
 
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Altis Library Mobile',
+      debugShowCheckedModeBanner: false,
       locale: _locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -57,10 +59,14 @@ class _MyAppState extends State<MyApp> {
         // tested with just a hot reload.
         colorScheme: AppTheme.lightTheme.colorScheme,
       ),
-      home: MyHomePage(
-        title: 'Altis Library Mobile',
-        onLocaleChanged: _changeLocale,
-      ),
+
+      initialRoute: AppRoutes.home,
+      routes: {
+        AppRoutes.home: (context) => MyHomePage(
+          title: 'Altis Library Mobile',
+          onLocaleChanged: _changeLocale,
+        ),
+      },
     );
   }
 }
@@ -119,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
         //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title, maxLines: 1, overflow: TextOverflow.ellipsis),
 
         actions: [
           PopupMenuButton<String>(
@@ -162,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            ),  
           ],
         ),
       ),

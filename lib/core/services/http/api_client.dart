@@ -1,12 +1,15 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import 'api_config.dart';
 
 class ApiClient {
   ApiClient({http.Client? client}) : _client = client ?? http.Client();
+
   final http.Client _client;
-  
   String? _token;
+
   void setToken(String? token) {
     _token = token;
   }
@@ -14,17 +17,14 @@ class ApiClient {
   Uri _buildUri(String endpoint) {
     final baseUrl = ApiConfig.baseUrl.replaceFirst(RegExp(r'/$'), '');
     final path = endpoint.startsWith('/') ? endpoint : '/$endpoint';
-
     return Uri.parse('$baseUrl$path');
   }
 
-  Map<String, String> get _headers {
-    return {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      if (_token != null) 'Authorization': 'Bearer $_token',
-    };
-  }
+  Map<String, String> get _headers => {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    if (_token != null) 'Authorization': 'Bearer $_token',
+  };
 
   Future<http.Response> get(String endpoint) {
     return _client.get(_buildUri(endpoint), headers: _headers);

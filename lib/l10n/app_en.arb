@@ -1,4 +1,53 @@
-{ 
- "@@locale": "en",
- "name": "Name" 
+{
+  "@@locale": "en",
+  "name": "Name",
+  "adminAccess": "Administrator access",
+  "email": "Email",
+  "password": "Password",
+  "login": "Sign in",
+  "loginRequiredFields": "Enter your email and password.",
+  "loginFailed": "Could not sign in.",
+  "usersManagement": "User management",
+  "searchUsers": "Search by name or email",
+  "clearSearch": "Clear search",
+  "totalUsers": "Total results",
+  "activeOnPage": "Active on this page",
+  "inactiveOnPage": "Inactive on this page",
+  "profile": "Profile",
+  "administrator": "Administrator",
+  "standardUser": "User",
+  "active": "Active",
+  "inactive": "Inactive",
+  "activateUser": "Activate user",
+  "deactivateUser": "Deactivate user",
+  "confirmStatusTitle": "Confirm change",
+  "confirmStatusMessage": "Do you want to {action} {name}?",
+  "@confirmStatusMessage": {
+    "placeholders": {
+      "action": {},
+      "name": {}
+    }
+  },
+  "activateAction": "activate",
+  "deactivateAction": "deactivate",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "statusUpdateFailed": "Could not update the user's status.",
+  "usersLoadFailed": "Could not load users.",
+  "retry": "Try again",
+  "noUsersFound": "No users found.",
+  "pageInfo": "Page {current} of {total}",
+  "@pageInfo": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "rowsPerPage": "Rows per page",
+  "previousPage": "Previous page",
+  "nextPage": "Next page"
 }

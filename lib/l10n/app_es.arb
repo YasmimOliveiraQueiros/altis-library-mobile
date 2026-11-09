@@ -1,4 +1,53 @@
-{ 
- "@@locale": "es",
- "name": "Nombre" 
+{
+  "@@locale": "es",
+  "name": "Nombre",
+  "adminAccess": "Acceso administrativo",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "login": "Iniciar sesión",
+  "loginRequiredFields": "Introduce el correo electrónico y la contraseña.",
+  "loginFailed": "No se pudo iniciar sesión.",
+  "usersManagement": "Gestión de usuarios",
+  "searchUsers": "Buscar por nombre o correo electrónico",
+  "clearSearch": "Borrar búsqueda",
+  "totalUsers": "Total de resultados",
+  "activeOnPage": "Activos en esta página",
+  "inactiveOnPage": "Inactivos en esta página",
+  "profile": "Perfil",
+  "administrator": "Administrador",
+  "standardUser": "Usuario",
+  "active": "Activo",
+  "inactive": "Inactivo",
+  "activateUser": "Activar usuario",
+  "deactivateUser": "Desactivar usuario",
+  "confirmStatusTitle": "Confirmar cambio",
+  "confirmStatusMessage": "¿Deseas {action} a {name}?",
+  "@confirmStatusMessage": {
+    "placeholders": {
+      "action": {},
+      "name": {}
+    }
+  },
+  "activateAction": "activar",
+  "deactivateAction": "desactivar",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "statusUpdateFailed": "No se pudo actualizar el estado del usuario.",
+  "usersLoadFailed": "No se pudieron cargar los usuarios.",
+  "retry": "Intentar de nuevo",
+  "noUsersFound": "No se encontraron usuarios.",
+  "pageInfo": "Página {current} de {total}",
+  "@pageInfo": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "rowsPerPage": "Elementos por página",
+  "previousPage": "Página anterior",
+  "nextPage": "Página siguiente"
 }

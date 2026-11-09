@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_theme.dart';
+import 'modules/users/pages/users_page.dart';
 import 'core/services/routes/app_routes.dart';
 
 import 'l10n/app_localizations.dart';
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
 
       initialRoute: AppRoutes.home,
       routes: {
+        AppRoutes.users: (context) => const UsersPage(),
         AppRoutes.home: (context) => MyHomePage(
           title: 'Altis Library Mobile',
           onLocaleChanged: _changeLocale,
@@ -168,7 +170,15 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
-            ),  
+            ),
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.users);
+              },
+              child: const Text('Gerenciar Usuários'),
+            ),
           ],
         ),
       ),

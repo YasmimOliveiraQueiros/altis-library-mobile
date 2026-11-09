@@ -11,4 +11,108 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get name => 'Nome';
+
+  @override
+  String get adminAccess => 'Acesso administrativo';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get password => 'Senha';
+
+  @override
+  String get login => 'Entrar';
+
+  @override
+  String get loginRequiredFields => 'Informe o e-mail e a senha.';
+
+  @override
+  String get loginFailed => 'Não foi possível realizar o login.';
+
+  @override
+  String get usersManagement => 'Gerenciamento de usuários';
+
+  @override
+  String get searchUsers => 'Pesquisar por nome ou e-mail';
+
+  @override
+  String get clearSearch => 'Limpar pesquisa';
+
+  @override
+  String get totalUsers => 'Total de resultados';
+
+  @override
+  String get activeOnPage => 'Ativos nesta página';
+
+  @override
+  String get inactiveOnPage => 'Inativos nesta página';
+
+  @override
+  String get profile => 'Perfil';
+
+  @override
+  String get administrator => 'Administrador';
+
+  @override
+  String get standardUser => 'Usuário';
+
+  @override
+  String get active => 'Ativo';
+
+  @override
+  String get inactive => 'Inativo';
+
+  @override
+  String get activateUser => 'Ativar usuário';
+
+  @override
+  String get deactivateUser => 'Desativar usuário';
+
+  @override
+  String get confirmStatusTitle => 'Confirmar alteração';
+
+  @override
+  String confirmStatusMessage(Object action, Object name) {
+    return 'Deseja $action $name?';
+  }
+
+  @override
+  String get activateAction => 'ativar';
+
+  @override
+  String get deactivateAction => 'desativar';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get statusUpdateFailed =>
+      'Não foi possível atualizar a situação do usuário.';
+
+  @override
+  String get usersLoadFailed => 'Não foi possível carregar os usuários.';
+
+  @override
+  String get retry => 'Tentar novamente';
+
+  @override
+  String get noUsersFound => 'Nenhum usuário encontrado.';
+
+  @override
+  String pageInfo(int current, int total) {
+    return 'Página $current de $total';
+  }
+
+  @override
+  String get rowsPerPage => 'Itens por página';
+
+  @override
+  String get previousPage => 'Página anterior';
+
+  @override
+  String get nextPage => 'Próxima página';
 }

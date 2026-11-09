@@ -105,6 +105,204 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nome'**
   String get name;
+
+  /// No description provided for @adminAccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso administrativo'**
+  String get adminAccess;
+
+  /// No description provided for @email.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha'**
+  String get password;
+
+  /// No description provided for @login.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar'**
+  String get login;
+
+  /// No description provided for @loginRequiredFields.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe o e-mail e a senha.'**
+  String get loginRequiredFields;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível realizar o login.'**
+  String get loginFailed;
+
+  /// No description provided for @usersManagement.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciamento de usuários'**
+  String get usersManagement;
+
+  /// No description provided for @searchUsers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pesquisar por nome ou e-mail'**
+  String get searchUsers;
+
+  /// No description provided for @clearSearch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar pesquisa'**
+  String get clearSearch;
+
+  /// No description provided for @totalUsers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de resultados'**
+  String get totalUsers;
+
+  /// No description provided for @activeOnPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativos nesta página'**
+  String get activeOnPage;
+
+  /// No description provided for @inactiveOnPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inativos nesta página'**
+  String get inactiveOnPage;
+
+  /// No description provided for @profile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Perfil'**
+  String get profile;
+
+  /// No description provided for @administrator.
+  ///
+  /// In pt, this message translates to:
+  /// **'Administrador'**
+  String get administrator;
+
+  /// No description provided for @standardUser.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usuário'**
+  String get standardUser;
+
+  /// No description provided for @active.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativo'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inativo'**
+  String get inactive;
+
+  /// No description provided for @activateUser.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativar usuário'**
+  String get activateUser;
+
+  /// No description provided for @deactivateUser.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desativar usuário'**
+  String get deactivateUser;
+
+  /// No description provided for @confirmStatusTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar alteração'**
+  String get confirmStatusTitle;
+
+  /// No description provided for @confirmStatusMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja {action} {name}?'**
+  String confirmStatusMessage(Object action, Object name);
+
+  /// No description provided for @activateAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'ativar'**
+  String get activateAction;
+
+  /// No description provided for @deactivateAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'desativar'**
+  String get deactivateAction;
+
+  /// No description provided for @cancel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar'**
+  String get confirm;
+
+  /// No description provided for @statusUpdateFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível atualizar a situação do usuário.'**
+  String get statusUpdateFailed;
+
+  /// No description provided for @usersLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar os usuários.'**
+  String get usersLoadFailed;
+
+  /// No description provided for @retry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tentar novamente'**
+  String get retry;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum usuário encontrado.'**
+  String get noUsersFound;
+
+  /// No description provided for @pageInfo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Página {current} de {total}'**
+  String pageInfo(int current, int total);
+
+  /// No description provided for @rowsPerPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Itens por página'**
+  String get rowsPerPage;
+
+  /// No description provided for @previousPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Página anterior'**
+  String get previousPage;
+
+  /// No description provided for @nextPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próxima página'**
+  String get nextPage;
 }
 
 class _AppLocalizationsDelegate

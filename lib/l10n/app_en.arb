@@ -1,6 +1,8 @@
 {
   "@@locale": "en",
   "name": "Name",
+  "manageUsers": "Manage users",
+  "managePublishers": "Manage publishers",
   "adminAccess": "Administrator access",
   "email": "Email",
   "password": "Password",
@@ -49,5 +51,28 @@
   },
   "rowsPerPage": "Rows per page",
   "previousPage": "Previous page",
-  "nextPage": "Next page"
+  "nextPage": "Next page",
+  "publishersManagement": "Publisher management",
+  "searchPublishers": "Search publishers by name or email",
+  "noPublishersFound": "No publishers found.",
+  "publishersLoadFailed": "Could not load publishers.",
+  "publisherSaveFailed": "Could not save the publisher.",
+  "publisherDeleteFailed": "Could not delete the publisher.",
+  "addPublisher": "Add publisher",
+  "editPublisher": "Edit publisher",
+  "deletePublisher": "Delete publisher",
+  "deletePublisherTitle": "Confirm deletion",
+  "deletePublisherMessage": "Do you want to delete publisher {name}?",
+  "@deletePublisherMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "cnpj": "CNPJ",
+  "city": "City",
+  "state": "State",
+  "bookCount": "Linked books",
+  "requiredField": "This field is required.",
+  "invalidEmail": "Enter a valid email address.",
+  "save": "Save"
 }

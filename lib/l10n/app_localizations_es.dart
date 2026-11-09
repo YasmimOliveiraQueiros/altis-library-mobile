@@ -13,6 +13,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get name => 'Nombre';
 
   @override
+  String get manageUsers => 'Administrar usuarios';
+
+  @override
+  String get managePublishers => 'Administrar editoriales';
+
+  @override
   String get adminAccess => 'Acceso administrativo';
 
   @override
@@ -116,4 +122,61 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get nextPage => 'Página siguiente';
+
+  @override
+  String get publishersManagement => 'Gestión de editoriales';
+
+  @override
+  String get searchPublishers =>
+      'Buscar editoriales por nombre o correo electrónico';
+
+  @override
+  String get noPublishersFound => 'No se encontraron editoriales.';
+
+  @override
+  String get publishersLoadFailed => 'No se pudieron cargar las editoriales.';
+
+  @override
+  String get publisherSaveFailed => 'No se pudo guardar la editorial.';
+
+  @override
+  String get publisherDeleteFailed => 'No se pudo eliminar la editorial.';
+
+  @override
+  String get addPublisher => 'Añadir editorial';
+
+  @override
+  String get editPublisher => 'Editar editorial';
+
+  @override
+  String get deletePublisher => 'Eliminar editorial';
+
+  @override
+  String get deletePublisherTitle => 'Confirmar eliminación';
+
+  @override
+  String deletePublisherMessage(Object name) {
+    return '¿Deseas eliminar la editorial $name?';
+  }
+
+  @override
+  String get cnpj => 'CNPJ';
+
+  @override
+  String get city => 'Ciudad';
+
+  @override
+  String get state => 'Estado';
+
+  @override
+  String get bookCount => 'Libros vinculados';
+
+  @override
+  String get requiredField => 'Este campo es obligatorio.';
+
+  @override
+  String get invalidEmail => 'Introduce un correo electrónico válido.';
+
+  @override
+  String get save => 'Guardar';
 }

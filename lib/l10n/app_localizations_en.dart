@@ -13,6 +13,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get name => 'Name';
 
   @override
+  String get manageUsers => 'Manage users';
+
+  @override
+  String get managePublishers => 'Manage publishers';
+
+  @override
   String get adminAccess => 'Administrator access';
 
   @override
@@ -114,4 +120,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nextPage => 'Next page';
+
+  @override
+  String get publishersManagement => 'Publisher management';
+
+  @override
+  String get searchPublishers => 'Search publishers by name or email';
+
+  @override
+  String get noPublishersFound => 'No publishers found.';
+
+  @override
+  String get publishersLoadFailed => 'Could not load publishers.';
+
+  @override
+  String get publisherSaveFailed => 'Could not save the publisher.';
+
+  @override
+  String get publisherDeleteFailed => 'Could not delete the publisher.';
+
+  @override
+  String get addPublisher => 'Add publisher';
+
+  @override
+  String get editPublisher => 'Edit publisher';
+
+  @override
+  String get deletePublisher => 'Delete publisher';
+
+  @override
+  String get deletePublisherTitle => 'Confirm deletion';
+
+  @override
+  String deletePublisherMessage(Object name) {
+    return 'Do you want to delete publisher $name?';
+  }
+
+  @override
+  String get cnpj => 'CNPJ';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get state => 'State';
+
+  @override
+  String get bookCount => 'Linked books';
+
+  @override
+  String get requiredField => 'This field is required.';
+
+  @override
+  String get invalidEmail => 'Enter a valid email address.';
+
+  @override
+  String get save => 'Save';
 }

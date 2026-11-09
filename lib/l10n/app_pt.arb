@@ -1,6 +1,8 @@
 {
   "@@locale": "pt",
   "name": "Nome",
+  "manageUsers": "Gerenciar usuários",
+  "managePublishers": "Gerenciar editoras",
   "adminAccess": "Acesso administrativo",
   "email": "E-mail",
   "password": "Senha",
@@ -49,5 +51,28 @@
   },
   "rowsPerPage": "Itens por página",
   "previousPage": "Página anterior",
-  "nextPage": "Próxima página"
+  "nextPage": "Próxima página",
+  "publishersManagement": "Gerenciamento de editoras",
+  "searchPublishers": "Pesquisar editoras por nome ou e-mail",
+  "noPublishersFound": "Nenhuma editora encontrada.",
+  "publishersLoadFailed": "Não foi possível carregar as editoras.",
+  "publisherSaveFailed": "Não foi possível salvar a editora.",
+  "publisherDeleteFailed": "Não foi possível excluir a editora.",
+  "addPublisher": "Adicionar editora",
+  "editPublisher": "Editar editora",
+  "deletePublisher": "Excluir editora",
+  "deletePublisherTitle": "Confirmar exclusão",
+  "deletePublisherMessage": "Deseja excluir a editora {name}?",
+  "@deletePublisherMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "cnpj": "CNPJ",
+  "city": "Cidade",
+  "state": "Estado",
+  "bookCount": "Livros vinculados",
+  "requiredField": "Campo obrigatório.",
+  "invalidEmail": "Informe um e-mail válido.",
+  "save": "Salvar"
 }

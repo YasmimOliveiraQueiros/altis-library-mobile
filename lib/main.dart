@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'core/services/http/api_client.dart';
 import 'core/theme/app_theme.dart';
+import 'modules/publishers/pages/publishers_page.dart';
 import 'modules/users/pages/users_page.dart';
 import 'core/services/routes/app_routes.dart';
 
@@ -19,6 +21,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final ApiClient _apiClient = ApiClient();
   Locale? _locale;
 
   void _changeLocale(Locale? locale) {
@@ -63,13 +66,21 @@ class _MyAppState extends State<MyApp> {
 
       initialRoute: AppRoutes.home,
       routes: {
-        AppRoutes.users: (context) => const UsersPage(),
+        AppRoutes.users: (context) => UsersPage(apiClient: _apiClient),
+        AppRoutes.publishers: (context) =>
+            PublishersPage(apiClient: _apiClient),
         AppRoutes.home: (context) => MyHomePage(
           title: 'Altis Library Mobile',
           onLocaleChanged: _changeLocale,
         ),
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _apiClient.dispose();
+    super.dispose();
   }
 }
 
@@ -177,7 +188,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.users);
               },
-              child: const Text('Gerenciar Usuários'),
+              child: Text(l10n.manageUsers),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.publishers);
+              },
+              child: Text(l10n.managePublishers),
             ),
           ],
         ),

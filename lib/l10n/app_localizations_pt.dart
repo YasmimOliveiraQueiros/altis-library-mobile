@@ -13,6 +13,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get name => 'Nome';
 
   @override
+  String get manageUsers => 'Gerenciar usuários';
+
+  @override
+  String get managePublishers => 'Gerenciar editoras';
+
+  @override
   String get adminAccess => 'Acesso administrativo';
 
   @override
@@ -115,4 +121,60 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get nextPage => 'Próxima página';
+
+  @override
+  String get publishersManagement => 'Gerenciamento de editoras';
+
+  @override
+  String get searchPublishers => 'Pesquisar editoras por nome ou e-mail';
+
+  @override
+  String get noPublishersFound => 'Nenhuma editora encontrada.';
+
+  @override
+  String get publishersLoadFailed => 'Não foi possível carregar as editoras.';
+
+  @override
+  String get publisherSaveFailed => 'Não foi possível salvar a editora.';
+
+  @override
+  String get publisherDeleteFailed => 'Não foi possível excluir a editora.';
+
+  @override
+  String get addPublisher => 'Adicionar editora';
+
+  @override
+  String get editPublisher => 'Editar editora';
+
+  @override
+  String get deletePublisher => 'Excluir editora';
+
+  @override
+  String get deletePublisherTitle => 'Confirmar exclusão';
+
+  @override
+  String deletePublisherMessage(Object name) {
+    return 'Deseja excluir a editora $name?';
+  }
+
+  @override
+  String get cnpj => 'CNPJ';
+
+  @override
+  String get city => 'Cidade';
+
+  @override
+  String get state => 'Estado';
+
+  @override
+  String get bookCount => 'Livros vinculados';
+
+  @override
+  String get requiredField => 'Campo obrigatório.';
+
+  @override
+  String get invalidEmail => 'Informe um e-mail válido.';
+
+  @override
+  String get save => 'Salvar';
 }

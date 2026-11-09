@@ -106,6 +106,18 @@ abstract class AppLocalizations {
   /// **'Nome'**
   String get name;
 
+  /// No description provided for @manageUsers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar usuários'**
+  String get manageUsers;
+
+  /// No description provided for @managePublishers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar editoras'**
+  String get managePublishers;
+
   /// No description provided for @adminAccess.
   ///
   /// In pt, this message translates to:
@@ -303,6 +315,114 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Próxima página'**
   String get nextPage;
+
+  /// No description provided for @publishersManagement.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciamento de editoras'**
+  String get publishersManagement;
+
+  /// No description provided for @searchPublishers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pesquisar editoras por nome ou e-mail'**
+  String get searchPublishers;
+
+  /// No description provided for @noPublishersFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma editora encontrada.'**
+  String get noPublishersFound;
+
+  /// No description provided for @publishersLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar as editoras.'**
+  String get publishersLoadFailed;
+
+  /// No description provided for @publisherSaveFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível salvar a editora.'**
+  String get publisherSaveFailed;
+
+  /// No description provided for @publisherDeleteFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível excluir a editora.'**
+  String get publisherDeleteFailed;
+
+  /// No description provided for @addPublisher.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar editora'**
+  String get addPublisher;
+
+  /// No description provided for @editPublisher.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar editora'**
+  String get editPublisher;
+
+  /// No description provided for @deletePublisher.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir editora'**
+  String get deletePublisher;
+
+  /// No description provided for @deletePublisherTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar exclusão'**
+  String get deletePublisherTitle;
+
+  /// No description provided for @deletePublisherMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir a editora {name}?'**
+  String deletePublisherMessage(Object name);
+
+  /// No description provided for @cnpj.
+  ///
+  /// In pt, this message translates to:
+  /// **'CNPJ'**
+  String get cnpj;
+
+  /// No description provided for @city.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cidade'**
+  String get city;
+
+  /// No description provided for @state.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estado'**
+  String get state;
+
+  /// No description provided for @bookCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livros vinculados'**
+  String get bookCount;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In pt, this message translates to:
+  /// **'Campo obrigatório.'**
+  String get requiredField;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um e-mail válido.'**
+  String get invalidEmail;
+
+  /// No description provided for @save.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate

@@ -5,33 +5,29 @@ import 'package:flutter/material.dart';
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/services/auth_service.dart';
+import '../../auth/widgets/admin_login_form.dart';
 import '../models/user.dart';
 import '../services/user_service.dart';
 import '../widgets/user_list_widgets.dart';
 
 class UsersPage extends StatefulWidget {
-  const UsersPage({super.key});
+  const UsersPage({super.key, required this.apiClient});
+
+  final ApiClient apiClient;
 
   @override
   State<UsersPage> createState() => _UsersPageState();
 }
 
 class _UsersPageState extends State<UsersPage> {
-  final ApiClient _apiClient = ApiClient();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _searchController = TextEditingController();
   final Set<int> _updatingUserIds = {};
 
   late final UserService _userService;
-  late final AuthService _authService;
 
   Timer? _searchDebounce;
   bool _isAuthenticated = false;
-  bool _isLoggingIn = false;
   bool _isLoading = false;
-  String? _loginError;
   String? _errorMessage;
   PageResponse<User>? _usersPage;
   int _pageSize = 10;
@@ -40,49 +36,18 @@ class _UsersPageState extends State<UsersPage> {
   @override
   void initState() {
     super.initState();
-    _userService = UserService(_apiClient);
-    _authService = AuthService(_apiClient);
+    _userService = UserService(widget.apiClient);
+    _isAuthenticated = widget.apiClient.hasToken;
+    if (_isAuthenticated) {
+      _loadUsers(page: 0);
+    }
   }
 
-  Future<void> _login() async {
-    final l10n = AppLocalizations.of(context)!;
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    if (email.isEmpty || password.isEmpty) {
-      setState(() {
-        _loginError = l10n.loginRequiredFields;
-      });
-      return;
-    }
-
+  void _onAuthenticated() {
     setState(() {
-      _isLoggingIn = true;
-      _loginError = null;
+      _isAuthenticated = true;
     });
-
-    try {
-      final token = await _authService.login(email: email, password: password);
-      if (!mounted) return;
-
-      _apiClient.setToken(token);
-      _passwordController.clear();
-      setState(() {
-        _isAuthenticated = true;
-      });
-      await _loadUsers(page: 0);
-    } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        _loginError = l10n.loginFailed;
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoggingIn = false;
-        });
-      }
-    }
+    _loadUsers(page: 0);
   }
 
   Future<void> _loadUsers({required int page}) async {
@@ -172,73 +137,9 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Widget _buildLoginForm() {
-    final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Icon(
-                Icons.admin_panel_settings,
-                size: 48,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.adminAccess,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: l10n.email,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                onSubmitted: (_) {
-                  if (!_isLoggingIn) _login();
-                },
-                decoration: InputDecoration(
-                  labelText: l10n.password,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              if (_loginError != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _loginError!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              ],
-              const SizedBox(height: 24),
-              FilledButton(
-                onPressed: _isLoggingIn ? null : _login,
-                child: _isLoggingIn
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(l10n.login),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return AdminLoginForm(
+      apiClient: widget.apiClient,
+      onAuthenticated: _onAuthenticated,
     );
   }
 
@@ -377,10 +278,7 @@ class _UsersPageState extends State<UsersPage> {
   @override
   void dispose() {
     _searchDebounce?.cancel();
-    _emailController.dispose();
-    _passwordController.dispose();
     _searchController.dispose();
-    _apiClient.dispose();
     super.dispose();
   }
 

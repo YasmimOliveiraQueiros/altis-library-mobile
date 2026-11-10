@@ -127,6 +127,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get publishersManagement => 'Gestión de editoriales';
 
   @override
+  String get publisherDashboardTitle => 'Altis+ Biblioteca';
+
+  @override
+  String get publisherDashboardSubtitle => 'Gestión de editoriales';
+
+  @override
+  String get publishersMetric => 'Editoriales';
+
+  @override
+  String get linkedBooksOnPage => 'Libros vinculados en esta página';
+
+  @override
   String get searchPublishers =>
       'Buscar editoriales por nombre o correo electrónico';
 
@@ -138,6 +150,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get publisherSaveFailed => 'No se pudo guardar la editorial.';
+
+  @override
+  String get publisherValidationFailed =>
+      'Revisa los datos introducidos e inténtalo de nuevo.';
+
+  @override
+  String get publisherAlreadyExists =>
+      'Ya existe una editorial con esos datos.';
+
+  @override
+  String get publisherSaved => 'Editorial guardada correctamente.';
 
   @override
   String get publisherDeleteFailed => 'No se pudo eliminar la editorial.';

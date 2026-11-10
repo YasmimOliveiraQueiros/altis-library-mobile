@@ -36,20 +36,20 @@ class PublisherService {
     return PageResponse<Publisher>.fromJson(json, Publisher.fromJson);
   }
 
-  Future<Publisher> createPublisher(PublisherData publisher) async {
+  Future<void> createPublisher(PublisherData publisher) async {
     final response = await _apiClient.post(
       '/publishers',
       body: publisher.toJson(),
     );
-    return _parsePublisherResponse(response, 'criar editora');
+    _checkSaveResponse(response);
   }
 
-  Future<Publisher> updatePublisher(int id, PublisherData publisher) async {
+  Future<void> updatePublisher(int id, PublisherData publisher) async {
     final response = await _apiClient.put(
       '/publishers/$id',
       body: publisher.toJson(),
     );
-    return _parsePublisherResponse(response, 'atualizar editora');
+    _checkSaveResponse(response);
   }
 
   Future<void> deletePublisher(int id) async {
@@ -60,13 +60,15 @@ class PublisherService {
     }
   }
 
-  Publisher _parsePublisherResponse(http.Response response, String action) {
-    if (response.statusCode != 200) {
-      throw Exception('Erro ao $action: HTTP ${response.statusCode}');
+  void _checkSaveResponse(http.Response response) {
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw PublisherSaveException(response.statusCode);
     }
-
-    final json =
-        jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
-    return Publisher.fromJson(json);
   }
+}
+
+class PublisherSaveException implements Exception {
+  const PublisherSaveException(this.statusCode);
+
+  final int statusCode;
 }

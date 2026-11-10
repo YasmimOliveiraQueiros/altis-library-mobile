@@ -45,6 +45,9 @@ void main() {
           if (request.method == 'DELETE') {
             return http.Response('', 200);
           }
+          if (request.method == 'POST') {
+            return http.Response('', 200);
+          }
           return http.Response.bytes(
             utf8.encode(jsonEncode(publisherJson)),
             200,
@@ -67,15 +70,13 @@ void main() {
           page: 1,
           size: 20,
         );
-        final created = await service.createPublisher(data);
-        final updated = await service.updatePublisher(42, data);
+        await service.createPublisher(data);
+        await service.updatePublisher(42, data);
         await service.deletePublisher(42);
 
         expect(page.content.single.status, PublisherStatus.active);
         expect(page.content.single.bookCount, 3);
         expect(page.totalElements, 1);
-        expect(created.id, 42);
-        expect(updated.name, data.name);
         expect(requests.map((request) => request.method), [
           'GET',
           'POST',
@@ -96,6 +97,74 @@ void main() {
         for (final request in requests) {
           expect(request.headers['authorization'], 'Bearer test-token');
         }
+      } finally {
+        client.dispose();
+      }
+    },
+  );
+
+  test(
+    'create and update accept 201 and 204 without decoding response bodies',
+    () async {
+      final requests = <http.Request>[];
+      final client = ApiClient(
+        client: MockClient((request) async {
+          requests.add(request);
+          return http.Response('', request.method == 'POST' ? 201 : 204);
+        }),
+      );
+      final service = PublisherService(client);
+      const data = PublisherData(
+        name: 'Altis Editora',
+        email: 'contato@altis.example',
+        cnpj: '12345678000199',
+        city: 'São Paulo',
+        state: 'SP',
+      );
+
+      try {
+        await service.createPublisher(data);
+        await service.updatePublisher(42, data);
+
+        expect(requests.map((request) => request.method), ['POST', 'PUT']);
+        expect(requests.map((request) => request.url.path), [
+          '/publishers',
+          '/publishers/42',
+        ]);
+      } finally {
+        client.dispose();
+      }
+    },
+  );
+
+  test(
+    'save failures retain the HTTP status without exposing the response body',
+    () async {
+      final client = ApiClient(
+        client: MockClient(
+          (_) async => http.Response('private backend detail', 409),
+        ),
+      );
+      final service = PublisherService(client);
+      const data = PublisherData(
+        name: 'Altis Editora',
+        email: 'contato@altis.example',
+        cnpj: '12345678000199',
+        city: 'São Paulo',
+        state: 'SP',
+      );
+
+      try {
+        await expectLater(
+          service.createPublisher(data),
+          throwsA(
+            isA<PublisherSaveException>().having(
+              (error) => error.statusCode,
+              'statusCode',
+              409,
+            ),
+          ),
+        );
       } finally {
         client.dispose();
       }

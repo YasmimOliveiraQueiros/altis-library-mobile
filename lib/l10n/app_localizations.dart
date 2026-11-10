@@ -322,6 +322,30 @@ abstract class AppLocalizations {
   /// **'Gerenciamento de editoras'**
   String get publishersManagement;
 
+  /// No description provided for @publisherDashboardTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altis+ Biblioteca'**
+  String get publisherDashboardTitle;
+
+  /// No description provided for @publisherDashboardSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle de editoras'**
+  String get publisherDashboardSubtitle;
+
+  /// No description provided for @publishersMetric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editoras'**
+  String get publishersMetric;
+
+  /// No description provided for @linkedBooksOnPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livros vinculados nesta página'**
+  String get linkedBooksOnPage;
+
   /// No description provided for @searchPublishers.
   ///
   /// In pt, this message translates to:
@@ -345,6 +369,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Não foi possível salvar a editora.'**
   String get publisherSaveFailed;
+
+  /// No description provided for @publisherValidationFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verifique os dados informados e tente novamente.'**
+  String get publisherValidationFailed;
+
+  /// No description provided for @publisherAlreadyExists.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe uma editora com esses dados.'**
+  String get publisherAlreadyExists;
+
+  /// No description provided for @publisherSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editora salva com sucesso.'**
+  String get publisherSaved;
 
   /// No description provided for @publisherDeleteFailed.
   ///

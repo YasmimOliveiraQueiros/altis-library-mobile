@@ -126,6 +126,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get publishersManagement => 'Gerenciamento de editoras';
 
   @override
+  String get publisherDashboardTitle => 'Altis+ Biblioteca';
+
+  @override
+  String get publisherDashboardSubtitle => 'Controle de editoras';
+
+  @override
+  String get publishersMetric => 'Editoras';
+
+  @override
+  String get linkedBooksOnPage => 'Livros vinculados nesta página';
+
+  @override
   String get searchPublishers => 'Pesquisar editoras por nome ou e-mail';
 
   @override
@@ -136,6 +148,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get publisherSaveFailed => 'Não foi possível salvar a editora.';
+
+  @override
+  String get publisherValidationFailed =>
+      'Verifique os dados informados e tente novamente.';
+
+  @override
+  String get publisherAlreadyExists => 'Já existe uma editora com esses dados.';
+
+  @override
+  String get publisherSaved => 'Editora salva com sucesso.';
 
   @override
   String get publisherDeleteFailed => 'Não foi possível excluir a editora.';

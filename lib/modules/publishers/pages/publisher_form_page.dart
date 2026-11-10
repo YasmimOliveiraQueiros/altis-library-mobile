@@ -54,7 +54,7 @@ class _PublisherFormPageState extends State<PublisherFormPage> {
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_isSaving || !_formKey.currentState!.validate()) return;
 
     setState(() {
       _isSaving = true;
@@ -75,7 +75,16 @@ class _PublisherFormPageState extends State<PublisherFormPage> {
       } else {
         await widget.service.createPublisher(data);
       }
-      if (mounted) Navigator.pop(context, true);
+    } on PublisherSaveException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        final l10n = AppLocalizations.of(context)!;
+        _errorMessage = switch (error.statusCode) {
+          400 || 422 => l10n.publisherValidationFailed,
+          409 => l10n.publisherAlreadyExists,
+          _ => l10n.publisherSaveFailed,
+        };
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -87,6 +96,10 @@ class _PublisherFormPageState extends State<PublisherFormPage> {
           _isSaving = false;
         });
       }
+    }
+
+    if (mounted && _errorMessage == null) {
+      Navigator.pop(context, true);
     }
   }
 

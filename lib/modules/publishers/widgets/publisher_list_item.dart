@@ -52,8 +52,29 @@ class PublisherListItem extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(publisher.email, maxLines: 1, overflow: TextOverflow.ellipsis),
-            Text('${publisher.cnpj} · ${publisher.city}/${publisher.state}'),
-            Text('${l10n.bookCount}: ${publisher.bookCount}'),
+            Text(
+              '${publisher.cnpj} · ${publisher.city}/${publisher.state}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Icon(
+                  Icons.menu_book_outlined,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    '${l10n.bookCount}: ${publisher.bookCount}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
             Align(
               alignment: Alignment.centerRight,
               child: Wrap(

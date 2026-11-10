@@ -9,6 +9,7 @@ import '../../auth/widgets/admin_login_form.dart';
 import '../models/publisher.dart';
 import '../services/publisher_service.dart';
 import '../widgets/publisher_list_item.dart';
+import '../widgets/publisher_metrics.dart';
 import 'publisher_form_page.dart';
 
 class PublishersPage extends StatefulWidget {
@@ -98,6 +99,10 @@ class _PublishersPageState extends State<PublishersPage> {
     );
     if (saved == true && mounted) {
       await _loadPublishers(page: _publishersPage?.number ?? 0);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.publisherSaved)),
+      );
     }
   }
 
@@ -206,13 +211,43 @@ class _PublishersPageState extends State<PublishersPage> {
     );
   }
 
+  Widget _buildPageHeader() {
+    final l10n = AppLocalizations.of(context)!;
+    final booksOnPage =
+        _publishersPage?.content.fold<int>(
+          0,
+          (total, publisher) => total + publisher.bookCount,
+        ) ??
+        0;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          PublisherMetrics(
+            totalPublishers: _publishersPage?.totalElements ?? 0,
+            booksOnPage: booksOnPage,
+          ),
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            onPressed: _isLoading ? null : () => _openForm(),
+            icon: const Icon(Icons.add),
+            label: Text(l10n.addPublisher.toUpperCase()),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildAuthenticatedBody() {
     final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
+        _buildPageHeader(),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: TextField(
             controller: _searchController,
             onChanged: _onSearchChanged,
@@ -273,20 +308,31 @@ class _PublishersPageState extends State<PublishersPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.publishersManagement)),
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.publisherDashboardTitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              l10n.publisherDashboardSubtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+          ],
+        ),
+      ),
       body: _isAuthenticated
           ? _buildAuthenticatedBody()
           : AdminLoginForm(
               apiClient: widget.apiClient,
               onAuthenticated: _onAuthenticated,
             ),
-      floatingActionButton: _isAuthenticated
-          ? FloatingActionButton.extended(
-              onPressed: _isLoading ? null : () => _openForm(),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.addPublisher),
-            )
-          : null,
     );
   }
 }

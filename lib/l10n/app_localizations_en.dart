@@ -125,6 +125,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get publishersManagement => 'Publisher management';
 
   @override
+  String get publisherDashboardTitle => 'Altis+ Library';
+
+  @override
+  String get publisherDashboardSubtitle => 'Publisher management';
+
+  @override
+  String get publishersMetric => 'Publishers';
+
+  @override
+  String get linkedBooksOnPage => 'Linked books on this page';
+
+  @override
   String get searchPublishers => 'Search publishers by name or email';
 
   @override
@@ -135,6 +147,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get publisherSaveFailed => 'Could not save the publisher.';
+
+  @override
+  String get publisherValidationFailed =>
+      'Check the entered information and try again.';
+
+  @override
+  String get publisherAlreadyExists =>
+      'A publisher with these details already exists.';
+
+  @override
+  String get publisherSaved => 'Publisher saved successfully.';
 
   @override
   String get publisherDeleteFailed => 'Could not delete the publisher.';

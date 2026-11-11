@@ -19,6 +19,107 @@ class AppLocalizationsPt extends AppLocalizations {
   String get managePublishers => 'Gerenciar editoras';
 
   @override
+  String get manageBooks => 'Gerenciar livros';
+
+  @override
+  String get bookDashboardTitle => 'Altis+ Biblioteca';
+
+  @override
+  String get bookDashboardSubtitle => 'Controle de livros';
+
+  @override
+  String get bookCopiesOnPage => 'Exemplares nesta página';
+
+  @override
+  String get booksOnPage => 'Livros nesta página';
+
+  @override
+  String get booksTotalInQuery => 'Total na consulta';
+
+  @override
+  String get addBook => 'Novo livro';
+
+  @override
+  String get editBook => 'Editar livro';
+
+  @override
+  String get deleteBook => 'Excluir livro';
+
+  @override
+  String get deleteBookTitle => 'Confirmar exclusão';
+
+  @override
+  String deleteBookMessage(Object title) {
+    return 'Deseja excluir o livro $title?';
+  }
+
+  @override
+  String get bookTitle => 'Título';
+
+  @override
+  String get bookAuthor => 'Autor';
+
+  @override
+  String get bookPublisher => 'Editora';
+
+  @override
+  String get bookQuantity => 'Quantidade disponível';
+
+  @override
+  String get bookStatus => 'Status';
+
+  @override
+  String get bookObservations => 'Observações';
+
+  @override
+  String get bookAvailable => 'Disponível';
+
+  @override
+  String get bookRented => 'Alugado';
+
+  @override
+  String get bookId => 'ID';
+
+  @override
+  String get actions => 'Ações';
+
+  @override
+  String get searchBooks => 'Pesquisar por título, autor ou observações';
+
+  @override
+  String get sortBooksBy => 'Ordenar por';
+
+  @override
+  String get sortAscending => 'Ordenar em ordem crescente';
+
+  @override
+  String get sortDescending => 'Ordenar em ordem decrescente';
+
+  @override
+  String get noBooksFound => 'Nenhum livro encontrado.';
+
+  @override
+  String get booksLoadFailed => 'Não foi possível carregar os livros.';
+
+  @override
+  String get bookSaveFailed => 'Não foi possível salvar o livro.';
+
+  @override
+  String get bookValidationFailed =>
+      'Verifique os dados informados e tente novamente.';
+
+  @override
+  String get bookDeleteFailed =>
+      'Não foi possível excluir o livro. Tente novamente.';
+
+  @override
+  String get bookSaved => 'Livro salvo com sucesso.';
+
+  @override
+  String get invalidBookQuantity =>
+      'Informe uma quantidade inteira igual ou maior que zero.';
+
+  @override
   String get adminAccess => 'Acesso administrativo';
 
   @override

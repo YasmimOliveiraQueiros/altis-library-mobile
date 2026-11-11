@@ -118,6 +118,198 @@ abstract class AppLocalizations {
   /// **'Gerenciar editoras'**
   String get managePublishers;
 
+  /// No description provided for @manageBooks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar livros'**
+  String get manageBooks;
+
+  /// No description provided for @bookDashboardTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altis+ Biblioteca'**
+  String get bookDashboardTitle;
+
+  /// No description provided for @bookDashboardSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle de livros'**
+  String get bookDashboardSubtitle;
+
+  /// No description provided for @bookCopiesOnPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exemplares nesta página'**
+  String get bookCopiesOnPage;
+
+  /// No description provided for @booksOnPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livros nesta página'**
+  String get booksOnPage;
+
+  /// No description provided for @booksTotalInQuery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total na consulta'**
+  String get booksTotalInQuery;
+
+  /// No description provided for @addBook.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo livro'**
+  String get addBook;
+
+  /// No description provided for @editBook.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar livro'**
+  String get editBook;
+
+  /// No description provided for @deleteBook.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir livro'**
+  String get deleteBook;
+
+  /// No description provided for @deleteBookTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar exclusão'**
+  String get deleteBookTitle;
+
+  /// No description provided for @deleteBookMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir o livro {title}?'**
+  String deleteBookMessage(Object title);
+
+  /// No description provided for @bookTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Título'**
+  String get bookTitle;
+
+  /// No description provided for @bookAuthor.
+  ///
+  /// In pt, this message translates to:
+  /// **'Autor'**
+  String get bookAuthor;
+
+  /// No description provided for @bookPublisher.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editora'**
+  String get bookPublisher;
+
+  /// No description provided for @bookQuantity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade disponível'**
+  String get bookQuantity;
+
+  /// No description provided for @bookStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Status'**
+  String get bookStatus;
+
+  /// No description provided for @bookObservations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações'**
+  String get bookObservations;
+
+  /// No description provided for @bookAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Disponível'**
+  String get bookAvailable;
+
+  /// No description provided for @bookRented.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alugado'**
+  String get bookRented;
+
+  /// No description provided for @bookId.
+  ///
+  /// In pt, this message translates to:
+  /// **'ID'**
+  String get bookId;
+
+  /// No description provided for @actions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ações'**
+  String get actions;
+
+  /// No description provided for @searchBooks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pesquisar por título, autor ou observações'**
+  String get searchBooks;
+
+  /// No description provided for @sortBooksBy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ordenar por'**
+  String get sortBooksBy;
+
+  /// No description provided for @sortAscending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ordenar em ordem crescente'**
+  String get sortAscending;
+
+  /// No description provided for @sortDescending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ordenar em ordem decrescente'**
+  String get sortDescending;
+
+  /// No description provided for @noBooksFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum livro encontrado.'**
+  String get noBooksFound;
+
+  /// No description provided for @booksLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar os livros.'**
+  String get booksLoadFailed;
+
+  /// No description provided for @bookSaveFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível salvar o livro.'**
+  String get bookSaveFailed;
+
+  /// No description provided for @bookValidationFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verifique os dados informados e tente novamente.'**
+  String get bookValidationFailed;
+
+  /// No description provided for @bookDeleteFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível excluir o livro. Tente novamente.'**
+  String get bookDeleteFailed;
+
+  /// No description provided for @bookSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro salvo com sucesso.'**
+  String get bookSaved;
+
+  /// No description provided for @invalidBookQuantity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe uma quantidade inteira igual ou maior que zero.'**
+  String get invalidBookQuantity;
+
   /// No description provided for @adminAccess.
   ///
   /// In pt, this message translates to:

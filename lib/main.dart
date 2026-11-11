@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/services/http/api_client.dart';
+import 'modules/books/pages/books_page.dart';
 import 'core/theme/app_theme.dart';
 import 'modules/publishers/pages/publishers_page.dart';
 import 'modules/users/pages/users_page.dart';
@@ -69,6 +70,7 @@ class _MyAppState extends State<MyApp> {
         AppRoutes.users: (context) => UsersPage(apiClient: _apiClient),
         AppRoutes.publishers: (context) =>
             PublishersPage(apiClient: _apiClient),
+        AppRoutes.books: (context) => BooksPage(apiClient: _apiClient),
         AppRoutes.home: (context) => MyHomePage(
           title: 'Altis Library Mobile',
           onLocaleChanged: _changeLocale,
@@ -196,6 +198,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, AppRoutes.publishers);
               },
               child: Text(l10n.managePublishers),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.books);
+              },
+              child: Text(l10n.manageBooks),
             ),
           ],
         ),

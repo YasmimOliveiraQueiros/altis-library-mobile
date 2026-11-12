@@ -53,6 +53,18 @@ class Loan {
       observations: json['observations'] as String?,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'userId': userId,
+    'bookId': bookId,
+    'bookTitle': bookTitle,
+    'loanDate': loanDate,
+    'returnDate': returnDate,
+    'returnedAt': returnedAt,
+    'status': status.apiValue,
+    'observations': observations,
+  };
 }
 
 class LoanData {

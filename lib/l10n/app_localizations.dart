@@ -130,6 +130,138 @@ abstract class AppLocalizations {
   /// **'Gerenciar aluguéis'**
   String get manageLoans;
 
+  /// No description provided for @dashboardBrand.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altis+ Biblioteca'**
+  String get dashboardBrand;
+
+  /// No description provided for @dashboardTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dashboard Administrativo'**
+  String get dashboardTitle;
+
+  /// No description provided for @dashboardOverview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visão geral do sistema'**
+  String get dashboardOverview;
+
+  /// No description provided for @dashboardViewAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver todos'**
+  String get dashboardViewAll;
+
+  /// No description provided for @dashboardTotalUsers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usuários'**
+  String get dashboardTotalUsers;
+
+  /// No description provided for @dashboardTotalBooks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livros'**
+  String get dashboardTotalBooks;
+
+  /// No description provided for @dashboardTotalPublishers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editoras'**
+  String get dashboardTotalPublishers;
+
+  /// No description provided for @dashboardActiveLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis ativos'**
+  String get dashboardActiveLoans;
+
+  /// No description provided for @dashboardLoanStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis por situação'**
+  String get dashboardLoanStatus;
+
+  /// No description provided for @dashboardPendingLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendentes'**
+  String get dashboardPendingLoans;
+
+  /// No description provided for @dashboardOverdueLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atrasados'**
+  String get dashboardOverdueLoans;
+
+  /// No description provided for @dashboardReturnedLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolvidos'**
+  String get dashboardReturnedLoans;
+
+  /// No description provided for @dashboardLoansByMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis por mês'**
+  String get dashboardLoansByMonth;
+
+  /// No description provided for @dashboardBooksByStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Disponibilidade dos livros'**
+  String get dashboardBooksByStatus;
+
+  /// No description provided for @dashboardAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Disponíveis'**
+  String get dashboardAvailable;
+
+  /// No description provided for @dashboardRented.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alugados'**
+  String get dashboardRented;
+
+  /// No description provided for @dashboardNoMonthlyLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não há dados mensais de aluguéis.'**
+  String get dashboardNoMonthlyLoans;
+
+  /// No description provided for @dashboardRecentLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis recentes'**
+  String get dashboardRecentLoans;
+
+  /// No description provided for @dashboardNoRecentLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum aluguel recente.'**
+  String get dashboardNoRecentLoans;
+
+  /// No description provided for @dashboardLoanDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alugado em'**
+  String get dashboardLoanDate;
+
+  /// No description provided for @dashboardLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar o dashboard.'**
+  String get dashboardLoadFailed;
+
+  /// No description provided for @dashboardRefresh.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atualizar dashboard'**
+  String get dashboardRefresh;
+
   /// No description provided for @loanDashboardTitle.
   ///
   /// In pt, this message translates to:

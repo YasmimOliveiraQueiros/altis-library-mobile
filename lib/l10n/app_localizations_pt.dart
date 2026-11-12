@@ -25,6 +25,72 @@ class AppLocalizationsPt extends AppLocalizations {
   String get manageLoans => 'Gerenciar aluguéis';
 
   @override
+  String get dashboardBrand => 'Altis+ Biblioteca';
+
+  @override
+  String get dashboardTitle => 'Dashboard Administrativo';
+
+  @override
+  String get dashboardOverview => 'Visão geral do sistema';
+
+  @override
+  String get dashboardViewAll => 'Ver todos';
+
+  @override
+  String get dashboardTotalUsers => 'Usuários';
+
+  @override
+  String get dashboardTotalBooks => 'Livros';
+
+  @override
+  String get dashboardTotalPublishers => 'Editoras';
+
+  @override
+  String get dashboardActiveLoans => 'Aluguéis ativos';
+
+  @override
+  String get dashboardLoanStatus => 'Aluguéis por situação';
+
+  @override
+  String get dashboardPendingLoans => 'Pendentes';
+
+  @override
+  String get dashboardOverdueLoans => 'Atrasados';
+
+  @override
+  String get dashboardReturnedLoans => 'Devolvidos';
+
+  @override
+  String get dashboardLoansByMonth => 'Aluguéis por mês';
+
+  @override
+  String get dashboardBooksByStatus => 'Disponibilidade dos livros';
+
+  @override
+  String get dashboardAvailable => 'Disponíveis';
+
+  @override
+  String get dashboardRented => 'Alugados';
+
+  @override
+  String get dashboardNoMonthlyLoans => 'Não há dados mensais de aluguéis.';
+
+  @override
+  String get dashboardRecentLoans => 'Aluguéis recentes';
+
+  @override
+  String get dashboardNoRecentLoans => 'Nenhum aluguel recente.';
+
+  @override
+  String get dashboardLoanDate => 'Alugado em';
+
+  @override
+  String get dashboardLoadFailed => 'Não foi possível carregar o dashboard.';
+
+  @override
+  String get dashboardRefresh => 'Atualizar dashboard';
+
+  @override
   String get loanDashboardTitle => 'Altis+ Biblioteca';
 
   @override

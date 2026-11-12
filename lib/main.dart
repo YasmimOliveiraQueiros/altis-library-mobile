@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/services/http/api_client.dart';
 import 'modules/books/pages/books_page.dart';
+import 'modules/dashboard/pages/admin_dashboard_page.dart';
 import 'modules/loans/pages/loans_page.dart';
 import 'core/theme/app_theme.dart';
 import 'modules/publishers/pages/publishers_page.dart';
@@ -68,6 +69,8 @@ class _MyAppState extends State<MyApp> {
 
       initialRoute: AppRoutes.home,
       routes: {
+        AppRoutes.dashboard: (context) =>
+            AdminDashboardPage(apiClient: _apiClient),
         AppRoutes.users: (context) => UsersPage(apiClient: _apiClient),
         AppRoutes.publishers: (context) =>
             PublishersPage(apiClient: _apiClient),
@@ -188,6 +191,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
 
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.dashboard);
+              },
+              child: Text(l10n.dashboardTitle),
+            ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.users);

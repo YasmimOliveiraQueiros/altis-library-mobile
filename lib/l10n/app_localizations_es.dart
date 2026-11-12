@@ -25,6 +25,72 @@ class AppLocalizationsEs extends AppLocalizations {
   String get manageLoans => 'Administrar préstamos';
 
   @override
+  String get dashboardBrand => 'Altis+ Biblioteca';
+
+  @override
+  String get dashboardTitle => 'Panel administrativo';
+
+  @override
+  String get dashboardOverview => 'Resumen del sistema';
+
+  @override
+  String get dashboardViewAll => 'Ver todos';
+
+  @override
+  String get dashboardTotalUsers => 'Usuarios';
+
+  @override
+  String get dashboardTotalBooks => 'Libros';
+
+  @override
+  String get dashboardTotalPublishers => 'Editoriales';
+
+  @override
+  String get dashboardActiveLoans => 'Préstamos activos';
+
+  @override
+  String get dashboardLoanStatus => 'Préstamos por estado';
+
+  @override
+  String get dashboardPendingLoans => 'Pendientes';
+
+  @override
+  String get dashboardOverdueLoans => 'Atrasados';
+
+  @override
+  String get dashboardReturnedLoans => 'Devueltos';
+
+  @override
+  String get dashboardLoansByMonth => 'Préstamos por mes';
+
+  @override
+  String get dashboardBooksByStatus => 'Disponibilidad de libros';
+
+  @override
+  String get dashboardAvailable => 'Disponibles';
+
+  @override
+  String get dashboardRented => 'Alquilados';
+
+  @override
+  String get dashboardNoMonthlyLoans => 'No hay datos mensuales de préstamos.';
+
+  @override
+  String get dashboardRecentLoans => 'Préstamos recientes';
+
+  @override
+  String get dashboardNoRecentLoans => 'No hay préstamos recientes.';
+
+  @override
+  String get dashboardLoanDate => 'Prestado el';
+
+  @override
+  String get dashboardLoadFailed => 'No se pudo cargar el panel.';
+
+  @override
+  String get dashboardRefresh => 'Actualizar panel';
+
+  @override
   String get loanDashboardTitle => 'Altis+ Biblioteca';
 
   @override

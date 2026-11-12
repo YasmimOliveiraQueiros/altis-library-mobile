@@ -25,6 +25,72 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageLoans => 'Manage loans';
 
   @override
+  String get dashboardBrand => 'Altis+ Library';
+
+  @override
+  String get dashboardTitle => 'Administrative Dashboard';
+
+  @override
+  String get dashboardOverview => 'System overview';
+
+  @override
+  String get dashboardViewAll => 'See all';
+
+  @override
+  String get dashboardTotalUsers => 'Users';
+
+  @override
+  String get dashboardTotalBooks => 'Books';
+
+  @override
+  String get dashboardTotalPublishers => 'Publishers';
+
+  @override
+  String get dashboardActiveLoans => 'Active loans';
+
+  @override
+  String get dashboardLoanStatus => 'Loans by status';
+
+  @override
+  String get dashboardPendingLoans => 'Pending';
+
+  @override
+  String get dashboardOverdueLoans => 'Overdue';
+
+  @override
+  String get dashboardReturnedLoans => 'Returned';
+
+  @override
+  String get dashboardLoansByMonth => 'Loans by month';
+
+  @override
+  String get dashboardBooksByStatus => 'Book availability';
+
+  @override
+  String get dashboardAvailable => 'Available';
+
+  @override
+  String get dashboardRented => 'Rented';
+
+  @override
+  String get dashboardNoMonthlyLoans => 'There is no monthly loan data.';
+
+  @override
+  String get dashboardRecentLoans => 'Recent loans';
+
+  @override
+  String get dashboardNoRecentLoans => 'There are no recent loans.';
+
+  @override
+  String get dashboardLoanDate => 'Loaned on';
+
+  @override
+  String get dashboardLoadFailed => 'Could not load the dashboard.';
+
+  @override
+  String get dashboardRefresh => 'Refresh dashboard';
+
+  @override
   String get loanDashboardTitle => 'Altis+ Library';
 
   @override

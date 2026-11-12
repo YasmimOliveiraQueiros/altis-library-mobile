@@ -124,6 +124,204 @@ abstract class AppLocalizations {
   /// **'Gerenciar livros'**
   String get manageBooks;
 
+  /// No description provided for @manageLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar aluguéis'**
+  String get manageLoans;
+
+  /// No description provided for @loanDashboardTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altis+ Biblioteca'**
+  String get loanDashboardTitle;
+
+  /// No description provided for @loanDashboardSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle de empréstimos de livros'**
+  String get loanDashboardSubtitle;
+
+  /// No description provided for @loanPendingMetric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendentes na consulta'**
+  String get loanPendingMetric;
+
+  /// No description provided for @loanOverdueMetric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atrasados na consulta'**
+  String get loanOverdueMetric;
+
+  /// No description provided for @loanReturnedMetric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolvidos na consulta'**
+  String get loanReturnedMetric;
+
+  /// No description provided for @loanTotalMetric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total na consulta'**
+  String get loanTotalMetric;
+
+  /// No description provided for @addLoan.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo aluguel'**
+  String get addLoan;
+
+  /// No description provided for @editLoan.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar aluguel'**
+  String get editLoan;
+
+  /// No description provided for @loanBorrower.
+  ///
+  /// In pt, this message translates to:
+  /// **'Locatário'**
+  String get loanBorrower;
+
+  /// No description provided for @loanBook.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro'**
+  String get loanBook;
+
+  /// No description provided for @loanDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data do aluguel'**
+  String get loanDate;
+
+  /// No description provided for @loanDueDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolução prevista'**
+  String get loanDueDate;
+
+  /// No description provided for @loanStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Status'**
+  String get loanStatus;
+
+  /// No description provided for @loanObservations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações'**
+  String get loanObservations;
+
+  /// No description provided for @loanPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente'**
+  String get loanPending;
+
+  /// No description provided for @loanOverdue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atrasado'**
+  String get loanOverdue;
+
+  /// No description provided for @loanReturned.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolvido'**
+  String get loanReturned;
+
+  /// No description provided for @loanReturnedLate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolvido com atraso'**
+  String get loanReturnedLate;
+
+  /// No description provided for @searchLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pesquisar pelo nome do locatário'**
+  String get searchLoans;
+
+  /// No description provided for @filterLoanStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtrar por status'**
+  String get filterLoanStatus;
+
+  /// No description provided for @allLoanStatuses.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os status'**
+  String get allLoanStatuses;
+
+  /// No description provided for @returnLoan.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar devolução'**
+  String get returnLoan;
+
+  /// No description provided for @returnLoanTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar devolução'**
+  String get returnLoanTitle;
+
+  /// No description provided for @returnLoanMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja registrar a devolução de {book}?'**
+  String returnLoanMessage(Object book);
+
+  /// No description provided for @loanSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguel salvo com sucesso.'**
+  String get loanSaved;
+
+  /// No description provided for @loansLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar os aluguéis.'**
+  String get loansLoadFailed;
+
+  /// No description provided for @noLoansFound.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum aluguel encontrado.'**
+  String get noLoansFound;
+
+  /// No description provided for @loanSaveFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível salvar o aluguel.'**
+  String get loanSaveFailed;
+
+  /// No description provided for @loanValidationFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verifique os dados informados e tente novamente.'**
+  String get loanValidationFailed;
+
+  /// No description provided for @loanOptionsLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar locatários e livros.'**
+  String get loanOptionsLoadFailed;
+
+  /// No description provided for @loanReturnFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível registrar a devolução.'**
+  String get loanReturnFailed;
+
+  /// No description provided for @loanMetricsLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar os indicadores globais.'**
+  String get loanMetricsLoadFailed;
+
   /// No description provided for @bookDashboardTitle.
   ///
   /// In pt, this message translates to:

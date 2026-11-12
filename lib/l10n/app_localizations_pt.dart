@@ -22,6 +22,110 @@ class AppLocalizationsPt extends AppLocalizations {
   String get manageBooks => 'Gerenciar livros';
 
   @override
+  String get manageLoans => 'Gerenciar aluguéis';
+
+  @override
+  String get loanDashboardTitle => 'Altis+ Biblioteca';
+
+  @override
+  String get loanDashboardSubtitle => 'Controle de empréstimos de livros';
+
+  @override
+  String get loanPendingMetric => 'Pendentes na consulta';
+
+  @override
+  String get loanOverdueMetric => 'Atrasados na consulta';
+
+  @override
+  String get loanReturnedMetric => 'Devolvidos na consulta';
+
+  @override
+  String get loanTotalMetric => 'Total na consulta';
+
+  @override
+  String get addLoan => 'Novo aluguel';
+
+  @override
+  String get editLoan => 'Editar aluguel';
+
+  @override
+  String get loanBorrower => 'Locatário';
+
+  @override
+  String get loanBook => 'Livro';
+
+  @override
+  String get loanDate => 'Data do aluguel';
+
+  @override
+  String get loanDueDate => 'Devolução prevista';
+
+  @override
+  String get loanStatus => 'Status';
+
+  @override
+  String get loanObservations => 'Observações';
+
+  @override
+  String get loanPending => 'Pendente';
+
+  @override
+  String get loanOverdue => 'Atrasado';
+
+  @override
+  String get loanReturned => 'Devolvido';
+
+  @override
+  String get loanReturnedLate => 'Devolvido com atraso';
+
+  @override
+  String get searchLoans => 'Pesquisar pelo nome do locatário';
+
+  @override
+  String get filterLoanStatus => 'Filtrar por status';
+
+  @override
+  String get allLoanStatuses => 'Todos os status';
+
+  @override
+  String get returnLoan => 'Registrar devolução';
+
+  @override
+  String get returnLoanTitle => 'Confirmar devolução';
+
+  @override
+  String returnLoanMessage(Object book) {
+    return 'Deseja registrar a devolução de $book?';
+  }
+
+  @override
+  String get loanSaved => 'Aluguel salvo com sucesso.';
+
+  @override
+  String get loansLoadFailed => 'Não foi possível carregar os aluguéis.';
+
+  @override
+  String get noLoansFound => 'Nenhum aluguel encontrado.';
+
+  @override
+  String get loanSaveFailed => 'Não foi possível salvar o aluguel.';
+
+  @override
+  String get loanValidationFailed =>
+      'Verifique os dados informados e tente novamente.';
+
+  @override
+  String get loanOptionsLoadFailed =>
+      'Não foi possível carregar locatários e livros.';
+
+  @override
+  String get loanReturnFailed => 'Não foi possível registrar a devolução.';
+
+  @override
+  String get loanMetricsLoadFailed =>
+      'Não foi possível carregar os indicadores globais.';
+
+  @override
   String get bookDashboardTitle => 'Altis+ Biblioteca';
 
   @override

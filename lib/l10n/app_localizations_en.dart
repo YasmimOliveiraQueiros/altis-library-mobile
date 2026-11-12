@@ -22,6 +22,108 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageBooks => 'Manage books';
 
   @override
+  String get manageLoans => 'Manage loans';
+
+  @override
+  String get loanDashboardTitle => 'Altis+ Library';
+
+  @override
+  String get loanDashboardSubtitle => 'Book loan management';
+
+  @override
+  String get loanPendingMetric => 'Pending in results';
+
+  @override
+  String get loanOverdueMetric => 'Overdue in results';
+
+  @override
+  String get loanReturnedMetric => 'Returned in results';
+
+  @override
+  String get loanTotalMetric => 'Total in results';
+
+  @override
+  String get addLoan => 'New loan';
+
+  @override
+  String get editLoan => 'Edit loan';
+
+  @override
+  String get loanBorrower => 'Borrower';
+
+  @override
+  String get loanBook => 'Book';
+
+  @override
+  String get loanDate => 'Loan date';
+
+  @override
+  String get loanDueDate => 'Expected return';
+
+  @override
+  String get loanStatus => 'Status';
+
+  @override
+  String get loanObservations => 'Observations';
+
+  @override
+  String get loanPending => 'Pending';
+
+  @override
+  String get loanOverdue => 'Overdue';
+
+  @override
+  String get loanReturned => 'Returned';
+
+  @override
+  String get loanReturnedLate => 'Returned late';
+
+  @override
+  String get searchLoans => 'Search by borrower name';
+
+  @override
+  String get filterLoanStatus => 'Filter by status';
+
+  @override
+  String get allLoanStatuses => 'All statuses';
+
+  @override
+  String get returnLoan => 'Register return';
+
+  @override
+  String get returnLoanTitle => 'Confirm return';
+
+  @override
+  String returnLoanMessage(Object book) {
+    return 'Do you want to register the return of $book?';
+  }
+
+  @override
+  String get loanSaved => 'Loan saved successfully.';
+
+  @override
+  String get loansLoadFailed => 'Could not load loans.';
+
+  @override
+  String get noLoansFound => 'No loans found.';
+
+  @override
+  String get loanSaveFailed => 'Could not save the loan.';
+
+  @override
+  String get loanValidationFailed =>
+      'Check the entered information and try again.';
+
+  @override
+  String get loanOptionsLoadFailed => 'Could not load borrowers and books.';
+
+  @override
+  String get loanReturnFailed => 'Could not register the return.';
+
+  @override
+  String get loanMetricsLoadFailed => 'Could not load global metrics.';
+
+  @override
   String get bookDashboardTitle => 'Altis+ Library';
 
   @override

@@ -52,7 +52,7 @@ class ApiClient {
     return _client.patch(
       _buildUri(endpoint),
       headers: _headers,
-      body: jsonEncode(body ?? {}),
+      body: body == null ? null : jsonEncode(body),
     );
   }
 

@@ -39,6 +39,19 @@ class BookService {
     return PageResponse<Book>.fromJson(json, Book.fromJson);
   }
 
+  Future<List<Book>> getAllBooks({int size = 100}) async {
+    final books = <Book>[];
+    var page = 0;
+    int totalPages;
+    do {
+      final response = await getBooks(page: page, size: size);
+      books.addAll(response.content);
+      totalPages = response.totalPages;
+      page++;
+    } while (page < totalPages);
+    return books;
+  }
+
   Future<Book> getBook(int id) async {
     final response = await _apiClient.get('/books/$id');
 

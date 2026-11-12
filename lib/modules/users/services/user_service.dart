@@ -36,6 +36,19 @@ class UserService {
     return PageResponse<User>.fromJson(json, User.fromJson);
   }
 
+  Future<List<User>> getAllUsers({int size = 100}) async {
+    final users = <User>[];
+    var page = 0;
+    int totalPages;
+    do {
+      final response = await getUsers(page: page, size: size);
+      users.addAll(response.content);
+      totalPages = response.totalPages;
+      page++;
+    } while (page < totalPages);
+    return users;
+  }
+
   Future<void> setUserActive(int id, {required bool active}) async {
     final response = await _apiClient.patch('/users/$id/status?active=$active');
 

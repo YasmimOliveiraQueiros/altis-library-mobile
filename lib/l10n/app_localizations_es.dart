@@ -22,6 +22,110 @@ class AppLocalizationsEs extends AppLocalizations {
   String get manageBooks => 'Administrar libros';
 
   @override
+  String get manageLoans => 'Administrar préstamos';
+
+  @override
+  String get loanDashboardTitle => 'Altis+ Biblioteca';
+
+  @override
+  String get loanDashboardSubtitle => 'Gestión de préstamos de libros';
+
+  @override
+  String get loanPendingMetric => 'Pendientes en resultados';
+
+  @override
+  String get loanOverdueMetric => 'Atrasados en resultados';
+
+  @override
+  String get loanReturnedMetric => 'Devueltos en resultados';
+
+  @override
+  String get loanTotalMetric => 'Total en resultados';
+
+  @override
+  String get addLoan => 'Nuevo préstamo';
+
+  @override
+  String get editLoan => 'Editar préstamo';
+
+  @override
+  String get loanBorrower => 'Prestatario';
+
+  @override
+  String get loanBook => 'Libro';
+
+  @override
+  String get loanDate => 'Fecha del préstamo';
+
+  @override
+  String get loanDueDate => 'Devolución prevista';
+
+  @override
+  String get loanStatus => 'Estado';
+
+  @override
+  String get loanObservations => 'Observaciones';
+
+  @override
+  String get loanPending => 'Pendiente';
+
+  @override
+  String get loanOverdue => 'Atrasado';
+
+  @override
+  String get loanReturned => 'Devuelto';
+
+  @override
+  String get loanReturnedLate => 'Devuelto con retraso';
+
+  @override
+  String get searchLoans => 'Buscar por nombre del prestatario';
+
+  @override
+  String get filterLoanStatus => 'Filtrar por estado';
+
+  @override
+  String get allLoanStatuses => 'Todos los estados';
+
+  @override
+  String get returnLoan => 'Registrar devolución';
+
+  @override
+  String get returnLoanTitle => 'Confirmar devolución';
+
+  @override
+  String returnLoanMessage(Object book) {
+    return '¿Deseas registrar la devolución de $book?';
+  }
+
+  @override
+  String get loanSaved => 'Préstamo guardado correctamente.';
+
+  @override
+  String get loansLoadFailed => 'No se pudieron cargar los préstamos.';
+
+  @override
+  String get noLoansFound => 'No se encontraron préstamos.';
+
+  @override
+  String get loanSaveFailed => 'No se pudo guardar el préstamo.';
+
+  @override
+  String get loanValidationFailed =>
+      'Revisa los datos introducidos e inténtalo de nuevo.';
+
+  @override
+  String get loanOptionsLoadFailed =>
+      'No se pudieron cargar los prestatarios y libros.';
+
+  @override
+  String get loanReturnFailed => 'No se pudo registrar la devolución.';
+
+  @override
+  String get loanMetricsLoadFailed =>
+      'No se pudieron cargar las métricas globales.';
+
+  @override
   String get bookDashboardTitle => 'Altis+ Biblioteca';
 
   @override

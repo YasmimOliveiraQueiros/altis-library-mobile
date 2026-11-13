@@ -29,6 +29,7 @@ class _LoansPageState extends State<LoansPage> {
   late final UserService _userService;
   Timer? _searchDebounce;
   bool _isAuthenticated = false;
+  int? _authorizedSessionRevision;
   bool _isLoading = false;
   String? _errorMessage;
   bool _metricsError = false;
@@ -50,16 +51,25 @@ class _LoansPageState extends State<LoansPage> {
     super.initState();
     _loanService = LoanService(widget.apiClient);
     _userService = UserService(widget.apiClient);
-    _isAuthenticated = widget.apiClient.hasToken;
+    _isAuthenticated = widget.apiClient.hasAdminSession;
+    if (_isAuthenticated) {
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
+    }
     if (_isAuthenticated) _loadLoans(page: 0);
   }
 
   void _onAuthenticated() {
     setState(() {
       _isAuthenticated = true;
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
     });
     _loadLoans(page: 0);
   }
+
+  bool get _canUseAdminSession =>
+      _isAuthenticated &&
+      widget.apiClient.hasAdminSession &&
+      _authorizedSessionRevision == widget.apiClient.sessionRevision;
 
   Future<void> _loadLoans({required int page}) async {
     _requestedPage = page;
@@ -480,12 +490,15 @@ class _LoansPageState extends State<LoansPage> {
           ],
         ),
       ),
-      body: _isAuthenticated
-          ? _buildAuthenticatedBody()
-          : AdminLoginForm(
-              apiClient: widget.apiClient,
-              onAuthenticated: _onAuthenticated,
-            ),
+      body: ValueListenableBuilder<int>(
+        valueListenable: widget.apiClient.sessionChanges,
+        builder: (context, _, _) => _canUseAdminSession
+            ? _buildAuthenticatedBody()
+            : AdminLoginForm(
+                apiClient: widget.apiClient,
+                onAuthenticated: _onAuthenticated,
+              ),
+      ),
     );
   }
 }

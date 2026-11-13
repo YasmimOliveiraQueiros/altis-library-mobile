@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/models/app_role.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 
-class AdminLoginForm extends StatefulWidget {
+class AdminLoginForm extends StatelessWidget {
   const AdminLoginForm({
     super.key,
     required this.apiClient,
@@ -15,10 +16,30 @@ class AdminLoginForm extends StatefulWidget {
   final VoidCallback onAuthenticated;
 
   @override
-  State<AdminLoginForm> createState() => _AdminLoginFormState();
+  Widget build(BuildContext context) => TemporaryRoleLoginForm(
+    apiClient: apiClient,
+    role: AppRole.admin,
+    onAuthenticated: onAuthenticated,
+  );
 }
 
-class _AdminLoginFormState extends State<AdminLoginForm> {
+class TemporaryRoleLoginForm extends StatefulWidget {
+  const TemporaryRoleLoginForm({
+    super.key,
+    required this.apiClient,
+    required this.role,
+    required this.onAuthenticated,
+  });
+
+  final ApiClient apiClient;
+  final AppRole role;
+  final VoidCallback onAuthenticated;
+
+  @override
+  State<TemporaryRoleLoginForm> createState() => _TemporaryRoleLoginFormState();
+}
+
+class _TemporaryRoleLoginFormState extends State<TemporaryRoleLoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   late final AuthService _authService;
@@ -49,10 +70,14 @@ class _AdminLoginFormState extends State<AdminLoginForm> {
     });
 
     try {
-      final token = await _authService.login(email: email, password: password);
+      final token = await _authService.login(
+        email: email,
+        password: password,
+        expectedRole: widget.role,
+      );
       if (!mounted) return;
 
-      widget.apiClient.setToken(token);
+      widget.apiClient.setSession(token: token, role: widget.role);
       _passwordController.clear();
       widget.onAuthenticated();
     } catch (_) {
@@ -79,6 +104,7 @@ class _AdminLoginFormState extends State<AdminLoginForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isAdmin = widget.role == AppRole.admin;
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -89,13 +115,13 @@ class _AdminLoginFormState extends State<AdminLoginForm> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Icon(
-                Icons.admin_panel_settings,
+                isAdmin ? Icons.admin_panel_settings : Icons.person_outline,
                 size: 48,
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(height: 16),
               Text(
-                l10n.adminAccess,
+                isAdmin ? l10n.adminAccess : l10n.tenantTemporaryAccess,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 22,

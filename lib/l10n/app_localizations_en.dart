@@ -299,6 +299,118 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Sign in';
 
   @override
+  String get tenantTemporaryAccess => 'Temporary tenant access';
+
+  @override
+  String get tenantDashboardTitle => 'Tenant area';
+
+  @override
+  String get tenantDashboardLoadFailed =>
+      'Could not load your profile and loans.';
+
+  @override
+  String get tenantLoansLoadFailed => 'Could not load your loans.';
+
+  @override
+  String get tenantTotalLoans => 'Total loans';
+
+  @override
+  String get tenantLoansOnPage => 'Loans on this page';
+
+  @override
+  String get tenantMyLoans => 'My loans';
+
+  @override
+  String get tenantNoLoans => 'You have no loans.';
+
+  @override
+  String get tenantPhone => 'Phone';
+
+  @override
+  String get tenantReturnedAt => 'Returned at';
+
+  @override
+  String get tenantEditProfile => 'Edit profile';
+
+  @override
+  String get tenantProfileLoadFailed => 'Could not load your profile.';
+
+  @override
+  String get tenantProfileValidationFailed =>
+      'Check the profile details and try again.';
+
+  @override
+  String get tenantProfileConflict =>
+      'A profile with this email already exists.';
+
+  @override
+  String get tenantProfileSaveFailed => 'Could not save your profile.';
+
+  @override
+  String get tenantProfileSaved => 'Profile updated successfully.';
+
+  @override
+  String get tenantChangePassword => 'Change password';
+
+  @override
+  String get tenantCurrentPassword => 'Current password';
+
+  @override
+  String get tenantNewPassword => 'New password';
+
+  @override
+  String get tenantConfirmPassword => 'Confirm new password';
+
+  @override
+  String get tenantPasswordMinLength =>
+      'Password must be at least 8 characters long.';
+
+  @override
+  String get tenantPasswordsDoNotMatch => 'Passwords do not match.';
+
+  @override
+  String get tenantPasswordValidationFailed =>
+      'Check the password details and try again.';
+
+  @override
+  String get tenantPasswordChangeFailed =>
+      'Could not change the password. Check your current password and try again.';
+
+  @override
+  String get tenantPasswordChanged => 'Password changed successfully.';
+
+  @override
+  String get tenantConnectionFailed =>
+      'Could not connect to the API. Check your connection.';
+
+  @override
+  String get tenantUserAccessRequired =>
+      'This page is available to users only.';
+
+  @override
+  String get tenantFieldTooLong =>
+      'The text exceeds the allowed character limit.';
+
+  @override
+  String get tenantAddress => 'Address';
+
+  @override
+  String get tenantCpf => 'CPF';
+
+  @override
+  String get tenantBirthDate => 'Date of birth';
+
+  @override
+  String get temporaryTenantReady =>
+      'USER session active. The dashboard will be added in a later checkpoint.';
+
+  @override
+  String get logout => 'Sign out';
+
+  @override
+  String get back => 'Back';
+
+  @override
   String get loginRequiredFields => 'Enter your email and password.';
 
   @override

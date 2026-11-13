@@ -24,6 +24,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   late final DashboardService _dashboardService;
   late final UserService _userService;
   late bool _isAuthenticated;
+  int? _authorizedSessionRevision;
   bool _isLoading = false;
   bool _usersLoaded = false;
   bool _userLoadFailed = false;
@@ -36,16 +37,25 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
     super.initState();
     _dashboardService = DashboardService(widget.apiClient);
     _userService = UserService(widget.apiClient);
-    _isAuthenticated = widget.apiClient.hasToken;
-    if (_isAuthenticated) _loadDashboard();
+    _isAuthenticated = widget.apiClient.hasAdminSession;
+    if (_isAuthenticated) {
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
+      _loadDashboard();
+    }
   }
 
   void _onAuthenticated() {
     setState(() {
       _isAuthenticated = true;
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
     });
     _loadDashboard();
   }
+
+  bool get _canUseAdminSession =>
+      _isAuthenticated &&
+      widget.apiClient.hasAdminSession &&
+      _authorizedSessionRevision == widget.apiClient.sessionRevision;
 
   Future<void> _loadDashboard() async {
     setState(() {
@@ -238,12 +248,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
   Widget _buildBody(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    if (!_isAuthenticated) {
-      return AdminLoginForm(
-        apiClient: widget.apiClient,
-        onAuthenticated: _onAuthenticated,
-      );
-    }
     if (_isLoading && _dashboard == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -301,37 +305,45 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l10n.dashboardBrand),
-            Text(
-              l10n.dashboardOverview,
-              style: Theme.of(context).textTheme.labelMedium,
+    return ValueListenableBuilder<int>(
+      valueListenable: widget.apiClient.sessionChanges,
+      builder: (context, _, _) => Scaffold(
+        appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l10n.dashboardBrand),
+              Text(
+                l10n.dashboardOverview,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ],
+          ),
+          actions: [
+            if (_canUseAdminSession)
+              IconButton(
+                tooltip: l10n.dashboardRefresh,
+                onPressed: _isLoading ? null : _loadDashboard,
+                icon: const Icon(Icons.refresh),
+              ),
+            const Padding(
+              padding: EdgeInsets.only(left: 4, right: 12),
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Color(0xFFE7EDF2),
+                child: Icon(Icons.person_outline, color: AppTheme.primaryColor),
+              ),
             ),
           ],
         ),
-        actions: [
-          if (_isAuthenticated)
-            IconButton(
-              tooltip: l10n.dashboardRefresh,
-              onPressed: _isLoading ? null : _loadDashboard,
-              icon: const Icon(Icons.refresh),
-            ),
-          const Padding(
-            padding: EdgeInsets.only(left: 4, right: 12),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Color(0xFFE7EDF2),
-              child: Icon(Icons.person_outline, color: AppTheme.primaryColor),
-            ),
-          ),
-        ],
+        body: _canUseAdminSession
+            ? _buildBody(context)
+            : AdminLoginForm(
+                apiClient: widget.apiClient,
+                onAuthenticated: _onAuthenticated,
+              ),
       ),
-      body: _buildBody(context),
     );
   }
 }

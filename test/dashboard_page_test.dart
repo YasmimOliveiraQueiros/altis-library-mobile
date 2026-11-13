@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:altis_library_mobile/core/models/app_role.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/core/services/routes/app_routes.dart';
 import 'package:altis_library_mobile/core/theme/app_theme.dart';
@@ -114,7 +115,7 @@ void main() {
       final client = ApiClient(
         client: MockClient((request) async => _successResponse(request)),
       );
-      client.setToken('test-token');
+      client.setSession(token: 'test-token', role: AppRole.admin);
       addTearDown(client.dispose);
 
       await tester.pumpWidget(_app(client, textScale: width < 400 ? 1.5 : 1));
@@ -199,7 +200,7 @@ void main() {
         return _successResponse(request, emptyRecentData: true);
       }),
     );
-    client.setToken('test-token');
+    client.setSession(token: 'test-token', role: AppRole.admin);
     addTearDown(client.dispose);
 
     await tester.pumpWidget(_app(client));
@@ -224,7 +225,7 @@ void main() {
     final client = ApiClient(
       client: MockClient((request) async => _successResponse(request)),
     );
-    client.setToken('test-token');
+    client.setSession(token: 'test-token', role: AppRole.admin);
     addTearDown(client.dispose);
 
     await tester.pumpWidget(_app(client));
@@ -247,7 +248,7 @@ void main() {
         return _successResponse(request);
       }),
     );
-    client.setToken('test-token');
+    client.setSession(token: 'test-token', role: AppRole.admin);
     addTearDown(client.dispose);
 
     await tester.pumpWidget(_app(client));
@@ -266,7 +267,7 @@ void main() {
     final client = ApiClient(
       client: MockClient((_) async => http.Response('', 500)),
     );
-    client.setToken('test-token');
+    client.setSession(token: 'test-token', role: AppRole.admin);
     addTearDown(client.dispose);
 
     await tester.pumpWidget(_app(client));

@@ -29,6 +29,7 @@ class _BooksPageState extends State<BooksPage> {
   late final PublisherService _publisherService;
   Timer? _searchDebounce;
   bool _isAuthenticated = false;
+  int? _authorizedSessionRevision;
   bool _isLoading = false;
   String? _errorMessage;
   String? _publisherNamesError;
@@ -44,16 +45,25 @@ class _BooksPageState extends State<BooksPage> {
     super.initState();
     _bookService = BookService(widget.apiClient);
     _publisherService = PublisherService(widget.apiClient);
-    _isAuthenticated = widget.apiClient.hasToken;
+    _isAuthenticated = widget.apiClient.hasAdminSession;
     if (_isAuthenticated) _loadBooks(page: 0);
+    if (_isAuthenticated) {
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
+    }
   }
 
   void _onAuthenticated() {
     setState(() {
       _isAuthenticated = true;
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
     });
     _loadBooks(page: 0);
   }
+
+  bool get _canUseAdminSession =>
+      _isAuthenticated &&
+      widget.apiClient.hasAdminSession &&
+      _authorizedSessionRevision == widget.apiClient.sessionRevision;
 
   Future<void> _loadBooks({required int page}) async {
     _requestedPage = page;
@@ -441,12 +451,15 @@ class _BooksPageState extends State<BooksPage> {
           ],
         ),
       ),
-      body: _isAuthenticated
-          ? _buildAuthenticatedBody()
-          : AdminLoginForm(
-              apiClient: widget.apiClient,
-              onAuthenticated: _onAuthenticated,
-            ),
+      body: ValueListenableBuilder<int>(
+        valueListenable: widget.apiClient.sessionChanges,
+        builder: (context, _, _) => _canUseAdminSession
+            ? _buildAuthenticatedBody()
+            : AdminLoginForm(
+                apiClient: widget.apiClient,
+                onAuthenticated: _onAuthenticated,
+              ),
+      ),
     );
   }
 }

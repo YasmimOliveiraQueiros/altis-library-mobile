@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:altis_library_mobile/core/models/app_role.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/core/theme/app_theme.dart';
 import 'package:altis_library_mobile/l10n/app_localizations.dart';
@@ -143,7 +144,7 @@ void main() {
         );
       }),
     );
-    client.setToken('test-token');
+    client.setSession(token: 'test-token', role: AppRole.admin);
     addTearDown(client.dispose);
 
     await tester.pumpWidget(_app(LoansPage(apiClient: client)));

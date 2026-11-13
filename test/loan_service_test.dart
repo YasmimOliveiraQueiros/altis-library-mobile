@@ -99,7 +99,7 @@ void main() {
         expect(requests[1].url.queryParameters, {
           'page': '1',
           'size': '5',
-          'sortBy': 'loanDate',
+          'sortBy': 'id',
           'sortDirection': 'DESC',
         });
         expect(requests.first.headers['authorization'], 'Bearer test-token');

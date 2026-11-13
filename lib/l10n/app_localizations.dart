@@ -664,6 +664,210 @@ abstract class AppLocalizations {
   /// **'Entrar'**
   String get login;
 
+  /// No description provided for @tenantTemporaryAccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso temporário do locatário'**
+  String get tenantTemporaryAccess;
+
+  /// No description provided for @tenantDashboardTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Área do locatário'**
+  String get tenantDashboardTitle;
+
+  /// No description provided for @tenantDashboardLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar seu perfil e empréstimos.'**
+  String get tenantDashboardLoadFailed;
+
+  /// No description provided for @tenantLoansLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar seus empréstimos.'**
+  String get tenantLoansLoadFailed;
+
+  /// No description provided for @tenantTotalLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de empréstimos'**
+  String get tenantTotalLoans;
+
+  /// No description provided for @tenantLoansOnPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Empréstimos nesta página'**
+  String get tenantLoansOnPage;
+
+  /// No description provided for @tenantMyLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meus empréstimos'**
+  String get tenantMyLoans;
+
+  /// No description provided for @tenantNoLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você não possui empréstimos.'**
+  String get tenantNoLoans;
+
+  /// No description provided for @tenantPhone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Telefone'**
+  String get tenantPhone;
+
+  /// No description provided for @tenantReturnedAt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolvido em'**
+  String get tenantReturnedAt;
+
+  /// No description provided for @tenantEditProfile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar perfil'**
+  String get tenantEditProfile;
+
+  /// No description provided for @tenantProfileLoadFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar seu perfil.'**
+  String get tenantProfileLoadFailed;
+
+  /// No description provided for @tenantProfileValidationFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revise os dados do perfil e tente novamente.'**
+  String get tenantProfileValidationFailed;
+
+  /// No description provided for @tenantProfileConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe um perfil com esse e-mail.'**
+  String get tenantProfileConflict;
+
+  /// No description provided for @tenantProfileSaveFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível salvar seu perfil.'**
+  String get tenantProfileSaveFailed;
+
+  /// No description provided for @tenantProfileSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Perfil atualizado com sucesso.'**
+  String get tenantProfileSaved;
+
+  /// No description provided for @tenantChangePassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alterar senha'**
+  String get tenantChangePassword;
+
+  /// No description provided for @tenantCurrentPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha atual'**
+  String get tenantCurrentPassword;
+
+  /// No description provided for @tenantNewPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova senha'**
+  String get tenantNewPassword;
+
+  /// No description provided for @tenantConfirmPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar nova senha'**
+  String get tenantConfirmPassword;
+
+  /// No description provided for @tenantPasswordMinLength.
+  ///
+  /// In pt, this message translates to:
+  /// **'A senha deve ter pelo menos 8 caracteres.'**
+  String get tenantPasswordMinLength;
+
+  /// No description provided for @tenantPasswordsDoNotMatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'As senhas não coincidem.'**
+  String get tenantPasswordsDoNotMatch;
+
+  /// No description provided for @tenantPasswordValidationFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revise os dados da senha e tente novamente.'**
+  String get tenantPasswordValidationFailed;
+
+  /// No description provided for @tenantPasswordChangeFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível alterar a senha. Confira a senha atual e tente novamente.'**
+  String get tenantPasswordChangeFailed;
+
+  /// No description provided for @tenantPasswordChanged.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha alterada com sucesso.'**
+  String get tenantPasswordChanged;
+
+  /// No description provided for @tenantConnectionFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conectar à API. Verifique a conexão.'**
+  String get tenantConnectionFailed;
+
+  /// No description provided for @tenantUserAccessRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta tela está disponível somente para usuários.'**
+  String get tenantUserAccessRequired;
+
+  /// No description provided for @tenantFieldTooLong.
+  ///
+  /// In pt, this message translates to:
+  /// **'O texto excede o limite de caracteres permitido.'**
+  String get tenantFieldTooLong;
+
+  /// No description provided for @tenantAddress.
+  ///
+  /// In pt, this message translates to:
+  /// **'Endereço'**
+  String get tenantAddress;
+
+  /// No description provided for @tenantCpf.
+  ///
+  /// In pt, this message translates to:
+  /// **'CPF'**
+  String get tenantCpf;
+
+  /// No description provided for @tenantBirthDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data de nascimento'**
+  String get tenantBirthDate;
+
+  /// No description provided for @temporaryTenantReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sessão USER ativa. O dashboard será adicionado em um próximo checkpoint.'**
+  String get temporaryTenantReady;
+
+  /// No description provided for @logout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Encerrar sessão'**
+  String get logout;
+
+  /// No description provided for @back.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar'**
+  String get back;
+
   /// No description provided for @loginRequiredFields.
   ///
   /// In pt, this message translates to:

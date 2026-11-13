@@ -27,6 +27,7 @@ class _UsersPageState extends State<UsersPage> {
 
   Timer? _searchDebounce;
   bool _isAuthenticated = false;
+  int? _authorizedSessionRevision;
   bool _isLoading = false;
   String? _errorMessage;
   PageResponse<User>? _usersPage;
@@ -37,8 +38,9 @@ class _UsersPageState extends State<UsersPage> {
   void initState() {
     super.initState();
     _userService = UserService(widget.apiClient);
-    _isAuthenticated = widget.apiClient.hasToken;
+    _isAuthenticated = widget.apiClient.hasAdminSession;
     if (_isAuthenticated) {
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
       _loadUsers(page: 0);
     }
   }
@@ -46,9 +48,15 @@ class _UsersPageState extends State<UsersPage> {
   void _onAuthenticated() {
     setState(() {
       _isAuthenticated = true;
+      _authorizedSessionRevision = widget.apiClient.sessionRevision;
     });
     _loadUsers(page: 0);
   }
+
+  bool get _canUseAdminSession =>
+      _isAuthenticated &&
+      widget.apiClient.hasAdminSession &&
+      _authorizedSessionRevision == widget.apiClient.sessionRevision;
 
   Future<void> _loadUsers({required int page}) async {
     _requestedPage = page;
@@ -287,7 +295,11 @@ class _UsersPageState extends State<UsersPage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.usersManagement)),
-      body: _isAuthenticated ? _buildAuthenticatedBody() : _buildLoginForm(),
+      body: ValueListenableBuilder<int>(
+        valueListenable: widget.apiClient.sessionChanges,
+        builder: (context, _, _) =>
+            _canUseAdminSession ? _buildAuthenticatedBody() : _buildLoginForm(),
+      ),
     );
   }
 }

@@ -44,7 +44,7 @@ class LoanService {
   Future<PageResponse<Loan>> getMyLoans({
     int page = 0,
     int size = 10,
-    String sortBy = 'loanDate',
+    String sortBy = 'id',
     String sortDirection = 'DESC',
   }) async {
     final endpoint = Uri(

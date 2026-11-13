@@ -302,6 +302,118 @@ class AppLocalizationsPt extends AppLocalizations {
   String get login => 'Entrar';
 
   @override
+  String get tenantTemporaryAccess => 'Acesso temporário do locatário';
+
+  @override
+  String get tenantDashboardTitle => 'Área do locatário';
+
+  @override
+  String get tenantDashboardLoadFailed =>
+      'Não foi possível carregar seu perfil e empréstimos.';
+
+  @override
+  String get tenantLoansLoadFailed =>
+      'Não foi possível carregar seus empréstimos.';
+
+  @override
+  String get tenantTotalLoans => 'Total de empréstimos';
+
+  @override
+  String get tenantLoansOnPage => 'Empréstimos nesta página';
+
+  @override
+  String get tenantMyLoans => 'Meus empréstimos';
+
+  @override
+  String get tenantNoLoans => 'Você não possui empréstimos.';
+
+  @override
+  String get tenantPhone => 'Telefone';
+
+  @override
+  String get tenantReturnedAt => 'Devolvido em';
+
+  @override
+  String get tenantEditProfile => 'Editar perfil';
+
+  @override
+  String get tenantProfileLoadFailed => 'Não foi possível carregar seu perfil.';
+
+  @override
+  String get tenantProfileValidationFailed =>
+      'Revise os dados do perfil e tente novamente.';
+
+  @override
+  String get tenantProfileConflict => 'Já existe um perfil com esse e-mail.';
+
+  @override
+  String get tenantProfileSaveFailed => 'Não foi possível salvar seu perfil.';
+
+  @override
+  String get tenantProfileSaved => 'Perfil atualizado com sucesso.';
+
+  @override
+  String get tenantChangePassword => 'Alterar senha';
+
+  @override
+  String get tenantCurrentPassword => 'Senha atual';
+
+  @override
+  String get tenantNewPassword => 'Nova senha';
+
+  @override
+  String get tenantConfirmPassword => 'Confirmar nova senha';
+
+  @override
+  String get tenantPasswordMinLength =>
+      'A senha deve ter pelo menos 8 caracteres.';
+
+  @override
+  String get tenantPasswordsDoNotMatch => 'As senhas não coincidem.';
+
+  @override
+  String get tenantPasswordValidationFailed =>
+      'Revise os dados da senha e tente novamente.';
+
+  @override
+  String get tenantPasswordChangeFailed =>
+      'Não foi possível alterar a senha. Confira a senha atual e tente novamente.';
+
+  @override
+  String get tenantPasswordChanged => 'Senha alterada com sucesso.';
+
+  @override
+  String get tenantConnectionFailed =>
+      'Não foi possível conectar à API. Verifique a conexão.';
+
+  @override
+  String get tenantUserAccessRequired =>
+      'Esta tela está disponível somente para usuários.';
+
+  @override
+  String get tenantFieldTooLong =>
+      'O texto excede o limite de caracteres permitido.';
+
+  @override
+  String get tenantAddress => 'Endereço';
+
+  @override
+  String get tenantCpf => 'CPF';
+
+  @override
+  String get tenantBirthDate => 'Data de nascimento';
+
+  @override
+  String get temporaryTenantReady =>
+      'Sessão USER ativa. O dashboard será adicionado em um próximo checkpoint.';
+
+  @override
+  String get logout => 'Encerrar sessão';
+
+  @override
+  String get back => 'Voltar';
+
+  @override
   String get loginRequiredFields => 'Informe o e-mail e a senha.';
 
   @override

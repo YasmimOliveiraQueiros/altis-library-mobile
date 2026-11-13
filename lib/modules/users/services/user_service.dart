@@ -36,6 +36,52 @@ class UserService {
     return PageResponse<User>.fromJson(json, User.fromJson);
   }
 
+  Future<User> getMyProfile() async {
+    final response = await _apiClient.get('/users/me');
+    if (response.statusCode != 200) {
+      throw UserRequestException(response.statusCode);
+    }
+
+    final json =
+        jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+    return User.fromJson(json);
+  }
+
+  Future<void> updateMyProfile({
+    required String name,
+    required String email,
+    required String phone,
+    required String address,
+  }) async {
+    final response = await _apiClient.patch(
+      '/users/me',
+      body: {'name': name, 'email': email, 'phone': phone, 'address': address},
+    );
+    _checkMyProfileResponse(response.statusCode);
+  }
+
+  Future<void> changeMyPassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final response = await _apiClient.patch(
+      '/users/me/password',
+      body: {
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+        'confirmPassword': confirmPassword,
+      },
+    );
+    _checkMyProfileResponse(response.statusCode);
+  }
+
+  void _checkMyProfileResponse(int statusCode) {
+    if (statusCode < 200 || statusCode >= 300) {
+      throw UserRequestException(statusCode);
+    }
+  }
+
   Future<List<User>> getAllUsers({int size = 100}) async {
     final users = <User>[];
     var page = 0;
@@ -58,4 +104,10 @@ class UserService {
       );
     }
   }
+}
+
+class UserRequestException implements Exception {
+  const UserRequestException(this.statusCode);
+
+  final int statusCode;
 }

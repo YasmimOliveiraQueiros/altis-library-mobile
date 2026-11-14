@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/app_role.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../core/services/routes/app_routes.dart';
+import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../dashboard/pages/admin_dashboard_page.dart';
 import '../../tenant/pages/tenant_dashboard_page.dart';
@@ -19,10 +20,20 @@ class AuthGate extends StatelessWidget {
       valueListenable: apiClient.sessionChanges,
       builder: (context, _, _) {
         if (apiClient.hasAdminSession) {
-          return AdminDashboardPage(apiClient: apiClient);
+          return AppNavigationShell(
+            apiClient: apiClient,
+            requiredRole: AppRole.admin,
+            currentRoute: AppRoutes.dashboard,
+            child: AdminDashboardPage(apiClient: apiClient),
+          );
         }
         if (apiClient.hasUserSession) {
-          return TenantDashboardPage(apiClient: apiClient);
+          return AppNavigationShell(
+            apiClient: apiClient,
+            requiredRole: AppRole.user,
+            currentRoute: AppRoutes.tenant,
+            child: TenantDashboardPage(apiClient: apiClient),
+          );
         }
         return LoginPage(apiClient: apiClient, onAuthenticated: () {});
       },

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../users/models/user.dart';
 import '../../users/services/user_service.dart';
@@ -309,7 +310,11 @@ class _TenantProfilePageState extends State<TenantProfilePage> {
     return ValueListenableBuilder<int>(
       valueListenable: widget.apiClient.sessionChanges,
       builder: (context, _, _) => Scaffold(
-        appBar: AppBar(title: Text(l10n.tenantEditProfile)),
+        appBar: AppBar(
+          leading: const AppNavigationButton(),
+          automaticallyImplyLeading: false,
+          title: Text(l10n.tenantEditProfile),
+        ),
         body: _hasUserSession
             ? _buildBody(context)
             : Center(child: Text(l10n.tenantUserAccessRequired)),

@@ -9,6 +9,8 @@ class AppRoutes {
   static const String dashboard = '/dashboard';
   static const String login = '/login';
   static const String tenant = '/tenant';
+  static const String tenantProfile = '/tenant/profile';
+  static const String tenantPassword = '/tenant/password';
   static const String passwordRecovery = '/password-recovery';
   static const String register = '/register';
 }

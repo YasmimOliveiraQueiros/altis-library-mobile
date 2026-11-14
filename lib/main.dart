@@ -5,15 +5,19 @@ import 'core/models/app_role.dart';
 import 'core/services/http/api_client.dart';
 import 'core/services/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/app_navigation_shell.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/auth/pages/auth_gate.dart';
-import 'modules/auth/pages/auth_placeholder_page.dart';
 import 'modules/auth/pages/login_page.dart';
+import 'modules/auth/pages/password_recovery_page.dart';
+import 'modules/auth/pages/registration_page.dart';
 import 'modules/books/pages/books_page.dart';
 import 'modules/dashboard/pages/admin_dashboard_page.dart';
 import 'modules/loans/pages/loans_page.dart';
 import 'modules/publishers/pages/publishers_page.dart';
 import 'modules/tenant/pages/tenant_dashboard_page.dart';
+import 'modules/tenant/pages/tenant_password_page.dart';
+import 'modules/tenant/pages/tenant_profile_page.dart';
 import 'modules/users/pages/users_page.dart';
 
 void main() {
@@ -53,52 +57,52 @@ class _MyAppState extends State<MyApp> {
         );
         break;
       case AppRoutes.dashboard:
-        builder = (_) => ProtectedRoute(
-          apiClient: _apiClient,
-          requiredRole: AppRole.admin,
-          builder: (_) => AdminDashboardPage(apiClient: _apiClient),
+        builder = (_) => _adminPage(
+          AppRoutes.dashboard,
+          AdminDashboardPage(apiClient: _apiClient),
         );
         break;
       case AppRoutes.users:
-        builder = (_) => ProtectedRoute(
-          apiClient: _apiClient,
-          requiredRole: AppRole.admin,
-          builder: (_) => UsersPage(apiClient: _apiClient),
-        );
+        builder = (_) =>
+            _adminPage(AppRoutes.users, UsersPage(apiClient: _apiClient));
         break;
       case AppRoutes.publishers:
-        builder = (_) => ProtectedRoute(
-          apiClient: _apiClient,
-          requiredRole: AppRole.admin,
-          builder: (_) => PublishersPage(apiClient: _apiClient),
+        builder = (_) => _adminPage(
+          AppRoutes.publishers,
+          PublishersPage(apiClient: _apiClient),
         );
         break;
       case AppRoutes.books:
-        builder = (_) => ProtectedRoute(
-          apiClient: _apiClient,
-          requiredRole: AppRole.admin,
-          builder: (_) => BooksPage(apiClient: _apiClient),
-        );
+        builder = (_) =>
+            _adminPage(AppRoutes.books, BooksPage(apiClient: _apiClient));
         break;
       case AppRoutes.loans:
-        builder = (_) => ProtectedRoute(
-          apiClient: _apiClient,
-          requiredRole: AppRole.admin,
-          builder: (_) => LoansPage(apiClient: _apiClient),
-        );
+        builder = (_) =>
+            _adminPage(AppRoutes.loans, LoansPage(apiClient: _apiClient));
         break;
       case AppRoutes.tenant:
-        builder = (_) => ProtectedRoute(
-          apiClient: _apiClient,
-          requiredRole: AppRole.user,
-          builder: (_) => TenantDashboardPage(apiClient: _apiClient),
+        builder = (_) => _userPage(
+          AppRoutes.tenant,
+          TenantDashboardPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.tenantProfile:
+        builder = (_) => _userPage(
+          AppRoutes.tenantProfile,
+          TenantProfilePage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.tenantPassword:
+        builder = (_) => _userPage(
+          AppRoutes.tenantPassword,
+          TenantPasswordPage(apiClient: _apiClient),
         );
         break;
       case AppRoutes.passwordRecovery:
-        builder = (_) => const AuthPlaceholderPage(isRegistration: false);
+        builder = (_) => PasswordRecoveryPage(apiClient: _apiClient);
         break;
       case AppRoutes.register:
-        builder = (_) => const AuthPlaceholderPage(isRegistration: true);
+        builder = (_) => const RegistrationPage();
         break;
       default:
         builder = (_) => AuthGate(apiClient: _apiClient);
@@ -107,6 +111,28 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialPageRoute<void>(builder: builder, settings: settings);
   }
+
+  Widget _adminPage(String route, Widget page) => AppNavigationShell(
+    apiClient: _apiClient,
+    requiredRole: AppRole.admin,
+    currentRoute: route,
+    child: ProtectedRoute(
+      apiClient: _apiClient,
+      requiredRole: AppRole.admin,
+      builder: (_) => page,
+    ),
+  );
+
+  Widget _userPage(String route, Widget page) => AppNavigationShell(
+    apiClient: _apiClient,
+    requiredRole: AppRole.user,
+    currentRoute: route,
+    child: ProtectedRoute(
+      apiClient: _apiClient,
+      requiredRole: AppRole.user,
+      builder: (_) => page,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {

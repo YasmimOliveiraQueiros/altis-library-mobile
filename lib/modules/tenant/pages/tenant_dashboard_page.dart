@@ -4,6 +4,7 @@ import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/pages/login_page.dart';
 import '../../loans/models/loan.dart';
@@ -428,6 +429,7 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isMenuOpen = AppNavigationShell.isMenuOpen(context);
     return ValueListenableBuilder<int>(
       valueListenable: widget.apiClient.sessionChanges,
       builder: (context, _, _) {
@@ -454,28 +456,40 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
         }
         return Scaffold(
           appBar: AppBar(
+            leading: const AppNavigationButton(),
+            automaticallyImplyLeading: false,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(l10n.dashboardBrand),
+                Text(
+                  l10n.dashboardBrand,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Text(
                   l10n.tenantDashboardTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ],
             ),
-            actions: [
-              IconButton(
-                tooltip: l10n.dashboardRefresh,
-                onPressed: _isLoading ? null : _loadDashboard,
-                icon: const Icon(Icons.refresh),
-              ),
-              IconButton(
-                tooltip: l10n.logout,
-                onPressed: widget.apiClient.clearSession,
-                icon: const Icon(Icons.logout),
-              ),
-            ],
+            actions: !isMenuOpen || MediaQuery.sizeOf(context).width >= 420
+                ? [
+                    IconButton(
+                      tooltip: l10n.dashboardRefresh,
+                      onPressed: _isLoading ? null : _loadDashboard,
+                      icon: const Icon(Icons.refresh),
+                    ),
+                    IconButton(
+                      tooltip: l10n.logout,
+                      onPressed: () =>
+                          AppNavigationShell.logout(context, widget.apiClient),
+                      icon: const Icon(Icons.logout),
+                    ),
+                  ]
+                : null,
           ),
           body: _buildContent(context),
         );

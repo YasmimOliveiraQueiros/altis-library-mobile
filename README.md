@@ -2,6 +2,14 @@
 
 A new Flutter project.
 
+## Account registration
+
+The mobile registration form is available, but account creation is disabled
+until the API provides a confirmed public registration endpoint. The current
+OpenAPI contract documents `POST /users` as requiring Bearer authentication;
+the app does not send registration data to that protected endpoint or attempt
+to create an account.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

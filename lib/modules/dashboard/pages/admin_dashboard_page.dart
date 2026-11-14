@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
 import '../../users/models/user.dart';
@@ -95,16 +96,28 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                action ?? const SizedBox.shrink(),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final heading = Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                );
+                if (constraints.maxWidth < 220) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      heading,
+                      if (action != null) Align(child: action),
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: heading),
+                    action ?? const SizedBox.shrink(),
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 12),
             child,
@@ -168,6 +181,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           ),
         ];
         final usersById = {for (final user in _users) user.id: user};
+        final metricsPerRow = constraints.maxWidth < 340 ? 1 : 2;
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 840),
@@ -176,7 +190,11 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (var index = 0; index < metrics.length; index += 2)
+                  for (
+                    var index = 0;
+                    index < metrics.length;
+                    index += metricsPerRow
+                  )
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Row(
@@ -189,15 +207,17 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                               dotColor: metrics[index].color,
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: DashboardMetricCard(
-                              id: metrics[index + 1].id,
-                              label: metrics[index + 1].label,
-                              value: metrics[index + 1].value,
-                              dotColor: metrics[index + 1].color,
+                          if (metricsPerRow == 2) ...[
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DashboardMetricCard(
+                                id: metrics[index + 1].id,
+                                label: metrics[index + 1].label,
+                                value: metrics[index + 1].value,
+                                dotColor: metrics[index + 1].color,
+                              ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
                     ),
@@ -222,12 +242,20 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       usersById: usersById,
                       userLoadFailed: _userLoadFailed,
                     ),
-                    action: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(AppRoutes.loans);
-                      },
-                      child: Text(l10n.dashboardViewAll),
-                    ),
+                    action: MediaQuery.sizeOf(context).width < 220
+                        ? IconButton(
+                            tooltip: l10n.dashboardViewAll,
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(AppRoutes.loans);
+                            },
+                            icon: const Icon(Icons.arrow_forward),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(AppRoutes.loans);
+                            },
+                            child: Text(l10n.dashboardViewAll),
+                          ),
                   ),
                 ],
               ),
@@ -297,42 +325,58 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isMenuOpen = AppNavigationShell.isMenuOpen(context);
     return ValueListenableBuilder<int>(
       valueListenable: widget.apiClient.sessionChanges,
       builder: (context, _, _) => Scaffold(
         appBar: AppBar(
+          leading: const AppNavigationButton(),
+          automaticallyImplyLeading: false,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(l10n.dashboardBrand),
+              Text(
+                l10n.dashboardBrand,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               Text(
                 l10n.dashboardOverview,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ],
           ),
           actions: [
-            if (_canUseAdminSession)
+            if (_canUseAdminSession &&
+                (!isMenuOpen || MediaQuery.sizeOf(context).width >= 420))
               IconButton(
                 tooltip: l10n.dashboardRefresh,
                 onPressed: _isLoading ? null : _loadDashboard,
                 icon: const Icon(Icons.refresh),
               ),
-            if (_canUseAdminSession)
+            if (_canUseAdminSession &&
+                (!isMenuOpen || MediaQuery.sizeOf(context).width >= 420))
               IconButton(
                 tooltip: l10n.logout,
-                onPressed: widget.apiClient.clearSession,
+                onPressed: () =>
+                    AppNavigationShell.logout(context, widget.apiClient),
                 icon: const Icon(Icons.logout),
               ),
-            const Padding(
-              padding: EdgeInsets.only(left: 4, right: 12),
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Color(0xFFE7EDF2),
-                child: Icon(Icons.person_outline, color: AppTheme.primaryColor),
+            if (!isMenuOpen || MediaQuery.sizeOf(context).width >= 520)
+              const Padding(
+                padding: EdgeInsets.only(left: 4, right: 12),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Color(0xFFE7EDF2),
+                  child: Icon(
+                    Icons.person_outline,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
               ),
-            ),
           ],
         ),
         body: _canUseAdminSession

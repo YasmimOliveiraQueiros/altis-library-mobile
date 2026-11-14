@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
 import '../../publishers/models/publisher.dart';
@@ -425,6 +426,8 @@ class _BooksPageState extends State<BooksPage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
+        leading: const AppNavigationButton(),
+        automaticallyImplyLeading: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

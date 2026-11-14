@@ -25,6 +25,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get manageLoans => 'Administrar préstamos';
 
   @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get navLoans => 'Alquileres';
+
+  @override
+  String get navBooks => 'Libros';
+
+  @override
+  String get navPublishers => 'Editoriales';
+
+  @override
+  String get navUsers => 'Usuarios';
+
+  @override
+  String get navEditProfile => 'Editar perfil';
+
+  @override
+  String get navChangePassword => 'Cambiar contraseña';
+
+  @override
+  String get navLogout => 'Cerrar sesión';
+
+  @override
+  String get navOpen => 'Abrir menú';
+
+  @override
+  String get navClose => 'Cerrar menú';
+
+  @override
   String get dashboardBrand => 'Altis+ Biblioteca';
 
   @override
@@ -339,10 +369,51 @@ class AppLocalizationsEs extends AppLocalizations {
   String get backToLogin => 'Volver al inicio de sesión';
 
   @override
-  String get registerTitle => 'Crear una cuenta';
+  String get registerTitle => 'Crear una cuenta nueva';
+
+  @override
+  String get registerFullName => 'Nombre completo';
+
+  @override
+  String get registerConfirmPassword => 'Confirmar contraseña';
+
+  @override
+  String get registerButton => 'Crear cuenta';
+
+  @override
+  String get registrationUnavailable =>
+      'El registro no está disponible temporalmente: la API todavía no ofrece un endpoint público de registro.';
 
   @override
   String get passwordRecoveryTitle => 'Recuperar contraseña';
+
+  @override
+  String get recoveryDescription =>
+      'Introduce tu correo electrónico y CPF para continuar.';
+
+  @override
+  String get recoveryCpf => 'CPF';
+
+  @override
+  String get recoveryConfirmPassword => 'Confirmar contraseña';
+
+  @override
+  String get recoveryInvalidCpf => 'Introduce un CPF válido.';
+
+  @override
+  String get recoveryConnectionFailed =>
+      'No se pudo conectar con la API. Comprueba tu conexión.';
+
+  @override
+  String get recoveryInvalidResponse => 'La respuesta de la API no es válida.';
+
+  @override
+  String get recoveryRequestFailed =>
+      'No se pudo verificar la información. Inténtalo de nuevo.';
+
+  @override
+  String get recoveryResetUnavailable =>
+      'El restablecimiento está bloqueado hasta que el backend confirme una autorización segura.';
 
   @override
   String get authFlowNotAvailable =>

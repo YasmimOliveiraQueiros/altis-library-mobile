@@ -130,6 +130,66 @@ abstract class AppLocalizations {
   /// **'Gerenciar aluguéis'**
   String get manageLoans;
 
+  /// No description provided for @navDashboard.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dashboard'**
+  String get navDashboard;
+
+  /// No description provided for @navLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguéis'**
+  String get navLoans;
+
+  /// No description provided for @navBooks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livros'**
+  String get navBooks;
+
+  /// No description provided for @navPublishers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editoras'**
+  String get navPublishers;
+
+  /// No description provided for @navUsers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usuários'**
+  String get navUsers;
+
+  /// No description provided for @navEditProfile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar Perfil'**
+  String get navEditProfile;
+
+  /// No description provided for @navChangePassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alterar Senha'**
+  String get navChangePassword;
+
+  /// No description provided for @navLogout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair'**
+  String get navLogout;
+
+  /// No description provided for @navOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir menu'**
+  String get navOpen;
+
+  /// No description provided for @navClose.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar menu'**
+  String get navClose;
+
   /// No description provided for @dashboardBrand.
   ///
   /// In pt, this message translates to:
@@ -733,14 +793,86 @@ abstract class AppLocalizations {
   /// No description provided for @registerTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Realizar cadastro'**
+  /// **'Cadastrar nova conta'**
   String get registerTitle;
+
+  /// No description provided for @registerFullName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome completo'**
+  String get registerFullName;
+
+  /// No description provided for @registerConfirmPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar senha'**
+  String get registerConfirmPassword;
+
+  /// No description provided for @registerButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastrar'**
+  String get registerButton;
+
+  /// No description provided for @registrationUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'O cadastro está temporariamente indisponível: a API ainda não oferece um endpoint público de cadastro.'**
+  String get registrationUnavailable;
 
   /// No description provided for @passwordRecoveryTitle.
   ///
   /// In pt, this message translates to:
   /// **'Recuperar senha'**
   String get passwordRecoveryTitle;
+
+  /// No description provided for @recoveryDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe seu e-mail e CPF para continuar.'**
+  String get recoveryDescription;
+
+  /// No description provided for @recoveryCpf.
+  ///
+  /// In pt, this message translates to:
+  /// **'CPF'**
+  String get recoveryCpf;
+
+  /// No description provided for @recoveryConfirmPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar senha'**
+  String get recoveryConfirmPassword;
+
+  /// No description provided for @recoveryInvalidCpf.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um CPF válido.'**
+  String get recoveryInvalidCpf;
+
+  /// No description provided for @recoveryConnectionFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conectar à API. Verifique sua conexão.'**
+  String get recoveryConnectionFailed;
+
+  /// No description provided for @recoveryInvalidResponse.
+  ///
+  /// In pt, this message translates to:
+  /// **'A resposta da API é inválida.'**
+  String get recoveryInvalidResponse;
+
+  /// No description provided for @recoveryRequestFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível verificar os dados. Tente novamente.'**
+  String get recoveryRequestFailed;
+
+  /// No description provided for @recoveryResetUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'A redefinição está bloqueada até que o backend confirme uma autorização segura.'**
+  String get recoveryResetUnavailable;
 
   /// No description provided for @authFlowNotAvailable.
   ///

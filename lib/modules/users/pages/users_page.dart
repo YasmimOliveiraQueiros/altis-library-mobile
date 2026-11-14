@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
 import '../models/user.dart';
@@ -283,7 +284,11 @@ class _UsersPageState extends State<UsersPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.usersManagement)),
+      appBar: AppBar(
+        leading: const AppNavigationButton(),
+        automaticallyImplyLeading: false,
+        title: Text(l10n.usersManagement),
+      ),
       body: ValueListenableBuilder<int>(
         valueListenable: widget.apiClient.sessionChanges,
         builder: (context, _, _) =>

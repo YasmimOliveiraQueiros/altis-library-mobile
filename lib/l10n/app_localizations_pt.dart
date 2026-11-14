@@ -25,6 +25,36 @@ class AppLocalizationsPt extends AppLocalizations {
   String get manageLoans => 'Gerenciar aluguéis';
 
   @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get navLoans => 'Aluguéis';
+
+  @override
+  String get navBooks => 'Livros';
+
+  @override
+  String get navPublishers => 'Editoras';
+
+  @override
+  String get navUsers => 'Usuários';
+
+  @override
+  String get navEditProfile => 'Editar Perfil';
+
+  @override
+  String get navChangePassword => 'Alterar Senha';
+
+  @override
+  String get navLogout => 'Sair';
+
+  @override
+  String get navOpen => 'Abrir menu';
+
+  @override
+  String get navClose => 'Fechar menu';
+
+  @override
   String get dashboardBrand => 'Altis+ Biblioteca';
 
   @override
@@ -337,10 +367,50 @@ class AppLocalizationsPt extends AppLocalizations {
   String get backToLogin => 'Voltar ao login';
 
   @override
-  String get registerTitle => 'Realizar cadastro';
+  String get registerTitle => 'Cadastrar nova conta';
+
+  @override
+  String get registerFullName => 'Nome completo';
+
+  @override
+  String get registerConfirmPassword => 'Confirmar senha';
+
+  @override
+  String get registerButton => 'Cadastrar';
+
+  @override
+  String get registrationUnavailable =>
+      'O cadastro está temporariamente indisponível: a API ainda não oferece um endpoint público de cadastro.';
 
   @override
   String get passwordRecoveryTitle => 'Recuperar senha';
+
+  @override
+  String get recoveryDescription => 'Informe seu e-mail e CPF para continuar.';
+
+  @override
+  String get recoveryCpf => 'CPF';
+
+  @override
+  String get recoveryConfirmPassword => 'Confirmar senha';
+
+  @override
+  String get recoveryInvalidCpf => 'Informe um CPF válido.';
+
+  @override
+  String get recoveryConnectionFailed =>
+      'Não foi possível conectar à API. Verifique sua conexão.';
+
+  @override
+  String get recoveryInvalidResponse => 'A resposta da API é inválida.';
+
+  @override
+  String get recoveryRequestFailed =>
+      'Não foi possível verificar os dados. Tente novamente.';
+
+  @override
+  String get recoveryResetUnavailable =>
+      'A redefinição está bloqueada até que o backend confirme uma autorização segura.';
 
   @override
   String get authFlowNotAvailable =>

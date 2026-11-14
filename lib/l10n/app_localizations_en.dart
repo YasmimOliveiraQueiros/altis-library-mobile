@@ -25,6 +25,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageLoans => 'Manage loans';
 
   @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get navLoans => 'Loans';
+
+  @override
+  String get navBooks => 'Books';
+
+  @override
+  String get navPublishers => 'Publishers';
+
+  @override
+  String get navUsers => 'Users';
+
+  @override
+  String get navEditProfile => 'Edit Profile';
+
+  @override
+  String get navChangePassword => 'Change Password';
+
+  @override
+  String get navLogout => 'Sign out';
+
+  @override
+  String get navOpen => 'Open menu';
+
+  @override
+  String get navClose => 'Close menu';
+
+  @override
   String get dashboardBrand => 'Altis+ Library';
 
   @override
@@ -333,10 +363,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backToLogin => 'Back to sign in';
 
   @override
-  String get registerTitle => 'Create an account';
+  String get registerTitle => 'Create a new account';
+
+  @override
+  String get registerFullName => 'Full name';
+
+  @override
+  String get registerConfirmPassword => 'Confirm password';
+
+  @override
+  String get registerButton => 'Create account';
+
+  @override
+  String get registrationUnavailable =>
+      'Registration is temporarily unavailable: the API does not yet provide a public registration endpoint.';
 
   @override
   String get passwordRecoveryTitle => 'Recover password';
+
+  @override
+  String get recoveryDescription => 'Enter your email and CPF to continue.';
+
+  @override
+  String get recoveryCpf => 'CPF';
+
+  @override
+  String get recoveryConfirmPassword => 'Confirm password';
+
+  @override
+  String get recoveryInvalidCpf => 'Enter a valid CPF.';
+
+  @override
+  String get recoveryConnectionFailed =>
+      'Could not connect to the API. Check your connection.';
+
+  @override
+  String get recoveryInvalidResponse => 'The API response is invalid.';
+
+  @override
+  String get recoveryRequestFailed =>
+      'Could not verify the information. Please try again.';
+
+  @override
+  String get recoveryResetUnavailable =>
+      'Password reset is blocked until the backend confirms secure authorization.';
 
   @override
   String get authFlowNotAvailable =>

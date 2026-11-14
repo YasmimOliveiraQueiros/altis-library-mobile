@@ -1,30 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 
+import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/main.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('the application opens at the definitive login screen', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient((_) async => http.Response('', 500)),
+    );
+    addTearDown(client.dispose);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
+    expect(find.text('Altis+ Biblioteca'), findsOneWidget);
+    expect(find.text('Recuperar senha?'), findsOneWidget);
+    expect(find.text('Realizar cadastro?'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

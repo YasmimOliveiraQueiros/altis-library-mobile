@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/models/app_role.dart';
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/widgets/admin_login_form.dart';
+import '../../auth/pages/login_page.dart';
 import '../../loans/models/loan.dart';
 import '../../loans/services/loan_service.dart';
 import '../../users/models/user.dart';
@@ -438,10 +438,17 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
         if (!canViewDashboard) {
           return Scaffold(
             appBar: AppBar(title: Text(l10n.tenantTemporaryAccess)),
-            body: TemporaryRoleLoginForm(
+            body: LoginPage(
               apiClient: widget.apiClient,
-              role: AppRole.user,
-              onAuthenticated: _onAuthenticated,
+              onAuthenticated: () {
+                if (widget.apiClient.hasUserSession) {
+                  _onAuthenticated();
+                } else {
+                  Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
+                }
+              },
             ),
           );
         }

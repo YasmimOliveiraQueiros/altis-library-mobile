@@ -1,248 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'core/models/app_role.dart';
 import 'core/services/http/api_client.dart';
+import 'core/services/routes/app_routes.dart';
+import 'core/theme/app_theme.dart';
+import 'l10n/app_localizations.dart';
+import 'modules/auth/pages/auth_gate.dart';
+import 'modules/auth/pages/auth_placeholder_page.dart';
+import 'modules/auth/pages/login_page.dart';
 import 'modules/books/pages/books_page.dart';
 import 'modules/dashboard/pages/admin_dashboard_page.dart';
 import 'modules/loans/pages/loans_page.dart';
-import 'core/theme/app_theme.dart';
 import 'modules/publishers/pages/publishers_page.dart';
-import 'modules/tenant/pages/temporary_tenant_access_page.dart';
+import 'modules/tenant/pages/tenant_dashboard_page.dart';
 import 'modules/users/pages/users_page.dart';
-import 'core/services/routes/app_routes.dart';
-
-import 'l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.apiClient, this.locale});
+
+  final ApiClient? apiClient;
+  final Locale? locale;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final ApiClient _apiClient = ApiClient();
-  Locale? _locale;
+  late final ApiClient _apiClient = widget.apiClient ?? ApiClient();
 
-  void _changeLocale(Locale? locale) {
-    setState(() {
-      _locale = locale;
-    });
+  void _openHome(BuildContext context) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
   }
 
-  // This widget is the root of your application.
+  Route<dynamic> _buildRoute(RouteSettings settings) {
+    final name = settings.name ?? AppRoutes.home;
+    late final WidgetBuilder builder;
+
+    switch (name) {
+      case AppRoutes.home:
+        builder = (_) => AuthGate(apiClient: _apiClient);
+        break;
+      case AppRoutes.login:
+        builder = (context) => LoginPage(
+          apiClient: _apiClient,
+          onAuthenticated: () => _openHome(context),
+        );
+        break;
+      case AppRoutes.dashboard:
+        builder = (_) => ProtectedRoute(
+          apiClient: _apiClient,
+          requiredRole: AppRole.admin,
+          builder: (_) => AdminDashboardPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.users:
+        builder = (_) => ProtectedRoute(
+          apiClient: _apiClient,
+          requiredRole: AppRole.admin,
+          builder: (_) => UsersPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.publishers:
+        builder = (_) => ProtectedRoute(
+          apiClient: _apiClient,
+          requiredRole: AppRole.admin,
+          builder: (_) => PublishersPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.books:
+        builder = (_) => ProtectedRoute(
+          apiClient: _apiClient,
+          requiredRole: AppRole.admin,
+          builder: (_) => BooksPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.loans:
+        builder = (_) => ProtectedRoute(
+          apiClient: _apiClient,
+          requiredRole: AppRole.admin,
+          builder: (_) => LoansPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.tenant:
+        builder = (_) => ProtectedRoute(
+          apiClient: _apiClient,
+          requiredRole: AppRole.user,
+          builder: (_) => TenantDashboardPage(apiClient: _apiClient),
+        );
+        break;
+      case AppRoutes.passwordRecovery:
+        builder = (_) => const AuthPlaceholderPage(isRegistration: false);
+        break;
+      case AppRoutes.register:
+        builder = (_) => const AuthPlaceholderPage(isRegistration: true);
+        break;
+      default:
+        builder = (_) => AuthGate(apiClient: _apiClient);
+        break;
+    }
+
+    return MaterialPageRoute<void>(builder: builder, settings: settings);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Altis Library Mobile',
+      title: 'Altis+ Biblioteca',
       debugShowCheckedModeBanner: false,
-      locale: _locale,
+      locale: widget.locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: AppTheme.lightTheme.colorScheme,
-      ),
-
+      theme: AppTheme.lightTheme,
       initialRoute: AppRoutes.home,
-      routes: {
-        AppRoutes.dashboard: (context) =>
-            AdminDashboardPage(apiClient: _apiClient),
-        AppRoutes.users: (context) => UsersPage(apiClient: _apiClient),
-        AppRoutes.publishers: (context) =>
-            PublishersPage(apiClient: _apiClient),
-        AppRoutes.books: (context) => BooksPage(apiClient: _apiClient),
-        AppRoutes.loans: (context) => LoansPage(apiClient: _apiClient),
-        AppRoutes.tenant: (context) =>
-            TemporaryTenantAccessPage(apiClient: _apiClient),
-        AppRoutes.home: (context) => MyHomePage(
-          title: 'Altis Library Mobile',
-          onLocaleChanged: _changeLocale,
-        ),
-      },
+      onGenerateRoute: _buildRoute,
     );
   }
 
   @override
   void dispose() {
-    _apiClient.dispose();
+    if (widget.apiClient == null) _apiClient.dispose();
     super.dispose();
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key,
-    required this.title,
-    required this.onLocaleChanged,
-  });
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-  final ValueChanged<Locale?> onLocaleChanged;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-
-        actions: [
-          PopupMenuButton<String>(
-            tooltip: 'Selecionar idioma',
-            icon: const Icon(Icons.language),
-            onSelected: (languageCode) {
-              widget.onLocaleChanged(Locale(languageCode));
-            },
-
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: 'pt', child: Text('Português')),
-
-              PopupMenuItem(value: 'en', child: Text('English')),
-
-              PopupMenuItem(value: 'es', child: Text('Español')),
-            ],
-          ),
-        ],
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(l10n.name),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 20),
-
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.dashboard);
-              },
-              child: Text(l10n.dashboardTitle),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.users);
-              },
-              child: Text(l10n.manageUsers),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.publishers);
-              },
-              child: Text(l10n.managePublishers),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.books);
-              },
-              child: Text(l10n.manageBooks),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.loans);
-              },
-              child: Text(l10n.manageLoans),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.tenant);
-              },
-              child: Text(l10n.tenantTemporaryAccess),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/widgets/admin_login_form.dart';
+import '../../auth/widgets/admin_access_required.dart';
 import '../../publishers/models/publisher.dart';
 import '../../publishers/services/publisher_service.dart';
 import '../models/book.dart';
@@ -50,14 +50,6 @@ class _BooksPageState extends State<BooksPage> {
     if (_isAuthenticated) {
       _authorizedSessionRevision = widget.apiClient.sessionRevision;
     }
-  }
-
-  void _onAuthenticated() {
-    setState(() {
-      _isAuthenticated = true;
-      _authorizedSessionRevision = widget.apiClient.sessionRevision;
-    });
-    _loadBooks(page: 0);
   }
 
   bool get _canUseAdminSession =>
@@ -455,10 +447,7 @@ class _BooksPageState extends State<BooksPage> {
         valueListenable: widget.apiClient.sessionChanges,
         builder: (context, _, _) => _canUseAdminSession
             ? _buildAuthenticatedBody()
-            : AdminLoginForm(
-                apiClient: widget.apiClient,
-                onAuthenticated: _onAuthenticated,
-              ),
+            : const AdminAccessRequired(),
       ),
     );
   }

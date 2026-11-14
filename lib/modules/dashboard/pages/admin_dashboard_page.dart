@@ -4,7 +4,7 @@ import '../../../core/services/http/api_client.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/widgets/admin_login_form.dart';
+import '../../auth/widgets/admin_access_required.dart';
 import '../../users/models/user.dart';
 import '../../users/services/user_service.dart';
 import '../models/dashboard.dart';
@@ -42,14 +42,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       _authorizedSessionRevision = widget.apiClient.sessionRevision;
       _loadDashboard();
     }
-  }
-
-  void _onAuthenticated() {
-    setState(() {
-      _isAuthenticated = true;
-      _authorizedSessionRevision = widget.apiClient.sessionRevision;
-    });
-    _loadDashboard();
   }
 
   bool get _canUseAdminSession =>
@@ -327,6 +319,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 onPressed: _isLoading ? null : _loadDashboard,
                 icon: const Icon(Icons.refresh),
               ),
+            if (_canUseAdminSession)
+              IconButton(
+                tooltip: l10n.logout,
+                onPressed: widget.apiClient.clearSession,
+                icon: const Icon(Icons.logout),
+              ),
             const Padding(
               padding: EdgeInsets.only(left: 4, right: 12),
               child: CircleAvatar(
@@ -339,10 +337,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         ),
         body: _canUseAdminSession
             ? _buildBody(context)
-            : AdminLoginForm(
-                apiClient: widget.apiClient,
-                onAuthenticated: _onAuthenticated,
-              ),
+            : const AdminAccessRequired(),
       ),
     );
   }

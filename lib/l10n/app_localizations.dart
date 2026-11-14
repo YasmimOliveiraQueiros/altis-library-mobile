@@ -646,6 +646,108 @@ abstract class AppLocalizations {
   /// **'Acesso administrativo'**
   String get adminAccess;
 
+  /// No description provided for @authBrand.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altis+ Biblioteca'**
+  String get authBrand;
+
+  /// No description provided for @authSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sistema de gestão de aluguéis'**
+  String get authSubtitle;
+
+  /// No description provided for @loginWelcome.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-vindo de volta!'**
+  String get loginWelcome;
+
+  /// No description provided for @loginDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faça login para acessar o sistema.'**
+  String get loginDescription;
+
+  /// No description provided for @loginForgotPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recuperar senha?'**
+  String get loginForgotPassword;
+
+  /// No description provided for @loginRegister.
+  ///
+  /// In pt, this message translates to:
+  /// **'Realizar cadastro?'**
+  String get loginRegister;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mostrar senha'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ocultar senha'**
+  String get hidePassword;
+
+  /// No description provided for @loginInvalidCredentials.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail ou senha incorretos.'**
+  String get loginInvalidCredentials;
+
+  /// No description provided for @loginInvalidResponse.
+  ///
+  /// In pt, this message translates to:
+  /// **'A resposta de autenticação é inválida.'**
+  String get loginInvalidResponse;
+
+  /// No description provided for @loginConnectionFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conectar à API. Verifique sua conexão.'**
+  String get loginConnectionFailed;
+
+  /// No description provided for @loginRequestFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível realizar o login. Tente novamente.'**
+  String get loginRequestFailed;
+
+  /// No description provided for @authSessionRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faça login para continuar.'**
+  String get authSessionRequired;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar ao login'**
+  String get backToLogin;
+
+  /// No description provided for @registerTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Realizar cadastro'**
+  String get registerTitle;
+
+  /// No description provided for @passwordRecoveryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recuperar senha'**
+  String get passwordRecoveryTitle;
+
+  /// No description provided for @authFlowNotAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este fluxo estará disponível em uma próxima etapa.'**
+  String get authFlowNotAvailable;
+
   /// No description provided for @email.
   ///
   /// In pt, this message translates to:

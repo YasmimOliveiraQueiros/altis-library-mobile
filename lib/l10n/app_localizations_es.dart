@@ -293,6 +293,62 @@ class AppLocalizationsEs extends AppLocalizations {
   String get adminAccess => 'Acceso administrativo';
 
   @override
+  String get authBrand => 'Altis+ Biblioteca';
+
+  @override
+  String get authSubtitle => 'Sistema de gestión de préstamos';
+
+  @override
+  String get loginWelcome => '¡Bienvenido de nuevo!';
+
+  @override
+  String get loginDescription => 'Inicia sesión para acceder al sistema.';
+
+  @override
+  String get loginForgotPassword => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get loginRegister => '¿Crear una cuenta?';
+
+  @override
+  String get showPassword => 'Mostrar contraseña';
+
+  @override
+  String get hidePassword => 'Ocultar contraseña';
+
+  @override
+  String get loginInvalidCredentials =>
+      'Correo electrónico o contraseña incorrectos.';
+
+  @override
+  String get loginInvalidResponse =>
+      'La respuesta de autenticación no es válida.';
+
+  @override
+  String get loginConnectionFailed =>
+      'No se pudo conectar con la API. Comprueba tu conexión.';
+
+  @override
+  String get loginRequestFailed =>
+      'No se pudo iniciar sesión. Inténtalo de nuevo.';
+
+  @override
+  String get authSessionRequired => 'Inicia sesión para continuar.';
+
+  @override
+  String get backToLogin => 'Volver al inicio de sesión';
+
+  @override
+  String get registerTitle => 'Crear una cuenta';
+
+  @override
+  String get passwordRecoveryTitle => 'Recuperar contraseña';
+
+  @override
+  String get authFlowNotAvailable =>
+      'Este flujo estará disponible en una próxima etapa.';
+
+  @override
   String get email => 'Correo electrónico';
 
   @override

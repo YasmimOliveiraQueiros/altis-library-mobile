@@ -279,7 +279,7 @@ void main() {
       await tester.pumpWidget(_app(TenantDashboardPage(apiClient: client)));
       await tester.pumpAndSettle();
 
-      expect(find.text('Acesso temporário do locatário'), findsWidgets);
+      expect(find.text('Bem-vindo de volta!'), findsOneWidget);
       expect(requests, isEmpty);
       expect(tester.takeException(), isNull);
     }
@@ -450,7 +450,7 @@ void main() {
 
     expect(client.hasToken, isFalse);
     expect(client.role, isNull);
-    expect(find.text('Acesso temporário do locatário'), findsWidgets);
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
     expect(find.text('Ana Silva'), findsNothing);
   });
 }

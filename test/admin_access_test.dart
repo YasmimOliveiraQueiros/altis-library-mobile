@@ -4,7 +4,7 @@ import 'package:altis_library_mobile/core/models/app_role.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/core/theme/app_theme.dart';
 import 'package:altis_library_mobile/l10n/app_localizations.dart';
-import 'package:altis_library_mobile/modules/auth/widgets/admin_login_form.dart';
+import 'package:altis_library_mobile/modules/auth/pages/login_page.dart';
 import 'package:altis_library_mobile/modules/books/pages/books_page.dart';
 import 'package:altis_library_mobile/modules/dashboard/pages/admin_dashboard_page.dart';
 import 'package:altis_library_mobile/modules/loans/pages/loans_page.dart';
@@ -81,7 +81,7 @@ void main() {
     await tester.pumpWidget(
       _app(
         Scaffold(
-          body: AdminLoginForm(
+          body: LoginPage(
             apiClient: client,
             onAuthenticated: () => authenticated = true,
           ),
@@ -168,7 +168,7 @@ void main() {
 
     expect(client.hasToken, isFalse);
     expect(client.role, isNull);
-    expect(find.text('Acesso temporário do locatário'), findsWidgets);
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
   });
 
   testWidgets('an ADMIN module hides prior data when the role changes', (

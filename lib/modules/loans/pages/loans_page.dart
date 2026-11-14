@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/widgets/admin_login_form.dart';
+import '../../auth/widgets/admin_access_required.dart';
 import '../../users/models/user.dart';
 import '../../users/services/user_service.dart';
 import '../models/loan.dart';
@@ -56,14 +56,6 @@ class _LoansPageState extends State<LoansPage> {
       _authorizedSessionRevision = widget.apiClient.sessionRevision;
     }
     if (_isAuthenticated) _loadLoans(page: 0);
-  }
-
-  void _onAuthenticated() {
-    setState(() {
-      _isAuthenticated = true;
-      _authorizedSessionRevision = widget.apiClient.sessionRevision;
-    });
-    _loadLoans(page: 0);
   }
 
   bool get _canUseAdminSession =>
@@ -494,10 +486,7 @@ class _LoansPageState extends State<LoansPage> {
         valueListenable: widget.apiClient.sessionChanges,
         builder: (context, _, _) => _canUseAdminSession
             ? _buildAuthenticatedBody()
-            : AdminLoginForm(
-                apiClient: widget.apiClient,
-                onAuthenticated: _onAuthenticated,
-              ),
+            : const AdminAccessRequired(),
       ),
     );
   }

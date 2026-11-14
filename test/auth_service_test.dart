@@ -8,7 +8,34 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
 void main() {
-  test('login defaults to ADMIN and rejects an unexpected USER role', () async {
+  test('ADMIN login sends credentials and creates an ADMIN session', () async {
+    http.Request? request;
+    final client = ApiClient(
+      client: MockClient((value) async {
+        request = value;
+        return http.Response(
+          jsonEncode({'token': 'admin-jwt', 'role': 'ADMIN'}),
+          200,
+        );
+      }),
+    );
+    addTearDown(client.dispose);
+
+    final role = await AuthService(client)
+        .login(email: 'admin@example.test', password: 'secret');
+
+    expect(role, AppRole.admin);
+    expect(client.hasAdminSession, isTrue);
+    expect(client.hasUserSession, isFalse);
+    expect(request?.method, 'POST');
+    expect(request?.url.path, '/auth/login');
+    expect(jsonDecode(request!.body), {
+      'email': 'admin@example.test',
+      'password': 'secret',
+    });
+  });
+
+  test('USER login creates a USER session from the backend role', () async {
     final client = ApiClient(
       client: MockClient(
         (_) async => http.Response(
@@ -19,55 +46,89 @@ void main() {
     );
     addTearDown(client.dispose);
 
-    await expectLater(
-      AuthService(client)
-          .login(email: 'user@example.test', password: 'password'),
-      throwsA(isA<AuthException>()),
-    );
-    expect(client.hasToken, isFalse);
-    expect(client.role, isNull);
+    final role = await AuthService(client)
+        .login(email: 'user@example.test', password: 'secret');
+
+    expect(role, AppRole.user);
+    expect(client.hasUserSession, isTrue);
+    expect(client.hasAdminSession, isFalse);
   });
 
-  test('login rejects an unknown role and malformed permissions', () async {
-    final responses = [
-      http.Response(jsonEncode({'token': 'jwt', 'role': 'SUPERVISOR'}), 200),
-      http.Response(jsonEncode({'token': '', 'role': 'ADMIN'}), 200),
-      http.Response('', 403),
-    ];
-
-    for (final response in responses) {
-      final client = ApiClient(client: MockClient((_) async => response));
+  test('401 and 403 are reported as invalid credentials', () async {
+    for (final status in [401, 403]) {
+      final client = ApiClient(
+        client: MockClient((_) async => http.Response('', status)),
+      );
       addTearDown(client.dispose);
 
       await expectLater(
         AuthService(client)
-            .login(email: 'admin@example.test', password: 'password'),
-        throwsA(isA<Exception>()),
+            .login(email: 'user@example.test', password: 'wrong'),
+        throwsA(
+          isA<AuthException>().having(
+            (error) => error.failure,
+            'failure',
+            AuthFailure.invalidCredentials,
+          ),
+        ),
       );
       expect(client.hasToken, isFalse);
-      expect(client.role, isNull);
     }
   });
 
-  test('USER login requires an explicit expected role', () async {
-    final client = ApiClient(
-      client: MockClient(
-        (_) async => http.Response(
-          jsonEncode({'token': 'user-jwt', 'role': 'USER'}),
-          200,
+  test(
+    'login rejects malformed responses without creating a session',
+    () async {
+      final responses = [
+        http.Response('not-json', 200),
+        http.Response(jsonEncode({'token': 'jwt', 'role': 'SUPERVISOR'}), 200),
+        http.Response(jsonEncode({'token': '', 'role': 'ADMIN'}), 200),
+        http.Response(jsonEncode({'role': 'ADMIN'}), 200),
+      ];
+
+      for (final response in responses) {
+        final client = ApiClient(client: MockClient((_) async => response));
+        addTearDown(client.dispose);
+
+        await expectLater(
+          AuthService(client)
+              .login(email: 'admin@example.test', password: 'secret'),
+          throwsA(
+            isA<AuthException>().having(
+              (error) => error.failure,
+              'failure',
+              AuthFailure.invalidResponse,
+            ),
+          ),
+        );
+        expect(client.hasToken, isFalse);
+        expect(client.role, isNull);
+      }
+    },
+  );
+
+  test(
+    'connection failure is reported without exposing request details',
+    () async {
+      final client = ApiClient(
+        client: MockClient((_) async {
+          throw http.ClientException('network unavailable');
+        }),
+      );
+      addTearDown(client.dispose);
+
+      await expectLater(
+        AuthService(client)
+            .login(email: 'user@example.test', password: 'secret'),
+        throwsA(
+          isA<AuthException>().having(
+            (error) => error.failure,
+            'failure',
+            AuthFailure.connection,
+          ),
         ),
-      ),
-    );
-    addTearDown(client.dispose);
-
-    final token = await AuthService(client).login(
-      email: 'user@example.test',
-      password: 'password',
-      expectedRole: AppRole.user,
-    );
-    client.setSession(token: token, role: AppRole.user);
-
-    expect(client.hasUserSession, isTrue);
-    expect(client.hasAdminSession, isFalse);
-  });
+      );
+      expect(client.hasToken, isFalse);
+    },
+  );
 }

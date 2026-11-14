@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/widgets/admin_login_form.dart';
+import '../../auth/widgets/admin_access_required.dart';
 import '../models/user.dart';
 import '../services/user_service.dart';
 import '../widgets/user_list_widgets.dart';
@@ -43,14 +43,6 @@ class _UsersPageState extends State<UsersPage> {
       _authorizedSessionRevision = widget.apiClient.sessionRevision;
       _loadUsers(page: 0);
     }
-  }
-
-  void _onAuthenticated() {
-    setState(() {
-      _isAuthenticated = true;
-      _authorizedSessionRevision = widget.apiClient.sessionRevision;
-    });
-    _loadUsers(page: 0);
   }
 
   bool get _canUseAdminSession =>
@@ -145,10 +137,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Widget _buildLoginForm() {
-    return AdminLoginForm(
-      apiClient: widget.apiClient,
-      onAuthenticated: _onAuthenticated,
-    );
+    return const AdminAccessRequired();
   }
 
   Widget _buildPagination(PageResponse<User> page) {

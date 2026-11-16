@@ -934,11 +934,29 @@ abstract class AppLocalizations {
   /// **'Não foi possível verificar os dados. Tente novamente.'**
   String get recoveryRequestFailed;
 
-  /// No description provided for @recoveryResetUnavailable.
+  /// No description provided for @recoveryResetButton.
   ///
   /// In pt, this message translates to:
-  /// **'A redefinição está bloqueada até que o backend confirme uma autorização segura.'**
-  String get recoveryResetUnavailable;
+  /// **'Redefinir senha'**
+  String get recoveryResetButton;
+
+  /// No description provided for @recoverySuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha redefinida com sucesso. Faça login para continuar.'**
+  String get recoverySuccess;
+
+  /// No description provided for @recoveryAdminBlocked.
+  ///
+  /// In pt, this message translates to:
+  /// **'A recuperação de senha não está disponível para contas de administrador. Volte ao login.'**
+  String get recoveryAdminBlocked;
+
+  /// No description provided for @recoveryResetFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível redefinir a senha. Tente novamente.'**
+  String get recoveryResetFailed;
 
   /// No description provided for @authFlowNotAvailable.
   ///

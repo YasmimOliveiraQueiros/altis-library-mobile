@@ -23,10 +23,19 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
   final _confirmPasswordController = TextEditingController();
   late final PasswordRecoveryService _recoveryService;
   bool _isVerifying = false;
+  bool _isResetting = false;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  bool _showPasswordFields = false;
+  bool _adminBlocked = false;
+  String? _verifiedEmail;
+  String? _verifiedCpf;
   PasswordRecoveryFailure? _failure;
+  String? _backendMessage;
+  bool _failureIsReset = false;
+
+  bool get _identityVerified =>
+      _verifiedEmail == _emailController.text.trim() &&
+      _verifiedCpf == _cpfController.text.replaceAll(RegExp(r'\D'), '');
 
   @override
   void initState() {
@@ -35,33 +44,123 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
   }
 
   Future<void> _verifyIdentity() async {
-    if (_isVerifying || !_formKey.currentState!.validate()) return;
+    if (_isVerifying ||
+        _isResetting ||
+        _identityVerified ||
+        !_formKey.currentState!.validate()) {
+      return;
+    }
 
     setState(() {
       _isVerifying = true;
       _failure = null;
+      _backendMessage = null;
+      _adminBlocked = false;
+      _failureIsReset = false;
     });
 
     try {
-      await _recoveryService.verify(
-        email: _emailController.text.trim(),
-        cpf: _cpfController.text.replaceAll(RegExp(r'\D'), ''),
-      );
+      final email = _emailController.text.trim();
+      final cpf = _cpfController.text.replaceAll(RegExp(r'\D'), '');
+      await _recoveryService.verify(email: email, cpf: cpf);
       if (!mounted) return;
-      setState(() => _showPasswordFields = true);
+      setState(() {
+        _verifiedEmail = email;
+        _verifiedCpf = cpf;
+      });
     } on PasswordRecoveryException catch (error) {
       if (!mounted) return;
-      setState(() => _failure = error.failure);
+      setState(() {
+        _failure = error.failure == PasswordRecoveryFailure.adminBlocked
+            ? null
+            : error.failure;
+        _backendMessage = error.displayMessage;
+        _adminBlocked = error.failure == PasswordRecoveryFailure.adminBlocked;
+      });
     } finally {
       if (mounted) setState(() => _isVerifying = false);
     }
   }
 
-  String _failureMessage(AppLocalizations l10n) => switch (_failure!) {
-    PasswordRecoveryFailure.connection => l10n.recoveryConnectionFailed,
-    PasswordRecoveryFailure.invalidResponse => l10n.recoveryInvalidResponse,
-    PasswordRecoveryFailure.requestFailed => l10n.recoveryRequestFailed,
-  };
+  Future<void> _resetPassword() async {
+    if (_isVerifying ||
+        _isResetting ||
+        !_identityVerified ||
+        !_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isResetting = true;
+      _failure = null;
+      _backendMessage = null;
+      _failureIsReset = false;
+    });
+
+    try {
+      await _recoveryService.reset(
+        email: _verifiedEmail!,
+        cpf: _verifiedCpf!,
+        newPassword: _passwordController.text,
+        confirmPassword: _confirmPasswordController.text,
+      );
+      if (!mounted) return;
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.recoverySuccess)),
+      );
+      Navigator.of(context).pop();
+    } on PasswordRecoveryException catch (error) {
+      if (!mounted) return;
+      final adminBlocked =
+          error.failure == PasswordRecoveryFailure.adminBlocked;
+      setState(() {
+        _failure = adminBlocked ? null : error.failure;
+        _backendMessage = adminBlocked ? null : error.displayMessage;
+        _failureIsReset = !adminBlocked;
+        _adminBlocked = adminBlocked;
+        if (adminBlocked) {
+          _verifiedEmail = null;
+          _verifiedCpf = null;
+          _passwordController.clear();
+          _confirmPasswordController.clear();
+        }
+      });
+    } finally {
+      if (mounted) setState(() => _isResetting = false);
+    }
+  }
+
+  String _failureMessage(AppLocalizations l10n) {
+    if (_backendMessage != null) return _backendMessage!;
+    return switch (_failure!) {
+      PasswordRecoveryFailure.connection => l10n.recoveryConnectionFailed,
+      PasswordRecoveryFailure.timeout => l10n.apiTimeout,
+      PasswordRecoveryFailure.invalidResponse => l10n.recoveryInvalidResponse,
+      PasswordRecoveryFailure.requestFailed =>
+        _failureIsReset ? l10n.recoveryResetFailed : l10n.recoveryRequestFailed,
+      PasswordRecoveryFailure.adminBlocked => l10n.recoveryAdminBlocked,
+    };
+  }
+
+  void _identityChanged() {
+    if ((_verifiedEmail == null && !_adminBlocked) || _identityVerified) {
+      return;
+    }
+    setState(() {
+      _verifiedEmail = null;
+      _verifiedCpf = null;
+      _adminBlocked = false;
+      _failure = null;
+      _backendMessage = null;
+      _failureIsReset = false;
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+    });
+  }
+
+  void _backToLogin() => Navigator.of(context).pop();
 
   String? _validateEmail(String? value, AppLocalizations l10n) {
     final email = value?.trim() ?? '';
@@ -191,7 +290,8 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                               TextFormField(
                                 key: const ValueKey('recovery-email'),
                                 controller: _emailController,
-                                enabled: !_showPasswordFields,
+                                enabled: !_isVerifying && !_isResetting,
+                                onChanged: (_) => _identityChanged(),
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) =>
@@ -206,7 +306,8 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                               TextFormField(
                                 key: const ValueKey('recovery-cpf'),
                                 controller: _cpfController,
-                                enabled: !_showPasswordFields,
+                                enabled: !_isVerifying && !_isResetting,
+                                onChanged: (_) => _identityChanged(),
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.done,
                                 inputFormatters: [CpfInputFormatter()],
@@ -218,12 +319,21 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                   hintText: '000.000.000-00',
                                 ),
                               ),
-                              if (_showPasswordFields) ...[
+                              if (_adminBlocked) ...[
+                                const SizedBox(height: 16),
+                                Text(
+                                  l10n.recoveryAdminBlocked,
+                                  key: const ValueKey('recovery-admin-blocked'),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                              if (_identityVerified) ...[
                                 const SizedBox(height: 16),
                                 TextFormField(
                                   key: const ValueKey('recovery-password'),
                                   controller: _passwordController,
                                   obscureText: !_isPasswordVisible,
+                                  enabled: !_isResetting,
                                   validator: (value) => (value ?? '').isEmpty
                                       ? l10n.requiredField
                                       : null,
@@ -254,6 +364,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                   ),
                                   controller: _confirmPasswordController,
                                   obscureText: !_isConfirmPasswordVisible,
+                                  enabled: !_isResetting,
                                   validator: (value) {
                                     if ((value ?? '').isEmpty) {
                                       return l10n.requiredField;
@@ -283,15 +394,6 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  l10n.recoveryResetUnavailable,
-                                  key: const ValueKey('recovery-reset-blocked'),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                ),
                               ],
                               if (_failure != null) ...[
                                 const SizedBox(height: 12),
@@ -308,14 +410,19 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                               SizedBox(
                                 height: 48,
                                 child: FilledButton(
-                                  onPressed: _isVerifying || _showPasswordFields
+                                  key: const ValueKey('recovery-submit'),
+                                  onPressed: _isVerifying || _isResetting
                                       ? null
+                                      : _adminBlocked
+                                      ? _backToLogin
+                                      : _identityVerified
+                                      ? _resetPassword
                                       : _verifyIdentity,
                                   style: FilledButton.styleFrom(
                                     backgroundColor: AppTheme.primaryColor,
                                     shape: const RoundedRectangleBorder(),
                                   ),
-                                  child: _isVerifying
+                                  child: _isVerifying || _isResetting
                                       ? const SizedBox(
                                           height: 20,
                                           width: 20,
@@ -324,7 +431,13 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                             color: Colors.white,
                                           ),
                                         )
-                                      : Text(l10n.confirm),
+                                      : Text(
+                                          _identityVerified
+                                              ? l10n.recoveryResetButton
+                                              : _adminBlocked
+                                              ? l10n.backToLogin
+                                              : l10n.confirm,
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 16),

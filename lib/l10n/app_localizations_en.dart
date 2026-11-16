@@ -446,8 +446,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Could not verify the information. Please try again.';
 
   @override
-  String get recoveryResetUnavailable =>
-      'Password reset is blocked until the backend confirms secure authorization.';
+  String get recoveryResetButton => 'Reset password';
+
+  @override
+  String get recoverySuccess =>
+      'Password reset successfully. Sign in to continue.';
+
+  @override
+  String get recoveryAdminBlocked =>
+      'Password recovery is not available for administrator accounts. Return to sign in.';
+
+  @override
+  String get recoveryResetFailed =>
+      'Could not reset the password. Please try again.';
 
   @override
   String get authFlowNotAvailable =>

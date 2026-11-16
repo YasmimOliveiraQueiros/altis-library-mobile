@@ -452,8 +452,19 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo verificar la información. Inténtalo de nuevo.';
 
   @override
-  String get recoveryResetUnavailable =>
-      'El restablecimiento está bloqueado hasta que el backend confirme una autorización segura.';
+  String get recoveryResetButton => 'Restablecer contraseña';
+
+  @override
+  String get recoverySuccess =>
+      'Contraseña restablecida correctamente. Inicia sesión para continuar.';
+
+  @override
+  String get recoveryAdminBlocked =>
+      'La recuperación de contraseña no está disponible para cuentas de administrador. Vuelve al inicio de sesión.';
+
+  @override
+  String get recoveryResetFailed =>
+      'No se pudo restablecer la contraseña. Inténtalo de nuevo.';
 
   @override
   String get authFlowNotAvailable =>

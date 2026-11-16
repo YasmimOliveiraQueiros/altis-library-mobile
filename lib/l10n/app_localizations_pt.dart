@@ -449,8 +449,19 @@ class AppLocalizationsPt extends AppLocalizations {
       'Não foi possível verificar os dados. Tente novamente.';
 
   @override
-  String get recoveryResetUnavailable =>
-      'A redefinição está bloqueada até que o backend confirme uma autorização segura.';
+  String get recoveryResetButton => 'Redefinir senha';
+
+  @override
+  String get recoverySuccess =>
+      'Senha redefinida com sucesso. Faça login para continuar.';
+
+  @override
+  String get recoveryAdminBlocked =>
+      'A recuperação de senha não está disponível para contas de administrador. Volte ao login.';
+
+  @override
+  String get recoveryResetFailed =>
+      'Não foi possível redefinir a senha. Tente novamente.';
 
   @override
   String get authFlowNotAvailable =>

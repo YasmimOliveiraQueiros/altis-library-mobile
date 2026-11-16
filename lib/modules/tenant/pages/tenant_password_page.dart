@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../users/services/user_service.dart';
@@ -80,21 +77,33 @@ class _TenantPasswordPageState extends State<TenantPasswordPage> {
         newPassword: _newPasswordController.text,
         confirmPassword: _confirmPasswordController.text,
       );
-      if (mounted && _hasUserSession) Navigator.pop(context, true);
+      if (mounted && _hasUserSession) {
+        AppNavigationShell.logout(context, widget.apiClient);
+      }
     } on UserRequestException catch (error) {
       if (!mounted || !_hasUserSession) return;
       setState(() {
         final l10n = AppLocalizations.of(context)!;
-        _saveError = error.statusCode == 400 || error.statusCode == 422
-            ? l10n.tenantPasswordValidationFailed
-            : l10n.tenantPasswordChangeFailed;
+        _saveError = error.statusCode == 400
+            ? apiHttpErrorMessage(
+                error,
+                l10n.tenantPasswordValidationFailed,
+                forbiddenFallback: l10n.accessDenied,
+              )
+            : apiHttpErrorMessage(
+                error,
+                l10n.tenantPasswordChangeFailed,
+                forbiddenFallback: l10n.accessDenied,
+              );
       });
-    } on SocketException {
-      _setConnectionError();
-    } on http.ClientException {
-      _setConnectionError();
-    } on TimeoutException {
-      _setConnectionError();
+    } on ApiTransportException catch (error) {
+      if (!mounted || !_hasUserSession) return;
+      setState(() {
+        _saveError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+      });
     } catch (_) {
       if (!mounted || !_hasUserSession) return;
       setState(() {
@@ -107,13 +116,6 @@ class _TenantPasswordPageState extends State<TenantPasswordPage> {
         });
       }
     }
-  }
-
-  void _setConnectionError() {
-    if (!mounted || !_hasUserSession) return;
-    setState(() {
-      _saveError = AppLocalizations.of(context)!.tenantConnectionFailed;
-    });
   }
 
   Widget _passwordField({

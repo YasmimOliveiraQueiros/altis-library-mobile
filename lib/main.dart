@@ -36,6 +36,35 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final ApiClient _apiClient = widget.apiClient ?? ApiClient();
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  int _handledSessionExpiration = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _apiClient.sessionExpirations.addListener(_handleSessionExpiration);
+  }
+
+  void _handleSessionExpiration() {
+    final expiration = _apiClient.sessionExpirations.value;
+    if (expiration == _handledSessionExpiration) return;
+    _handledSessionExpiration = expiration;
+
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null) return;
+    navigator.pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = _navigatorKey.currentContext;
+      if (context == null || !mounted) return;
+      final localizations = AppLocalizations.of(context);
+      if (localizations == null) return;
+      _scaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(content: Text(localizations.sessionExpired)),
+      );
+    });
+  }
 
   void _openHome(BuildContext context) {
     Navigator.of(context)
@@ -137,6 +166,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
+      scaffoldMessengerKey: _scaffoldMessengerKey,
       title: 'Altis+ Biblioteca',
       debugShowCheckedModeBanner: false,
       locale: widget.locale,
@@ -155,6 +186,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
+    _apiClient.sessionExpirations.removeListener(_handleSessionExpiration);
     if (widget.apiClient == null) _apiClient.dispose();
     super.dispose();
   }

@@ -92,6 +92,9 @@ void main() {
     expect(client.hasToken, isFalse);
     expect(client.role, isNull);
     expect(find.text('Bem-vindo de volta!'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
   });
 
   testWidgets('USER menu contains only tenant actions and preserves session', (

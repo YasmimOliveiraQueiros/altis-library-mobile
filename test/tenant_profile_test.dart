@@ -4,6 +4,7 @@ import 'package:altis_library_mobile/core/models/app_role.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/core/theme/app_theme.dart';
 import 'package:altis_library_mobile/l10n/app_localizations.dart';
+import 'package:altis_library_mobile/main.dart';
 import 'package:altis_library_mobile/modules/tenant/pages/tenant_dashboard_page.dart';
 import 'package:altis_library_mobile/modules/tenant/pages/tenant_password_page.dart';
 import 'package:altis_library_mobile/modules/tenant/pages/tenant_profile_page.dart';
@@ -60,7 +61,10 @@ void main() {
       final client = ApiClient(
         client: MockClient((request) async {
           requests.add(request);
-          return http.Response('', 200);
+          return http.Response(
+            '',
+            request.url.path == '/users/me/password' ? 204 : 200,
+          );
         }),
       );
       client.setSession(token: 'user-jwt', role: AppRole.user);
@@ -287,7 +291,7 @@ void main() {
     expect(find.text('Perfil atualizado com sucesso.'), findsNothing);
   });
 
-  testWidgets('password form validates confirmation and accepts empty 200', (
+  testWidgets('password form validates confirmation and accepts empty 204', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(800, 1200);
@@ -307,7 +311,7 @@ void main() {
         if (request.method == 'PATCH' &&
             request.url.path == '/users/me/password') {
           passwordRequest = request;
-          return http.Response('', 200);
+          return http.Response('', 204);
         }
         return http.Response('', 404);
       }),
@@ -315,9 +319,13 @@ void main() {
     client.setSession(token: 'user-jwt', role: AppRole.user);
     addTearDown(client.dispose);
 
-    await tester.pumpWidget(_app(TenantDashboardPage(apiClient: client)));
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Alterar senha'));
+    await tester.tap(find.byTooltip('Abrir menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Alterar Senha'));
     await tester.pumpAndSettle();
 
     final fields = [
@@ -365,14 +373,20 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(passwordRequest?.url.path, '/users/me/password');
+    expect(passwordRequest?.headers['authorization'], 'Bearer user-jwt');
     expect(jsonDecode(passwordRequest!.body), {
       'currentPassword': 'current-secret',
       'newPassword': 'new-secret-123',
       'confirmPassword': 'new-secret-123',
     });
-    expect(find.text('Senha alterada com sucesso.'), findsOneWidget);
+    expect(client.hasToken, isFalse);
+    expect(client.role, isNull);
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
     expect(find.text('current-secret'), findsNothing);
     expect(find.text('new-secret-123'), findsNothing);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
   });
 
   testWidgets('password backend errors are shown without response details', (
@@ -421,11 +435,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text(
-        'Não foi possível alterar a senha. Confira a senha atual e tente novamente.',
-      ),
+      find.text('Acesso negado. Você não tem permissão para esta ação.'),
       findsOneWidget,
     );
+    expect(client.hasUserSession, isTrue);
     expect(find.text('private backend detail'), findsNothing);
     final passwordFields = tester
         .widgetList<EditableText>(find.byType(EditableText))
@@ -464,7 +477,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.text('Não foi possível conectar à API. Verifique a conexão.'),
+        find.text('Não foi possível conectar à API. Verifique sua conexão.'),
         findsOneWidget,
       );
       expect(find.text('private connection detail'), findsNothing);

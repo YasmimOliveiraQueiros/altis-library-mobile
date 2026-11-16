@@ -155,6 +155,91 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('protected 401 clears session and returns to Login', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient((_) async => http.Response('', 401)),
+    );
+    client.setSession(token: 'admin-jwt', role: AppRole.admin);
+    addTearDown(client.dispose);
+
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(client.hasToken, isFalse);
+    expect(client.role, isNull);
+    expect(client.sessionExpirations.value, 1);
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
+    expect(find.text('Sua sessão expirou. Entre novamente.'), findsOneWidget);
+    expect(
+      Navigator.of(tester.element(find.byType(LoginPage))).canPop(),
+      isFalse,
+    );
+
+    tester
+        .state<ScaffoldMessengerState>(find.byType(ScaffoldMessenger))
+        .hideCurrentSnackBar();
+    await tester.pumpAndSettle();
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
+    expect(find.text('Visão geral do sistema'), findsNothing);
+  });
+
+  testWidgets('protected 403 shows access denied and preserves session', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient((_) async => http.Response('', 403)),
+    );
+    client.setSession(token: 'admin-jwt', role: AppRole.admin);
+    addTearDown(client.dispose);
+
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Acesso negado. Você não tem permissão para esta ação.'),
+      findsOneWidget,
+    );
+    expect(find.byType(LoginPage), findsNothing);
+    expect(client.hasAdminSession, isTrue);
+    expect(client.sessionExpirations.value, 0);
+  });
+
+  testWidgets('public login 401 does not show a session-expired notice', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient((_) async => http.Response('', 401)),
+    );
+    addTearDown(client.dispose);
+
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('login-email')),
+      'ana@example.test',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('login-password')),
+      'wrong-password',
+    );
+    await tester.tap(find.text('Entrar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('E-mail ou senha incorretos.'), findsOneWidget);
+    expect(find.text('Sua sessão expirou. Entre novamente.'), findsNothing);
+    expect(client.sessionExpirations.value, 0);
+  });
+
   testWidgets('login form remains usable on a narrow viewport', (tester) async {
     tester.view.physicalSize = const Size(320, 540);
     tester.view.devicePixelRatio = 1;

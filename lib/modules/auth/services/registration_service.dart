@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 
 class RegistrationService {
   RegistrationService(this._apiClient);
@@ -33,75 +31,48 @@ class RegistrationService {
           'address': address,
         },
       );
-    } on http.ClientException {
-      throw const RegistrationException(RegistrationFailure.connection);
-    } on SocketException {
-      throw const RegistrationException(RegistrationFailure.connection);
+    } on ApiTransportException catch (error) {
+      throw RegistrationException(
+        error.failure == ApiTransportFailure.timeout
+            ? RegistrationFailure.timeout
+            : RegistrationFailure.connection,
+      );
     }
 
     if (response.statusCode == 201) return;
 
-    final error = _readError(response);
+    final error = ApiErrorResponse.fromResponse(response);
     if (response.statusCode == 400) {
       throw RegistrationException(
         RegistrationFailure.validation,
-        message: error.message,
-        fieldErrors: error.fieldErrors,
+        message: error?.message,
+        fieldErrors: error?.fieldErrors ?? const {},
       );
     }
     if (response.statusCode == 409) {
       final duplicateType = _duplicateType(error);
       throw RegistrationException(
         duplicateType,
-        message: error.message,
-        fieldErrors: error.fieldErrors,
+        message: error?.message,
+        fieldErrors: error?.fieldErrors ?? const {},
       );
     }
-    throw const RegistrationException(RegistrationFailure.requestFailed);
+    throw RegistrationException(
+      RegistrationFailure.requestFailed,
+      message: error?.message,
+      fieldErrors: error?.fieldErrors ?? const {},
+    );
   }
 
-  _RegistrationError _readError(http.Response response) {
-    try {
-      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
-      if (decoded is! Map<String, dynamic>) return const _RegistrationError();
-
-      final message = decoded['message'];
-      final fieldErrors = <String, String>{};
-      final rawFieldErrors = decoded['fieldErrors'];
-      if (rawFieldErrors is List) {
-        for (final entry in rawFieldErrors) {
-          if (entry is! Map<String, dynamic>) continue;
-          final field = entry['field'];
-          final fieldMessage = entry['message'];
-          if (field is String &&
-              fieldMessage is String &&
-              field.isNotEmpty &&
-              fieldMessage.isNotEmpty) {
-            fieldErrors[field] = fieldMessage;
-          }
-        }
-      }
-
-      return _RegistrationError(
-        message: message is String && message.trim().isNotEmpty
-            ? message.trim()
-            : null,
-        fieldErrors: fieldErrors,
-      );
-    } on FormatException {
-      return const _RegistrationError();
-    }
-  }
-
-  RegistrationFailure _duplicateType(_RegistrationError error) {
-    final cpfError = error.fieldErrors.containsKey('cpf');
+  RegistrationFailure _duplicateType(ApiErrorResponse? error) {
+    final cpfError = error?.fieldErrors.containsKey('cpf') ?? false;
     final emailError =
-        error.fieldErrors.containsKey('email') ||
-        error.fieldErrors.containsKey('e-mail');
+        error?.fieldErrors.containsKey('email') == true ||
+        error?.fieldErrors.containsKey('e-mail') == true;
     if (cpfError && !emailError) return RegistrationFailure.cpfConflict;
     if (emailError && !cpfError) return RegistrationFailure.emailConflict;
 
-    final message = error.message?.toLowerCase() ?? '';
+    final message = error?.message?.toLowerCase() ?? '';
     if (message.contains('cpf')) return RegistrationFailure.cpfConflict;
     if (message.contains('e-mail') || message.contains('email')) {
       return RegistrationFailure.emailConflict;
@@ -112,6 +83,7 @@ class RegistrationService {
 
 enum RegistrationFailure {
   connection,
+  timeout,
   validation,
   emailConflict,
   cpfConflict,
@@ -127,13 +99,6 @@ class RegistrationException implements Exception {
   });
 
   final RegistrationFailure failure;
-  final String? message;
-  final Map<String, String> fieldErrors;
-}
-
-class _RegistrationError {
-  const _RegistrationError({this.message, this.fieldErrors = const {}});
-
   final String? message;
   final Map<String, String> fieldErrors;
 }

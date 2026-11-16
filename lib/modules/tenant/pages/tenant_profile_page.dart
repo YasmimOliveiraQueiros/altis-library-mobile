@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../users/models/user.dart';
@@ -60,6 +57,25 @@ class _TenantProfilePageState extends State<TenantProfilePage> {
         _emailController.text = user.email;
         _phoneController.text = user.phone;
         _addressController.text = user.address;
+        _isLoading = false;
+      });
+    } on ApiHttpException catch (error) {
+      if (!mounted || !_hasUserSession) return;
+      setState(() {
+        _loadError = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.tenantProfileLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted || !_hasUserSession) return;
+      setState(() {
+        _loadError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
         _isLoading = false;
       });
     } catch (_) {
@@ -121,17 +137,27 @@ class _TenantProfilePageState extends State<TenantProfilePage> {
       setState(() {
         final l10n = AppLocalizations.of(context)!;
         _saveError = switch (error.statusCode) {
-          400 || 422 => l10n.tenantProfileValidationFailed,
-          409 => l10n.tenantProfileConflict,
-          _ => l10n.tenantProfileSaveFailed,
+          400 => apiHttpErrorMessage(
+            error,
+            l10n.tenantProfileValidationFailed,
+            forbiddenFallback: l10n.accessDenied,
+          ),
+          409 => error.errorResponse?.message ?? l10n.tenantProfileConflict,
+          _ => apiHttpErrorMessage(
+            error,
+            l10n.tenantProfileSaveFailed,
+            forbiddenFallback: l10n.accessDenied,
+          ),
         };
       });
-    } on SocketException {
-      _setConnectionError();
-    } on http.ClientException {
-      _setConnectionError();
-    } on TimeoutException {
-      _setConnectionError();
+    } on ApiTransportException catch (error) {
+      if (!mounted || !_hasUserSession) return;
+      setState(() {
+        _saveError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+      });
     } catch (_) {
       if (!mounted || !_hasUserSession) return;
       setState(() {
@@ -144,13 +170,6 @@ class _TenantProfilePageState extends State<TenantProfilePage> {
         });
       }
     }
-  }
-
-  void _setConnectionError() {
-    if (!mounted || !_hasUserSession) return;
-    setState(() {
-      _saveError = AppLocalizations.of(context)!.tenantConnectionFailed;
-    });
   }
 
   Widget _textField({

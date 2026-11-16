@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
@@ -76,6 +77,25 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
         _loansPage = results[1] as PageResponse<Loan>;
         _isLoading = false;
       });
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _loadError = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.tenantDashboardLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _loadError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+        _isLoading = false;
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -96,6 +116,25 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
       if (!mounted) return;
       setState(() {
         _loansPage = loans;
+        _isLoadingLoans = false;
+      });
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _loanError = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.tenantLoansLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoadingLoans = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _loanError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
         _isLoadingLoans = false;
       });
     } catch (_) {

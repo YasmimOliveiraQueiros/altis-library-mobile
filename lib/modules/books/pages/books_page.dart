@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
@@ -85,6 +86,25 @@ class _BooksPageState extends State<BooksPage> {
       if (_publishers.isEmpty && response.content.isNotEmpty) {
         _loadPublisherNames();
       }
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.booksLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+        _isLoading = false;
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -111,6 +131,23 @@ class _BooksPageState extends State<BooksPage> {
           _publisherNamesError = null;
         });
       }
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _publisherNamesError = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.publishersLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _publisherNamesError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+      });
     } catch (_) {
       if (mounted) {
         setState(() {
@@ -178,6 +215,24 @@ class _BooksPageState extends State<BooksPage> {
       await _bookService.deleteBook(book.id);
       if (!mounted) return;
       await _loadBooks(page: _booksPage?.number ?? 0);
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            apiHttpErrorMessage(
+              error,
+              l10n.bookDeleteFailed,
+              forbiddenFallback: l10n.accessDenied,
+            ),
+          ),
+        ),
+      );
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(apiTransportErrorMessage(l10n, error))),
+      );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)

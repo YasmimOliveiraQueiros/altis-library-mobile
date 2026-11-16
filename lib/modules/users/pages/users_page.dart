@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
@@ -70,6 +71,25 @@ class _UsersPageState extends State<UsersPage> {
         _errorMessage = null;
         _isLoading = false;
       });
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.usersLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+        _isLoading = false;
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -124,6 +144,24 @@ class _UsersPageState extends State<UsersPage> {
       await _userService.setUserActive(user.id, active: active);
       if (!mounted) return;
       await _loadUsers(page: _usersPage?.number ?? 0);
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            apiHttpErrorMessage(
+              error,
+              l10n.statusUpdateFailed,
+              forbiddenFallback: l10n.accessDenied,
+            ),
+          ),
+        ),
+      );
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(apiTransportErrorMessage(l10n, error))),
+      );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)

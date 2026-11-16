@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/services/http/api_errors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../publishers/models/publisher.dart';
 import '../../publishers/services/publisher_service.dart';
@@ -74,6 +75,25 @@ class _BookFormPageState extends State<BookFormPage> {
         _publishers = publishers;
         _isLoadingPublishers = false;
       });
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _publisherLoadError = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.publishersLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoadingPublishers = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _publisherLoadError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+        _isLoadingPublishers = false;
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -129,13 +149,29 @@ class _BookFormPageState extends State<BookFormPage> {
         await widget.service.createBook(data);
       }
       if (mounted) Navigator.pop(context, true);
-    } on BookRequestException catch (error) {
+    } on ApiHttpException catch (error) {
       if (!mounted) return;
       setState(() {
         final l10n = AppLocalizations.of(context)!;
-        _saveError = error.statusCode == 400 || error.statusCode == 422
-            ? l10n.bookValidationFailed
-            : l10n.bookSaveFailed;
+        _saveError = error.statusCode == 400
+            ? apiHttpErrorMessage(
+                error,
+                l10n.bookValidationFailed,
+                forbiddenFallback: l10n.accessDenied,
+              )
+            : apiHttpErrorMessage(
+                error,
+                l10n.bookSaveFailed,
+                forbiddenFallback: l10n.accessDenied,
+              );
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _saveError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
       });
     } catch (_) {
       if (!mounted) return;

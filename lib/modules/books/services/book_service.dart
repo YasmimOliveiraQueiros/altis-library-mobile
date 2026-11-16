@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:altis_library_mobile/core/models/page_response.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
+import 'package:altis_library_mobile/core/services/http/api_errors.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/book.dart';
 
@@ -31,7 +33,7 @@ class BookService {
     final response = await _apiClient.get(endpoint);
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao buscar livros: HTTP ${response.statusCode}');
+      throw ApiHttpException(response);
     }
 
     final json =
@@ -56,7 +58,7 @@ class BookService {
     final response = await _apiClient.get('/books/$id');
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao buscar livro: HTTP ${response.statusCode}');
+      throw ApiHttpException(response);
     }
 
     return Book.fromJson(
@@ -66,28 +68,26 @@ class BookService {
 
   Future<void> createBook(BookData book) async {
     final response = await _apiClient.post('/books', body: book.toJson());
-    _checkWriteResponse(response.statusCode);
+    _checkWriteResponse(response, 201);
   }
 
   Future<void> updateBook(int id, BookData book) async {
     final response = await _apiClient.put('/books/$id', body: book.toJson());
-    _checkWriteResponse(response.statusCode);
+    _checkWriteResponse(response, 200);
   }
 
   Future<void> deleteBook(int id) async {
     final response = await _apiClient.delete('/books/$id');
-    _checkWriteResponse(response.statusCode);
+    _checkWriteResponse(response, 204);
   }
 
-  void _checkWriteResponse(int statusCode) {
-    if (statusCode < 200 || statusCode >= 300) {
-      throw BookRequestException(statusCode);
+  void _checkWriteResponse(http.Response response, int expectedStatus) {
+    if (response.statusCode != expectedStatus) {
+      throw BookRequestException(response);
     }
   }
 }
 
-class BookRequestException implements Exception {
-  const BookRequestException(this.statusCode);
-
-  final int statusCode;
+class BookRequestException extends ApiHttpException {
+  BookRequestException(super.response);
 }

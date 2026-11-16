@@ -79,15 +79,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
-  String _failureMessage(AppLocalizations l10n) => switch (_failure!.failure) {
-    RegistrationFailure.connection => l10n.registrationConnectionFailed,
-    RegistrationFailure.validation =>
-      _failure!.message ?? l10n.registrationValidationFailed,
-    RegistrationFailure.emailConflict => l10n.registrationEmailConflict,
-    RegistrationFailure.cpfConflict => l10n.registrationCpfConflict,
-    RegistrationFailure.conflict => l10n.registrationConflict,
-    RegistrationFailure.requestFailed => l10n.registrationRequestFailed,
-  };
+  String _failureMessage(AppLocalizations l10n) {
+    if (_failure!.message != null) return _failure!.message!;
+    return switch (_failure!.failure) {
+      RegistrationFailure.connection => l10n.apiConnectionFailed,
+      RegistrationFailure.timeout => l10n.apiTimeout,
+      RegistrationFailure.validation => l10n.registrationValidationFailed,
+      RegistrationFailure.emailConflict => l10n.registrationEmailConflict,
+      RegistrationFailure.cpfConflict => l10n.registrationCpfConflict,
+      RegistrationFailure.conflict => l10n.registrationConflict,
+      RegistrationFailure.requestFailed => l10n.registrationRequestFailed,
+    };
+  }
 
   Future<void> _selectBirthDate() async {
     if (_isRegistering) return;

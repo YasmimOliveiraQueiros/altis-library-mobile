@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:altis_library_mobile/core/models/page_response.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
+import 'package:altis_library_mobile/core/services/http/api_errors.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/publisher.dart';
@@ -15,10 +16,14 @@ class PublisherService {
     String? search,
     int page = 0,
     int size = 10,
+    String sortBy = 'id',
+    String sortDirection = 'DESC',
   }) async {
     final queryParameters = <String, String>{
       'page': page.toString(),
       'size': size.toString(),
+      'sortBy': sortBy,
+      'sortDirection': sortDirection,
       if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
     };
     final endpoint = Uri(
@@ -28,7 +33,7 @@ class PublisherService {
     final response = await _apiClient.get(endpoint);
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao buscar editoras: HTTP ${response.statusCode}');
+      throw ApiHttpException(response);
     }
 
     final json =
@@ -41,7 +46,7 @@ class PublisherService {
       '/publishers',
       body: publisher.toJson(),
     );
-    _checkSaveResponse(response);
+    _checkResponse(response, 201);
   }
 
   Future<void> updatePublisher(int id, PublisherData publisher) async {
@@ -49,26 +54,22 @@ class PublisherService {
       '/publishers/$id',
       body: publisher.toJson(),
     );
-    _checkSaveResponse(response);
+    _checkResponse(response, 200);
   }
 
   Future<void> deletePublisher(int id) async {
     final response = await _apiClient.delete('/publishers/$id');
 
-    if (response.statusCode != 200) {
-      throw Exception('Erro ao excluir editora: HTTP ${response.statusCode}');
-    }
+    _checkResponse(response, 204);
   }
 
-  void _checkSaveResponse(http.Response response) {
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw PublisherSaveException(response.statusCode);
+  void _checkResponse(http.Response response, int expectedStatus) {
+    if (response.statusCode != expectedStatus) {
+      throw PublisherSaveException(response);
     }
   }
 }
 
-class PublisherSaveException implements Exception {
-  const PublisherSaveException(this.statusCode);
-
-  final int statusCode;
+class PublisherSaveException extends ApiHttpException {
+  PublisherSaveException(super.response);
 }

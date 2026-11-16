@@ -29,6 +29,7 @@ void main() {
     expect(client.hasUserSession, isFalse);
     expect(request?.method, 'POST');
     expect(request?.url.path, '/auth/login');
+    expect(request?.headers.containsKey('authorization'), isFalse);
     expect(jsonDecode(request!.body), {
       'email': 'admin@example.test',
       'password': 'secret',
@@ -54,12 +55,68 @@ void main() {
     expect(client.hasAdminSession, isFalse);
   });
 
-  test('401 and 403 are reported as invalid credentials', () async {
-    for (final status in [401, 403]) {
+  test(
+    '401 is invalid credentials and 403 is insufficient permission',
+    () async {
+      final unauthorizedClient = ApiClient(
+        client: MockClient((_) async => http.Response('', 401)),
+      );
+      addTearDown(unauthorizedClient.dispose);
+      await expectLater(
+        AuthService(unauthorizedClient)
+            .login(email: 'user@example.test', password: 'wrong'),
+        throwsA(
+          isA<AuthException>().having(
+            (error) => error.failure,
+            'failure',
+            AuthFailure.invalidCredentials,
+          ),
+        ),
+      );
+
+      final forbiddenClient = ApiClient(
+        client: MockClient(
+          (_) async => http.Response.bytes(
+            utf8.encode(jsonEncode({'message': 'Permissão insuficiente.'})),
+            403,
+            headers: {'content-type': 'application/json; charset=utf-8'},
+          ),
+        ),
+      );
+      addTearDown(forbiddenClient.dispose);
+      await expectLater(
+        AuthService(forbiddenClient)
+            .login(email: 'user@example.test', password: 'wrong'),
+        throwsA(
+          isA<AuthException>()
+              .having(
+                (error) => error.failure,
+                'failure',
+                AuthFailure.forbidden,
+              )
+              .having(
+                (error) => error.message,
+                'message',
+                'Permissão insuficiente.',
+              ),
+        ),
+      );
+      expect(forbiddenClient.hasToken, isFalse);
+    },
+  );
+
+  test(
+    'public login failure does not invalidate an existing session',
+    () async {
+      http.Request? request;
       final client = ApiClient(
-        client: MockClient((_) async => http.Response('', status)),
+        client: MockClient((value) async {
+          request = value;
+          return http.Response('', 401);
+        }),
       );
       addTearDown(client.dispose);
+      client.setSession(token: 'existing-jwt', role: AppRole.user);
 
       await expectLater(
         AuthService(client)
@@ -72,9 +129,12 @@ void main() {
           ),
         ),
       );
-      expect(client.hasToken, isFalse);
-    }
-  });
+
+      expect(request?.headers.containsKey('authorization'), isFalse);
+      expect(client.hasUserSession, isTrue);
+      expect(client.sessionExpirations.value, 0);
+    },
+  );
 
   test(
     'login rejects malformed responses without creating a session',

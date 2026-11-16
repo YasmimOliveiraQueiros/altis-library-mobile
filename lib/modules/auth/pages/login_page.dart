@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoggingIn = false;
   bool _isPasswordVisible = false;
   AuthFailure? _failure;
+  String? _backendMessage;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoggingIn = true;
       _failure = null;
+      _backendMessage = null;
     });
 
     try {
@@ -53,18 +55,26 @@ class _LoginPageState extends State<LoginPage> {
       widget.onAuthenticated();
     } on AuthException catch (error) {
       if (!mounted) return;
-      setState(() => _failure = error.failure);
+      setState(() {
+        _failure = error.failure;
+        _backendMessage = error.message;
+      });
     } finally {
       if (mounted) setState(() => _isLoggingIn = false);
     }
   }
 
-  String _failureMessage(AppLocalizations l10n) => switch (_failure!) {
-    AuthFailure.invalidCredentials => l10n.loginInvalidCredentials,
-    AuthFailure.invalidResponse => l10n.loginInvalidResponse,
-    AuthFailure.connection => l10n.loginConnectionFailed,
-    AuthFailure.requestFailed => l10n.loginRequestFailed,
-  };
+  String _failureMessage(AppLocalizations l10n) {
+    if (_backendMessage != null) return _backendMessage!;
+    return switch (_failure!) {
+      AuthFailure.invalidCredentials => l10n.loginInvalidCredentials,
+      AuthFailure.forbidden => l10n.loginForbidden,
+      AuthFailure.invalidResponse => l10n.loginInvalidResponse,
+      AuthFailure.connection => l10n.apiConnectionFailed,
+      AuthFailure.timeout => l10n.apiTimeout,
+      AuthFailure.requestFailed => l10n.loginRequestFailed,
+    };
+  }
 
   @override
   void dispose() {

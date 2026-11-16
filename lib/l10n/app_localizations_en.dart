@@ -347,7 +347,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginInvalidCredentials => 'Incorrect email or password.';
 
   @override
+  String get loginForbidden => 'You do not have permission to sign in.';
+
+  @override
+  String get accessDenied =>
+      'Access denied. You do not have permission to perform this action.';
+
+  @override
+  String get sessionExpired =>
+      'Your session has expired. Please sign in again.';
+
+  @override
   String get loginInvalidResponse => 'The authentication response is invalid.';
+
+  @override
+  String get apiConnectionFailed =>
+      'Could not connect to the API. Check your connection.';
+
+  @override
+  String get apiTimeout => 'The request timed out. Please try again.';
 
   @override
   String get loginConnectionFailed =>

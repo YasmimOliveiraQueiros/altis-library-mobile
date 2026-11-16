@@ -43,10 +43,10 @@ void main() {
             );
           }
           if (request.method == 'DELETE') {
-            return http.Response('', 200);
+            return http.Response('', 204);
           }
           if (request.method == 'POST') {
-            return http.Response('', 200);
+            return http.Response('', 201);
           }
           return http.Response.bytes(
             utf8.encode(jsonEncode(publisherJson)),
@@ -87,6 +87,8 @@ void main() {
         expect(requests[0].url.queryParameters, {
           'page': '1',
           'size': '20',
+          'sortBy': 'id',
+          'sortDirection': 'DESC',
           'search': 'Altis',
         });
         expect(requests[1].url.path, '/publishers');
@@ -104,13 +106,13 @@ void main() {
   );
 
   test(
-    'create and update accept 201 and 204 without decoding response bodies',
+    'publisher writes accept their endpoint status without decoding bodies',
     () async {
       final requests = <http.Request>[];
       final client = ApiClient(
         client: MockClient((request) async {
           requests.add(request);
-          return http.Response('', request.method == 'POST' ? 201 : 204);
+          return http.Response('', request.method == 'POST' ? 201 : 200);
         }),
       );
       final service = PublisherService(client);
@@ -138,11 +140,14 @@ void main() {
   );
 
   test(
-    'save failures retain the HTTP status without exposing the response body',
+    'save failures retain structured HTTP errors without raw response bodies',
     () async {
       final client = ApiClient(
         client: MockClient(
-          (_) async => http.Response('private backend detail', 409),
+          (_) async => http.Response(
+            jsonEncode({'message': 'Editora vinculada a livros existentes.'}),
+            409,
+          ),
         ),
       );
       final service = PublisherService(client);
@@ -158,11 +163,13 @@ void main() {
         await expectLater(
           service.createPublisher(data),
           throwsA(
-            isA<PublisherSaveException>().having(
-              (error) => error.statusCode,
-              'statusCode',
-              409,
-            ),
+            isA<PublisherSaveException>()
+                .having((error) => error.statusCode, 'statusCode', 409)
+                .having(
+                  (error) => error.errorResponse?.message,
+                  'message',
+                  'Editora vinculada a livros existentes.',
+                ),
           ),
         );
       } finally {

@@ -760,11 +760,41 @@ abstract class AppLocalizations {
   /// **'E-mail ou senha incorretos.'**
   String get loginInvalidCredentials;
 
+  /// No description provided for @loginForbidden.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você não tem permissão para entrar.'**
+  String get loginForbidden;
+
+  /// No description provided for @accessDenied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso negado. Você não tem permissão para esta ação.'**
+  String get accessDenied;
+
+  /// No description provided for @sessionExpired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua sessão expirou. Entre novamente.'**
+  String get sessionExpired;
+
   /// No description provided for @loginInvalidResponse.
   ///
   /// In pt, this message translates to:
   /// **'A resposta de autenticação é inválida.'**
   String get loginInvalidResponse;
+
+  /// No description provided for @apiConnectionFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conectar à API. Verifique sua conexão.'**
+  String get apiConnectionFailed;
+
+  /// No description provided for @apiTimeout.
+  ///
+  /// In pt, this message translates to:
+  /// **'A solicitação excedeu o tempo limite. Tente novamente.'**
+  String get apiTimeout;
 
   /// No description provided for @loginConnectionFailed.
   ///

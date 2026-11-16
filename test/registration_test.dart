@@ -347,9 +347,7 @@ void main() {
     await _tapVisible(tester, find.text('Cadastrar'));
 
     expect(
-      find.text(
-        'Não foi possível conectar à API. Verifique sua conexão e tente novamente.',
-      ),
+      find.text('Não foi possível conectar à API. Verifique sua conexão.'),
       findsOneWidget,
     );
     expect(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/services/http/api_errors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../models/publisher.dart';
 import '../services/publisher_service.dart';
@@ -75,15 +76,31 @@ class _PublisherFormPageState extends State<PublisherFormPage> {
       } else {
         await widget.service.createPublisher(data);
       }
-    } on PublisherSaveException catch (error) {
+    } on ApiHttpException catch (error) {
       if (!mounted) return;
       setState(() {
         final l10n = AppLocalizations.of(context)!;
         _errorMessage = switch (error.statusCode) {
-          400 || 422 => l10n.publisherValidationFailed,
-          409 => l10n.publisherAlreadyExists,
-          _ => l10n.publisherSaveFailed,
+          400 => apiHttpErrorMessage(
+            error,
+            l10n.publisherValidationFailed,
+            forbiddenFallback: l10n.accessDenied,
+          ),
+          409 => error.errorResponse?.message ?? l10n.publisherAlreadyExists,
+          _ => apiHttpErrorMessage(
+            error,
+            l10n.publisherSaveFailed,
+            forbiddenFallback: l10n.accessDenied,
+          ),
         };
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
       });
     } catch (_) {
       if (!mounted) return;

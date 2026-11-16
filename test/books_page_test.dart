@@ -100,7 +100,7 @@ void main() {
               200,
             );
           }
-          return http.Response('', 200);
+          return http.Response('', request.method == 'POST' ? 201 : 200);
         }),
       );
       final bookService = BookService(client);

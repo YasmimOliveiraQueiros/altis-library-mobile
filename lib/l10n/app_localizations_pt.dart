@@ -350,7 +350,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loginInvalidCredentials => 'E-mail ou senha incorretos.';
 
   @override
+  String get loginForbidden => 'Você não tem permissão para entrar.';
+
+  @override
+  String get accessDenied =>
+      'Acesso negado. Você não tem permissão para esta ação.';
+
+  @override
+  String get sessionExpired => 'Sua sessão expirou. Entre novamente.';
+
+  @override
   String get loginInvalidResponse => 'A resposta de autenticação é inválida.';
+
+  @override
+  String get apiConnectionFailed =>
+      'Não foi possível conectar à API. Verifique sua conexão.';
+
+  @override
+  String get apiTimeout =>
+      'A solicitação excedeu o tempo limite. Tente novamente.';
 
   @override
   String get loginConnectionFailed =>

@@ -43,7 +43,7 @@ void main() {
               200,
             );
           }
-          return http.Response('', 204);
+          return http.Response('', 200);
         }),
       );
       client.setToken('test-token');

@@ -351,8 +351,26 @@ class AppLocalizationsEs extends AppLocalizations {
       'Correo electrónico o contraseña incorrectos.';
 
   @override
+  String get loginForbidden => 'No tienes permiso para iniciar sesión.';
+
+  @override
+  String get accessDenied =>
+      'Acceso denegado. No tienes permiso para realizar esta acción.';
+
+  @override
+  String get sessionExpired => 'Tu sesión ha caducado. Inicia sesión de nuevo.';
+
+  @override
   String get loginInvalidResponse =>
       'La respuesta de autenticación no es válida.';
+
+  @override
+  String get apiConnectionFailed =>
+      'No se pudo conectar con la API. Comprueba tu conexión.';
+
+  @override
+  String get apiTimeout =>
+      'La solicitud agotó el tiempo de espera. Inténtalo de nuevo.';
 
   @override
   String get loginConnectionFailed =>

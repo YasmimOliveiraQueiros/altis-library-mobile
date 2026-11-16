@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:altis_library_mobile/core/models/page_response.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
+import 'package:altis_library_mobile/core/services/http/api_errors.dart';
 
 import '../models/user.dart';
 
@@ -27,7 +28,7 @@ class UserService {
     final response = await _apiClient.get(endpoint);
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao buscar usuários: HTTP ${response.statusCode}');
+      throw UserRequestException(response);
     }
 
     final json =
@@ -39,7 +40,7 @@ class UserService {
   Future<User> getMyProfile() async {
     final response = await _apiClient.get('/users/me');
     if (response.statusCode != 200) {
-      throw UserRequestException(response.statusCode);
+      throw UserRequestException(response);
     }
 
     final json =
@@ -57,7 +58,7 @@ class UserService {
       '/users/me',
       body: {'name': name, 'email': email, 'phone': phone, 'address': address},
     );
-    _checkMyProfileResponse(response.statusCode);
+    if (response.statusCode != 200) throw UserRequestException(response);
   }
 
   Future<void> changeMyPassword({
@@ -73,13 +74,7 @@ class UserService {
         'confirmPassword': confirmPassword,
       },
     );
-    _checkMyProfileResponse(response.statusCode);
-  }
-
-  void _checkMyProfileResponse(int statusCode) {
-    if (statusCode < 200 || statusCode >= 300) {
-      throw UserRequestException(statusCode);
-    }
+    if (response.statusCode != 204) throw UserRequestException(response);
   }
 
   Future<List<User>> getAllUsers({int size = 100}) async {
@@ -98,16 +93,10 @@ class UserService {
   Future<void> setUserActive(int id, {required bool active}) async {
     final response = await _apiClient.patch('/users/$id/status?active=$active');
 
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(
-        'Erro ao atualizar situação do usuário: HTTP ${response.statusCode}',
-      );
-    }
+    if (response.statusCode != 200) throw UserRequestException(response);
   }
 }
 
-class UserRequestException implements Exception {
-  const UserRequestException(this.statusCode);
-
-  final int statusCode;
+class UserRequestException extends ApiHttpException {
+  UserRequestException(super.response);
 }

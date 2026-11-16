@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../core/models/app_role.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 
 class AuthService {
   AuthService(this._apiClient);
@@ -16,19 +17,32 @@ class AuthService {
   }) async {
     final http.Response response;
     try {
-      response = await _apiClient.post(
+      response = await _apiClient.postPublic(
         '/auth/login',
         body: {'email': email, 'password': password},
       );
-    } on http.ClientException {
-      throw const AuthException(AuthFailure.connection);
+    } on ApiTransportException catch (error) {
+      throw AuthException(
+        error.failure == ApiTransportFailure.timeout
+            ? AuthFailure.timeout
+            : AuthFailure.connection,
+      );
     }
 
-    if (response.statusCode == 401 || response.statusCode == 403) {
+    if (response.statusCode == 401) {
       throw const AuthException(AuthFailure.invalidCredentials);
     }
+    if (response.statusCode == 403) {
+      throw AuthException(
+        AuthFailure.forbidden,
+        message: ApiErrorResponse.fromResponse(response)?.message,
+      );
+    }
     if (response.statusCode != 200) {
-      throw const AuthException(AuthFailure.requestFailed);
+      throw AuthException(
+        AuthFailure.requestFailed,
+        message: ApiErrorResponse.fromResponse(response)?.displayMessage,
+      );
     }
 
     final Object? decoded;
@@ -55,13 +69,16 @@ class AuthService {
 
 enum AuthFailure {
   invalidCredentials,
+  forbidden,
   invalidResponse,
   connection,
+  timeout,
   requestFailed,
 }
 
 class AuthException implements Exception {
-  const AuthException(this.failure);
+  const AuthException(this.failure, {this.message});
 
   final AuthFailure failure;
+  final String? message;
 }

@@ -127,10 +127,11 @@ void main() {
       expect(find.text('A Biblioteca'), findsOneWidget);
       expect(find.text('Ana Silva'), findsOneWidget);
       expect(find.text('2026-03-20'), findsOneWidget);
-      for (final value in ['24', '8', '61', '9', '3']) {
+      for (final value in ['24', '8', '61', '9', '3', '21']) {
         expect(find.text(value), findsWidgets);
       }
       expect(find.text('Alugados (6)'), findsOneWidget);
+      expect(find.text('Aluguéis ativos'), findsOneWidget);
       expect(
         find.byKey(const ValueKey('dashboardMetricCard-books')),
         findsOneWidget,
@@ -140,14 +141,18 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const ValueKey('dashboardMetricCard-rented')),
+        find.byKey(const ValueKey('dashboardMetricCard-activeLoans')),
         findsOneWidget,
       );
       expect(
         find.descendant(
-          of: find.byKey(const ValueKey('dashboardMetricCard-rented')),
+          of: find.byKey(const ValueKey('dashboardMetricCard-activeLoans')),
           matching: find.text('12'),
         ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('dashboardMetricCard-returnedLoans')),
         findsOneWidget,
       );
       expect(
@@ -170,8 +175,8 @@ void main() {
         find.byKey(const ValueKey('dashboardMetricCard-publishers')),
       );
       expect(secondRect.top, firstRect.top);
-      final rentedRect = tester.getRect(
-        find.byKey(const ValueKey('dashboardMetricCard-rented')),
+      final activeLoansRect = tester.getRect(
+        find.byKey(const ValueKey('dashboardMetricCard-activeLoans')),
       );
       final usersRect = tester.getRect(
         find.byKey(const ValueKey('dashboardMetricCard-users')),
@@ -182,9 +187,9 @@ void main() {
       final overdueRect = tester.getRect(
         find.byKey(const ValueKey('dashboardMetricCard-overdue')),
       );
-      expect(rentedRect.top, greaterThan(firstRect.top));
-      expect(usersRect.top, rentedRect.top);
-      expect(pendingRect.top, greaterThan(rentedRect.top));
+      expect(activeLoansRect.top, greaterThan(firstRect.top));
+      expect(usersRect.top, activeLoansRect.top);
+      expect(pendingRect.top, greaterThan(activeLoansRect.top));
       expect(overdueRect.top, pendingRect.top);
       expect(tester.takeException(), isNull);
     });

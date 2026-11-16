@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
@@ -62,6 +63,25 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       if (!_usersLoaded) {
         try {
           users = await _userService.getAllUsers();
+        } on ApiHttpException catch (error) {
+          if (!mounted) return;
+          setState(() {
+            _errorMessage = apiHttpErrorMessage(
+              error,
+              AppLocalizations.of(context)!.dashboardLoadFailed,
+              forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+            );
+            _isLoading = false;
+          });
+        } on ApiTransportException catch (error) {
+          if (!mounted) return;
+          setState(() {
+            _errorMessage = apiTransportErrorMessage(
+              AppLocalizations.of(context)!,
+              error,
+            );
+            _isLoading = false;
+          });
         } catch (_) {
           userLoadFailed = true;
         }
@@ -72,6 +92,25 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         _users = users;
         _usersLoaded = !userLoadFailed;
         _userLoadFailed = userLoadFailed;
+        _isLoading = false;
+      });
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.dashboardLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
         _isLoading = false;
       });
     } catch (_) {
@@ -156,8 +195,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             color: Colors.teal,
           ),
           (
-            id: 'rented',
-            label: l10n.dashboardRented,
+            id: 'activeLoans',
+            label: l10n.dashboardActiveLoans,
             value: dashboard.activeLoans,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -178,6 +217,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             label: l10n.dashboardOverdueLoans,
             value: dashboard.overdueLoans,
             color: Theme.of(context).colorScheme.error,
+          ),
+          (
+            id: 'returnedLoans',
+            label: l10n.dashboardReturnedLoans,
+            value: dashboard.returnedLoans,
+            color: Colors.green,
           ),
         ];
         final usersById = {for (final user in _users) user.id: user};
@@ -210,13 +255,15 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                           if (metricsPerRow == 2) ...[
                             const SizedBox(width: 10),
                             Expanded(
-                              child: DashboardMetricCard(
-                                id: metrics[index + 1].id,
-                                label: metrics[index + 1].label,
-                                value: metrics[index + 1].value,
-                                dotColor: metrics[index + 1].color,
+                              child: index + 1 < metrics.length
+                                  ? DashboardMetricCard(
+                                      id: metrics[index + 1].id,
+                                      label: metrics[index + 1].label,
+                                      value: metrics[index + 1].value,
+                                      dotColor: metrics[index + 1].color,
+                                    )
+                                  : const SizedBox.shrink(),
                               ),
-                            ),
                           ],
                         ],
                       ),

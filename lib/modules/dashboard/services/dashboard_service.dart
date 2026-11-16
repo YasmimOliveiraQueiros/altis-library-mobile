@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../models/dashboard.dart';
 
 class DashboardService {
@@ -11,7 +12,7 @@ class DashboardService {
   Future<Dashboard> getDashboard() async {
     final response = await _apiClient.get('/dashboard');
     if (response.statusCode != 200) {
-      throw DashboardRequestException(response.statusCode);
+      throw DashboardRequestException(response);
     }
 
     final json =
@@ -20,8 +21,6 @@ class DashboardService {
   }
 }
 
-class DashboardRequestException implements Exception {
-  const DashboardRequestException(this.statusCode);
-
-  final int statusCode;
+class DashboardRequestException extends ApiHttpException {
+  DashboardRequestException(super.response);
 }

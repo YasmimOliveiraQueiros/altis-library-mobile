@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/l10n/app_localizations.dart';
 import 'package:altis_library_mobile/main.dart';
@@ -28,7 +31,7 @@ Future<void> _enterTextVisible(
 }
 
 void main() {
-  testWidgets('registration renders every requested field and blocked submit', (
+  testWidgets('registration renders every requested field and enables submit', (
     tester,
   ) async {
     final client = ApiClient(
@@ -54,14 +57,10 @@ void main() {
     }
 
     expect(find.text('Cadastrar nova conta'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('registration-unavailable')),
-      findsOneWidget,
-    );
     final button = tester.widget<FilledButton>(
       find.widgetWithText(FilledButton, 'Cadastrar'),
     );
-    expect(button.onPressed, isNull);
+    expect(button.onPressed, isNotNull);
     expect(tester.takeException(), isNull);
   });
 
@@ -195,12 +194,14 @@ void main() {
     expect(find.text('Cadastrar nova conta'), findsNothing);
   });
 
-  testWidgets('blocked registration never sends requests', (tester) async {
+  testWidgets('successful registration posts and returns to login', (
+    tester,
+  ) async {
     final requests = <http.Request>[];
     final client = ApiClient(
       client: MockClient((request) async {
         requests.add(request);
-        return http.Response('', 500);
+        return http.Response('{}', 201);
       }),
     );
     addTearDown(client.dispose);
@@ -208,19 +209,157 @@ void main() {
     await tester.pumpWidget(_app(client));
     await tester.pumpAndSettle();
     await _tapVisible(tester, find.text('Realizar cadastro?'));
+    await _fillRegistration(tester);
+    await _tapVisible(tester, find.text('Cadastrar'));
 
+    expect(requests, hasLength(1));
+    expect(requests.single.url.path, '/users');
+    expect(requests.single.headers.containsKey('authorization'), isFalse);
+    final requestBody =
+        jsonDecode(requests.single.body) as Map<String, dynamic>;
+    expect(requestBody.keys.toSet(), {
+      'name',
+      'email',
+      'password',
+      'phone',
+      'cpf',
+      'birthDate',
+      'address',
+    });
+    expect(requestBody['cpf'], '12345678900');
+    expect(requestBody['phone'], '85999999999');
+    expect(requestBody['birthDate'], matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
+    expect(find.text('Cadastrar nova conta'), findsNothing);
+    expect(
+      find.text('Cadastro realizado com sucesso. Faça login para continuar.'),
+      findsOneWidget,
+    );
+    expect(client.hasToken, isFalse);
+  });
+
+  testWidgets('400 displays backend validation errors and retains input', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient(
+        (_) async => http.Response(
+          jsonEncode({
+            'message': 'Dados da requisição inválidos.',
+            'fieldErrors': [
+              {'field': 'email', 'message': 'E-mail inválido.'},
+            ],
+          }),
+          400,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        ),
+      ),
+    );
+    addTearDown(client.dispose);
+
+    await tester.pumpWidget(_app(client));
+    await tester.pumpAndSettle();
+    await _tapVisible(tester, find.text('Realizar cadastro?'));
+    await _fillRegistration(tester);
+    await _tapVisible(tester, find.text('Cadastrar'));
+
+    expect(find.text('Dados da requisição inválidos.'), findsOneWidget);
+    expect(find.text('E-mail inválido.'), findsOneWidget);
     expect(
       tester
-          .widget<FilledButton>(find.widgetWithText(FilledButton, 'Cadastrar'))
+          .widget<TextFormField>(
+            find.byKey(const ValueKey('registration-name')),
+          )
+          .controller!
+          .text,
+      'Pessoa Exemplo',
+    );
+    expect(find.text('Cadastrar nova conta'), findsOneWidget);
+  });
+
+  testWidgets('duplicate submission is blocked and failures retain input', (
+    tester,
+  ) async {
+    final responseCompleter = Completer<http.Response>();
+    var requestCount = 0;
+    final client = ApiClient(
+      client: MockClient((_) {
+        requestCount++;
+        return responseCompleter.future;
+      }),
+    );
+    addTearDown(client.dispose);
+
+    await tester.pumpWidget(_app(client));
+    await tester.pumpAndSettle();
+    await _tapVisible(tester, find.text('Realizar cadastro?'));
+    await _fillRegistration(tester);
+
+    final submit = find.widgetWithText(FilledButton, 'Cadastrar');
+    await tester.ensureVisible(submit);
+    await tester.tap(submit);
+    await tester.pump();
+
+    expect(requestCount, 1);
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.byKey(const ValueKey('registration-submit')),
+          )
           .onPressed,
       isNull,
     );
-    expect(requests, isEmpty);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    responseCompleter.complete(http.Response('error', 503));
+    await tester.pumpAndSettle();
+
+    expect(requestCount, 1);
+    expect(
+      find.text('Não foi possível realizar o cadastro. Tente novamente.'),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<TextFormField>(
+            find.byKey(const ValueKey('registration-name')),
+          )
+          .controller!
+          .text,
+      'Pessoa Exemplo',
+    );
+  });
+
+  testWidgets('network failure shows retry guidance and preserves input', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient((_) async {
+        throw http.ClientException('network unavailable');
+      }),
+    );
+    addTearDown(client.dispose);
+
+    await tester.pumpWidget(_app(client));
+    await tester.pumpAndSettle();
+    await _tapVisible(tester, find.text('Realizar cadastro?'));
+    await _fillRegistration(tester);
+    await _tapVisible(tester, find.text('Cadastrar'));
+
     expect(
       find.text(
-        'O cadastro está temporariamente indisponível: a API ainda não oferece um endpoint público de cadastro.',
+        'Não foi possível conectar à API. Verifique sua conexão e tente novamente.',
       ),
       findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<TextFormField>(
+            find.byKey(const ValueKey('registration-name')),
+          )
+          .controller!
+          .text,
+      'Pessoa Exemplo',
     );
   });
 
@@ -231,6 +370,21 @@ void main() {
       'pt': ['Cadastrar nova conta', 'Nome completo', 'Cadastrar'],
       'en': ['Create a new account', 'Full name', 'Create account'],
       'es': ['Crear una cuenta nueva', 'Nombre completo', 'Crear cuenta'],
+    };
+    const registrationMessages = {
+      'pt': (
+        success: 'Cadastro realizado com sucesso. Faça login para continuar.',
+        emailConflict: 'O e-mail informado já está cadastrado.',
+      ),
+      'en': (
+        success: 'Registration completed successfully. Sign in to continue.',
+        emailConflict: 'The email address is already registered.',
+      ),
+      'es': (
+        success:
+            'Registro completado correctamente. Inicia sesión para continuar.',
+        emailConflict: 'El correo electrónico ya está registrado.',
+      ),
     };
 
     for (final entry in labels.entries) {
@@ -244,14 +398,33 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const RegistrationPage(),
+          home: RegistrationPage(
+            apiClient: ApiClient(
+              client: MockClient((_) async => http.Response('', 500)),
+            ),
+          ),
         ),
       );
+      final pageClient = tester
+          .widget<RegistrationPage>(find.byType(RegistrationPage))
+          .apiClient;
+      addTearDown(pageClient.dispose);
       await tester.pumpAndSettle();
 
       for (final label in entry.value) {
         expect(find.text(label), findsOneWidget);
       }
+      final localizations = AppLocalizations.of(
+        tester.element(find.byType(RegistrationPage)),
+      )!;
+      expect(
+        localizations.registrationSuccess,
+        registrationMessages[entry.key]!.success,
+      );
+      expect(
+        localizations.registrationEmailConflict,
+        registrationMessages[entry.key]!.emailConflict,
+      );
 
       await tester.pumpWidget(const SizedBox.shrink());
     }
@@ -279,4 +452,28 @@ void main() {
     expect(find.text('Bem-vindo de volta!'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+Future<void> _fillRegistration(WidgetTester tester) async {
+  for (final entry in const {
+    'registration-name': 'Pessoa Exemplo',
+    'registration-cpf': '12345678900',
+    'registration-phone': '85999999999',
+    'registration-address': 'Rua Exemplo, 100',
+    'registration-email': 'pessoa@example.com',
+    'registration-password': 'senha',
+    'registration-confirm-password': 'senha',
+  }.entries) {
+    await _enterTextVisible(
+      tester,
+      find.byKey(ValueKey(entry.key)),
+      entry.value,
+    );
+  }
+
+  await _tapVisible(
+    tester,
+    find.byKey(const ValueKey('registration-birth-date')),
+  );
+  await _tapVisible(tester, find.text('OK'));
 }

@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> {
         builder = (_) => PasswordRecoveryPage(apiClient: _apiClient);
         break;
       case AppRoutes.register:
-        builder = (_) => const RegistrationPage();
+        builder = (_) => RegistrationPage(apiClient: _apiClient);
         break;
       default:
         builder = (_) => AuthGate(apiClient: _apiClient);

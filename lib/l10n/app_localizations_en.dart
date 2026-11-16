@@ -375,8 +375,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerButton => 'Create account';
 
   @override
-  String get registrationUnavailable =>
-      'Registration is temporarily unavailable: the API does not yet provide a public registration endpoint.';
+  String get registrationSuccess =>
+      'Registration completed successfully. Sign in to continue.';
+
+  @override
+  String get registrationConnectionFailed =>
+      'Could not connect to the API. Check your connection and try again.';
+
+  @override
+  String get registrationValidationFailed =>
+      'Check the information entered and try again.';
+
+  @override
+  String get registrationEmailConflict =>
+      'The email address is already registered.';
+
+  @override
+  String get registrationCpfConflict => 'The CPF is already registered.';
+
+  @override
+  String get registrationConflict =>
+      'An account with these details already exists.';
+
+  @override
+  String get registrationRequestFailed =>
+      'Could not create the account. Please try again.';
 
   @override
   String get passwordRecoveryTitle => 'Recover password';

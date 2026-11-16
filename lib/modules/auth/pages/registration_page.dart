@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../../../core/services/http/api_client.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../services/registration_service.dart';
 import '../widgets/auth_input_formatters.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  const RegistrationPage({super.key, required this.apiClient});
+
+  final ApiClient apiClient;
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -21,11 +26,71 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  late final RegistrationService _registrationService;
   DateTime? _birthDate;
+  RegistrationException? _failure;
+  bool _isRegistering = false;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _registrationService = RegistrationService(widget.apiClient);
+  }
+
+  void _clearErrors() {
+    if (_failure == null) return;
+    setState(() => _failure = null);
+  }
+
+  String? _fieldError(String field) => _failure?.fieldErrors[field];
+
+  Future<void> _register() async {
+    if (_isRegistering || !_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isRegistering = true;
+      _failure = null;
+    });
+
+    try {
+      await _registrationService.register(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        phone: _phoneController.text.replaceAll(RegExp(r'\D'), ''),
+        cpf: _cpfController.text.replaceAll(RegExp(r'\D'), ''),
+        birthDate: DateFormat('yyyy-MM-dd').format(_birthDate!),
+        address: _addressController.text.trim(),
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.registrationSuccess),
+        ),
+      );
+      Navigator.of(context).pop();
+    } on RegistrationException catch (error) {
+      if (!mounted) return;
+      setState(() => _failure = error);
+    } finally {
+      if (mounted) setState(() => _isRegistering = false);
+    }
+  }
+
+  String _failureMessage(AppLocalizations l10n) => switch (_failure!.failure) {
+    RegistrationFailure.connection => l10n.registrationConnectionFailed,
+    RegistrationFailure.validation =>
+      _failure!.message ?? l10n.registrationValidationFailed,
+    RegistrationFailure.emailConflict => l10n.registrationEmailConflict,
+    RegistrationFailure.cpfConflict => l10n.registrationCpfConflict,
+    RegistrationFailure.conflict => l10n.registrationConflict,
+    RegistrationFailure.requestFailed => l10n.registrationRequestFailed,
+  };
+
   Future<void> _selectBirthDate() async {
+    if (_isRegistering) return;
     final now = DateTime.now();
     final initialDate = _birthDate ?? now;
     final selectedDate = await showDatePicker(
@@ -45,6 +110,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       _birthDate = date;
       _birthDateController.text = MaterialLocalizations.of(context)
           .formatMediumDate(date);
+      _failure = null;
     });
   }
 
@@ -150,7 +216,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 textCapitalization: TextCapitalization.words,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) =>
+                                    _fieldError('name') ??
                                     _validateRequired(value, l10n),
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.registerFullName,
                                   prefixIcon: const Icon(Icons.person_outline),
@@ -163,9 +231,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 controller: _birthDateController,
                                 readOnly: true,
                                 onTap: _selectBirthDate,
-                                validator: (_) => _birthDate == null
-                                    ? l10n.requiredField
-                                    : null,
+                                validator: (_) =>
+                                    _fieldError('birthDate') ??
+                                    (_birthDate == null
+                                        ? l10n.requiredField
+                                        : null),
                                 decoration: InputDecoration(
                                   labelText: l10n.tenantBirthDate,
                                   prefixIcon: const Icon(
@@ -183,7 +253,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 textInputAction: TextInputAction.next,
                                 inputFormatters: [CpfInputFormatter()],
                                 validator: (value) =>
+                                    _fieldError('cpf') ??
                                     _validateRequired(value, l10n),
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.tenantCpf,
                                   prefixIcon: const Icon(Icons.badge_outlined),
@@ -199,7 +271,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 textInputAction: TextInputAction.next,
                                 inputFormatters: [PhoneInputFormatter()],
                                 validator: (value) =>
+                                    _fieldError('phone') ??
                                     _validateRequired(value, l10n),
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.tenantPhone,
                                   prefixIcon: const Icon(Icons.phone_outlined),
@@ -214,7 +288,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     TextCapitalization.sentences,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) =>
+                                    _fieldError('address') ??
                                     _validateRequired(value, l10n),
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.tenantAddress,
                                   prefixIcon: const Icon(Icons.home_outlined),
@@ -228,7 +304,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) =>
+                                    _fieldError('email') ??
                                     _validateEmail(value, l10n),
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.email,
                                   prefixIcon: const Icon(Icons.email_outlined),
@@ -242,7 +320,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 obscureText: !_isPasswordVisible,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) =>
+                                    _fieldError('password') ??
                                     _validateRequired(value, l10n),
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.password,
                                   prefixIcon: const Icon(Icons.lock_outline),
@@ -272,6 +352,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 obscureText: !_isConfirmPasswordVisible,
                                 textInputAction: TextInputAction.done,
                                 validator: (value) {
+                                  final fieldError = _fieldError('password');
+                                  if (fieldError != null) return fieldError;
                                   final requiredError = _validateRequired(
                                     value,
                                     l10n,
@@ -284,6 +366,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   }
                                   return null;
                                 },
+                                onChanged: (_) => _clearErrors(),
                                 decoration: InputDecoration(
                                   labelText: l10n.registerConfirmPassword,
                                   prefixIcon: const Icon(Icons.lock_outline),
@@ -305,29 +388,40 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              Semantics(
-                                liveRegion: true,
-                                child: Text(
-                                  l10n.registrationUnavailable,
-                                  key: const ValueKey(
-                                    'registration-unavailable',
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
+                              if (_failure != null)
+                                Semantics(
+                                  liveRegion: true,
+                                  child: Text(
+                                    _failureMessage(l10n),
+                                    key: const ValueKey('registration-error'),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .error,
+                                    ),
                                   ),
                                 ),
-                              ),
                               const SizedBox(height: 20),
                               SizedBox(
                                 height: 48,
                                 child: FilledButton(
-                                  onPressed: null,
+                                  key: const ValueKey('registration-submit'),
+                                  onPressed: _isRegistering ? null : _register,
                                   style: FilledButton.styleFrom(
                                     backgroundColor: AppTheme.primaryColor,
                                     shape: const RoundedRectangleBorder(),
                                   ),
-                                  child: Text(l10n.registerButton),
+                                  child: _isRegistering
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : Text(l10n.registerButton),
                                 ),
                               ),
                               const SizedBox(height: 8),

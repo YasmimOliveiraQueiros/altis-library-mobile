@@ -49,20 +49,31 @@ class ApiClient {
     return Uri.parse('$baseUrl$path');
   }
 
-  Map<String, String> get _headers => {
+  Map<String, String> _headers({bool includeToken = true}) => {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    if (_token != null) 'Authorization': 'Bearer $_token',
+    if (includeToken && _token != null) 'Authorization': 'Bearer $_token',
   };
 
   Future<http.Response> get(String endpoint) {
-    return _client.get(_buildUri(endpoint), headers: _headers);
+    return _client.get(_buildUri(endpoint), headers: _headers());
   }
 
   Future<http.Response> post(String endpoint, {Map<String, dynamic>? body}) {
     return _client.post(
       _buildUri(endpoint),
-      headers: _headers,
+      headers: _headers(),
+      body: jsonEncode(body ?? {}),
+    );
+  }
+
+  Future<http.Response> postPublic(
+    String endpoint, {
+    Map<String, dynamic>? body,
+  }) {
+    return _client.post(
+      _buildUri(endpoint),
+      headers: _headers(includeToken: false),
       body: jsonEncode(body ?? {}),
     );
   }
@@ -70,7 +81,7 @@ class ApiClient {
   Future<http.Response> put(String endpoint, {Map<String, dynamic>? body}) {
     return _client.put(
       _buildUri(endpoint),
-      headers: _headers,
+      headers: _headers(),
       body: jsonEncode(body ?? {}),
     );
   }
@@ -78,13 +89,13 @@ class ApiClient {
   Future<http.Response> patch(String endpoint, {Map<String, dynamic>? body}) {
     return _client.patch(
       _buildUri(endpoint),
-      headers: _headers,
+      headers: _headers(),
       body: body == null ? null : jsonEncode(body),
     );
   }
 
   Future<http.Response> delete(String endpoint) {
-    return _client.delete(_buildUri(endpoint), headers: _headers);
+    return _client.delete(_buildUri(endpoint), headers: _headers());
   }
 
   void dispose() {

@@ -379,8 +379,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get registerButton => 'Cadastrar';
 
   @override
-  String get registrationUnavailable =>
-      'O cadastro está temporariamente indisponível: a API ainda não oferece um endpoint público de cadastro.';
+  String get registrationSuccess =>
+      'Cadastro realizado com sucesso. Faça login para continuar.';
+
+  @override
+  String get registrationConnectionFailed =>
+      'Não foi possível conectar à API. Verifique sua conexão e tente novamente.';
+
+  @override
+  String get registrationValidationFailed =>
+      'Confira os dados informados e tente novamente.';
+
+  @override
+  String get registrationEmailConflict =>
+      'O e-mail informado já está cadastrado.';
+
+  @override
+  String get registrationCpfConflict => 'O CPF informado já está cadastrado.';
+
+  @override
+  String get registrationConflict => 'Já existe um cadastro com esses dados.';
+
+  @override
+  String get registrationRequestFailed =>
+      'Não foi possível realizar o cadastro. Tente novamente.';
 
   @override
   String get passwordRecoveryTitle => 'Recuperar senha';

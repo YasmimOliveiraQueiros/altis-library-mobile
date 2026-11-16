@@ -814,11 +814,47 @@ abstract class AppLocalizations {
   /// **'Cadastrar'**
   String get registerButton;
 
-  /// No description provided for @registrationUnavailable.
+  /// No description provided for @registrationSuccess.
   ///
   /// In pt, this message translates to:
-  /// **'O cadastro está temporariamente indisponível: a API ainda não oferece um endpoint público de cadastro.'**
-  String get registrationUnavailable;
+  /// **'Cadastro realizado com sucesso. Faça login para continuar.'**
+  String get registrationSuccess;
+
+  /// No description provided for @registrationConnectionFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conectar à API. Verifique sua conexão e tente novamente.'**
+  String get registrationConnectionFailed;
+
+  /// No description provided for @registrationValidationFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira os dados informados e tente novamente.'**
+  String get registrationValidationFailed;
+
+  /// No description provided for @registrationEmailConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'O e-mail informado já está cadastrado.'**
+  String get registrationEmailConflict;
+
+  /// No description provided for @registrationCpfConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'O CPF informado já está cadastrado.'**
+  String get registrationCpfConflict;
+
+  /// No description provided for @registrationConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe um cadastro com esses dados.'**
+  String get registrationConflict;
+
+  /// No description provided for @registrationRequestFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível realizar o cadastro. Tente novamente.'**
+  String get registrationRequestFailed;
 
   /// No description provided for @passwordRecoveryTitle.
   ///

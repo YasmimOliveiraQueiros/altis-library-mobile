@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
@@ -34,6 +35,7 @@ class _PublishersPageState extends State<PublishersPage> {
   PageResponse<Publisher>? _publishersPage;
   int _pageSize = 10;
   int _requestedPage = 0;
+  String _sortDirection = 'DESC';
 
   @override
   void initState() {
@@ -63,10 +65,34 @@ class _PublishersPageState extends State<PublishersPage> {
         search: _searchController.text,
         page: page,
         size: _pageSize,
+        sortDirection: _sortDirection,
       );
       if (!mounted) return;
       setState(() {
         _publishersPage = response;
+        _isLoading = false;
+      });
+      if (response.empty && response.number > 0) {
+        await _loadPublishers(page: response.number - 1);
+        return;
+      }
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.publishersLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
         _isLoading = false;
       });
     } catch (_) {
@@ -132,6 +158,24 @@ class _PublishersPageState extends State<PublishersPage> {
       await _publisherService.deletePublisher(publisher.id);
       if (!mounted) return;
       await _loadPublishers(page: _publishersPage?.number ?? 0);
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            apiHttpErrorMessage(
+              error,
+              l10n.publisherDeleteFailed,
+              forbiddenFallback: l10n.accessDenied,
+            ),
+          ),
+        ),
+      );
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(apiTransportErrorMessage(l10n, error))),
+      );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -266,6 +310,29 @@ class _PublishersPageState extends State<PublishersPage> {
                       },
                       icon: const Icon(Icons.clear),
                     ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: IconButton(
+            tooltip: _sortDirection == 'ASC'
+                ? l10n.sortDescending
+                : l10n.sortAscending,
+            onPressed: _isLoading
+                ? null
+                : () {
+                    setState(() {
+                      _sortDirection = _sortDirection == 'ASC'
+                          ? 'DESC'
+                          : 'ASC';
+                    });
+                    _loadPublishers(page: 0);
+                  },
+            icon: Icon(
+              _sortDirection == 'ASC'
+                  ? Icons.arrow_upward
+                  : Icons.arrow_downward,
             ),
           ),
         ),

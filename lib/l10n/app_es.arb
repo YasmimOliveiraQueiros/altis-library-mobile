@@ -49,6 +49,7 @@
   "loanBook": "Libro",
   "loanDate": "Fecha del préstamo",
   "loanDueDate": "Devolución prevista",
+  "loanDueDateBeforeLoanDate": "La fecha de devolución prevista no puede ser anterior a la fecha del préstamo.",
   "loanStatus": "Estado",
   "loanObservations": "Observaciones",
   "loanPending": "Pendiente",

@@ -104,7 +104,7 @@ void main() {
             200,
           );
         }
-        return http.Response('', 200);
+        return http.Response('', request.method == 'POST' ? 201 : 200);
       }),
     );
     client.setToken('test-token');
@@ -170,11 +170,92 @@ void main() {
     expect(payload, isNot(contains('returnedAt')));
   });
 
-  testWidgets('editing keeps the existing user, book, and date values', (
+  testWidgets(
+    'editing a returned loan keeps its fields and locks its records',
+    (tester) async {
+      final client = ApiClient(
+        client: MockClient((request) async {
+          if (request.url.path == '/users') {
+            return http.Response.bytes(
+              utf8.encode(jsonEncode(_page([_user(active: false)]))),
+              200,
+            );
+          }
+          if (request.url.path == '/books') {
+            return http.Response.bytes(
+              utf8.encode(
+                jsonEncode(
+                  _page([
+                    _book(
+                      id: 70,
+                      title: 'Livro emprestado',
+                      status: 'RENTED',
+                      quantity: 0,
+                    ),
+                  ]),
+                ),
+              ),
+              200,
+            );
+          }
+          return http.Response('', 200);
+        }),
+      );
+      addTearDown(client.dispose);
+      const loan = Loan(
+        id: 31,
+        userId: 77,
+        bookId: 70,
+        bookTitle: 'Livro emprestado',
+        loanDate: '2026-03-10',
+        returnDate: '2026-03-20',
+        returnedAt: '2026-03-21T10:15:00',
+        status: LoanStatus.returnedLate,
+        observations: 'Observação existente',
+      );
+
+      await tester.pumpWidget(
+        _app(
+          LoanFormPage(
+            apiClient: client,
+            loanService: LoanService(client),
+            loan: loan,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final dropdowns = tester
+          .widgetList<DropdownButtonFormField<int>>(
+            find.byType(DropdownButtonFormField<int>),
+          )
+          .toList();
+      expect(dropdowns[0].initialValue, 77);
+      expect(dropdowns[1].initialValue, 70);
+      expect(dropdowns[0].onChanged, isNull);
+      expect(dropdowns[1].onChanged, isNull);
+      expect(find.text('2026-03-10'), findsOneWidget);
+      expect(find.text('2026-03-20'), findsOneWidget);
+      expect(find.text('Observação existente'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextFormField, '2026-03-10'));
+      await tester.pumpAndSettle();
+      expect(find.byType(DatePickerDialog), findsOneWidget);
+      final l10n = AppLocalizations.of(
+        tester.element(find.byType(LoanFormPage)),
+      )!;
+      await tester.tap(find.widgetWithText(TextButton, l10n.cancel));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('rejects a due date before the loan date without sending a PUT', (
     tester,
   ) async {
+    final requests = <http.Request>[];
     final client = ApiClient(
       client: MockClient((request) async {
+        requests.add(request);
         if (request.url.path == '/users') {
           return http.Response.bytes(
             utf8.encode(jsonEncode(_page([_user(active: false)]))),
@@ -207,11 +288,11 @@ void main() {
       userId: 77,
       bookId: 70,
       bookTitle: 'Livro emprestado',
-      loanDate: '2026-03-10',
-      returnDate: '2026-03-20',
+      loanDate: '2026-03-20',
+      returnDate: '2026-03-10',
       returnedAt: null,
-      status: LoanStatus.overdue,
-      observations: 'Observação existente',
+      status: LoanStatus.pending,
+      observations: null,
     );
 
     await tester.pumpWidget(
@@ -224,17 +305,15 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Salvar'));
+    await tester.pumpAndSettle();
 
-    final dropdowns = tester
-        .widgetList<DropdownButtonFormField<int>>(
-          find.byType(DropdownButtonFormField<int>),
-        )
-        .toList();
-    expect(dropdowns[0].initialValue, 77);
-    expect(dropdowns[1].initialValue, 70);
-    expect(find.text('2026-03-10'), findsOneWidget);
-    expect(find.text('2026-03-20'), findsOneWidget);
-    expect(find.text('Observação existente'), findsOneWidget);
-    expect(tester.takeException(), isNull);
+    expect(
+      find.text(
+        'A devolução prevista não pode ser anterior à data do aluguel.',
+      ),
+      findsOneWidget,
+    );
+    expect(requests.where((request) => request.method == 'PUT'), isEmpty);
   });
 }

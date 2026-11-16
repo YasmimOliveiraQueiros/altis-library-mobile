@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+
 import 'package:altis_library_mobile/core/models/page_response.dart';
 import 'package:altis_library_mobile/core/services/http/api_client.dart';
+import 'package:altis_library_mobile/core/services/http/api_errors.dart';
 
 import '../models/loan.dart';
 
@@ -33,7 +36,7 @@ class LoanService {
     final response = await _apiClient.get(endpoint);
 
     if (response.statusCode != 200) {
-      throw LoanRequestException(response.statusCode);
+      throw LoanRequestException(response);
     }
 
     final json =
@@ -59,7 +62,7 @@ class LoanService {
     final response = await _apiClient.get(endpoint);
 
     if (response.statusCode != 200) {
-      throw LoanRequestException(response.statusCode);
+      throw LoanRequestException(response);
     }
 
     final json =
@@ -69,28 +72,26 @@ class LoanService {
 
   Future<void> createLoan(LoanData loan) async {
     final response = await _apiClient.post('/loans', body: loan.toJson());
-    _checkWriteResponse(response.statusCode);
+    _checkWriteResponse(response, 201);
   }
 
   Future<void> updateLoan(int id, LoanData loan) async {
     final response = await _apiClient.put('/loans/$id', body: loan.toJson());
-    _checkWriteResponse(response.statusCode);
+    _checkWriteResponse(response, 200);
   }
 
   Future<void> returnLoan(int id) async {
     final response = await _apiClient.patch('/loans/$id/return');
-    _checkWriteResponse(response.statusCode);
+    _checkWriteResponse(response, 200);
   }
 
-  void _checkWriteResponse(int statusCode) {
-    if (statusCode < 200 || statusCode >= 300) {
-      throw LoanRequestException(statusCode);
+  void _checkWriteResponse(http.Response response, int expectedStatus) {
+    if (response.statusCode != expectedStatus) {
+      throw LoanRequestException(response);
     }
   }
 }
 
-class LoanRequestException implements Exception {
-  const LoanRequestException(this.statusCode);
-
-  final int statusCode;
+class LoanRequestException extends ApiHttpException {
+  LoanRequestException(super.response);
 }

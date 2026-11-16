@@ -49,6 +49,7 @@
   "loanBook": "Book",
   "loanDate": "Loan date",
   "loanDueDate": "Expected return",
+  "loanDueDateBeforeLoanDate": "The expected return date cannot be before the loan date.",
   "loanStatus": "Status",
   "loanObservations": "Observations",
   "loanPending": "Pending",

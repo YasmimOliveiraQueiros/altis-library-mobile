@@ -157,6 +157,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loanDueDate => 'Devolução prevista';
 
   @override
+  String get loanDueDateBeforeLoanDate =>
+      'A devolução prevista não pode ser anterior à data do aluguel.';
+
+  @override
   String get loanStatus => 'Status';
 
   @override

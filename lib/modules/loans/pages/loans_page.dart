@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/page_response.dart';
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
@@ -104,6 +105,25 @@ class _LoansPageState extends State<LoansPage> {
       if (loansPage.empty && loansPage.number > 0) {
         await _loadLoans(page: loansPage.number - 1);
       }
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.loansLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+        _isLoading = false;
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -205,10 +225,23 @@ class _LoansPageState extends State<LoansPage> {
       await _loanService.returnLoan(loan.id);
       if (!mounted) return;
       await _loadLoans(page: _loansPage?.number ?? 0);
-    } on LoanRequestException catch (error) {
+    } on ApiHttpException catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_writeErrorMessage(l10n, error.statusCode))),
+        SnackBar(
+          content: Text(
+            apiHttpErrorMessage(
+              error,
+              _writeErrorMessage(l10n, error.statusCode),
+              forbiddenFallback: l10n.accessDenied,
+            ),
+          ),
+        ),
+      );
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(apiTransportErrorMessage(l10n, error))),
       );
     } catch (_) {
       if (!mounted) return;

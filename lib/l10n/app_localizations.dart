@@ -394,6 +394,12 @@ abstract class AppLocalizations {
   /// **'Devolução prevista'**
   String get loanDueDate;
 
+  /// No description provided for @loanDueDateBeforeLoanDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'A devolução prevista não pode ser anterior à data do aluguel.'**
+  String get loanDueDateBeforeLoanDate;
+
   /// No description provided for @loanStatus.
   ///
   /// In pt, this message translates to:

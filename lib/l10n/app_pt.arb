@@ -49,6 +49,7 @@
   "loanBook": "Livro",
   "loanDate": "Data do aluguel",
   "loanDueDate": "Devolução prevista",
+  "loanDueDateBeforeLoanDate": "A devolução prevista não pode ser anterior à data do aluguel.",
   "loanStatus": "Status",
   "loanObservations": "Observações",
   "loanPending": "Pendente",

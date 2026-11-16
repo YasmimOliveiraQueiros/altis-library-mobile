@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/http/api_errors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../books/models/book.dart';
 import '../../books/services/book_service.dart';
@@ -78,6 +79,25 @@ class _LoanFormPageState extends State<LoanFormPage> {
         _books = results[1] as List<Book>;
         _isLoading = false;
       });
+    } on ApiHttpException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _loadError = apiHttpErrorMessage(
+          error,
+          AppLocalizations.of(context)!.loanOptionsLoadFailed,
+          forbiddenFallback: AppLocalizations.of(context)!.accessDenied,
+        );
+        _isLoading = false;
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _loadError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
+        _isLoading = false;
+      });
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -140,13 +160,29 @@ class _LoanFormPageState extends State<LoanFormPage> {
         await widget.loanService.createLoan(data);
       }
       if (mounted) Navigator.pop(context, true);
-    } on LoanRequestException catch (error) {
+    } on ApiHttpException catch (error) {
       if (!mounted) return;
       setState(() {
         final l10n = AppLocalizations.of(context)!;
-        _saveError = error.statusCode == 400 || error.statusCode == 422
-            ? l10n.loanValidationFailed
-            : l10n.loanSaveFailed;
+        _saveError = error.statusCode == 400
+            ? apiHttpErrorMessage(
+                error,
+                l10n.loanValidationFailed,
+                forbiddenFallback: l10n.accessDenied,
+              )
+            : apiHttpErrorMessage(
+                error,
+                l10n.loanSaveFailed,
+                forbiddenFallback: l10n.accessDenied,
+              );
+      });
+    } on ApiTransportException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _saveError = apiTransportErrorMessage(
+          AppLocalizations.of(context)!,
+          error,
+        );
       });
     } catch (_) {
       if (!mounted) return;
@@ -179,9 +215,16 @@ class _LoanFormPageState extends State<LoanFormPage> {
           border: const OutlineInputBorder(),
           suffixIcon: const Icon(Icons.calendar_today_outlined),
         ),
-        validator: (_) => (loanDate ? _loanDate : _returnDate) == null
-            ? l10n.requiredField
-            : null,
+        validator: (_) {
+          final selectedDate = loanDate ? _loanDate : _returnDate;
+          if (selectedDate == null) return l10n.requiredField;
+          if (!loanDate &&
+              _loanDate != null &&
+              selectedDate.isBefore(_loanDate!)) {
+            return l10n.loanDueDateBeforeLoanDate;
+          }
+          return null;
+        },
       ),
     );
   }
@@ -259,7 +302,9 @@ class _LoanFormPageState extends State<LoanFormPage> {
                                 ),
                               )
                               .toList(),
-                          onChanged: (id) => setState(() => _userId = id),
+                          onChanged: _isEditing
+                              ? null
+                              : (id) => setState(() => _userId = id),
                           validator: (id) =>
                               id == null ? l10n.requiredField : null,
                         ),
@@ -283,7 +328,9 @@ class _LoanFormPageState extends State<LoanFormPage> {
                                 ),
                               )
                               .toList(),
-                          onChanged: (id) => setState(() => _bookId = id),
+                          onChanged: _isEditing
+                              ? null
+                              : (id) => setState(() => _bookId = id),
                           validator: (id) =>
                               id == null ? l10n.requiredField : null,
                         ),

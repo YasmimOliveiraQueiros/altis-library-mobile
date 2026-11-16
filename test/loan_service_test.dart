@@ -110,7 +110,7 @@ void main() {
   );
 
   test(
-    'create, update, and return accept empty successful responses',
+    'create, update, and return accept their endpoint status and empty bodies',
     () async {
       final requests = <http.Request>[];
       final client = ApiClient(
@@ -118,8 +118,9 @@ void main() {
           requests.add(request);
           final statusCode = switch (request.method) {
             'POST' => 201,
-            'PUT' => 204,
-            _ => 200,
+            'PUT' => 200,
+            'PATCH' => 200,
+            _ => 500,
           };
           return http.Response('', statusCode);
         }),
@@ -154,10 +155,14 @@ void main() {
     },
   );
 
-  test('non-success responses retain status without exposing body', () async {
+  test('non-success responses retain structured details', () async {
     final client = ApiClient(
       client: MockClient(
-        (_) async => http.Response('private backend detail', 409),
+        (_) async => http.Response.bytes(
+          utf8.encode(jsonEncode({'message': 'Aluguel já devolvido.'})),
+          409,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        ),
       ),
     );
     final service = LoanService(client);
@@ -166,11 +171,13 @@ void main() {
       await expectLater(
         service.returnLoan(31),
         throwsA(
-          isA<LoanRequestException>().having(
-            (error) => error.statusCode,
-            'statusCode',
-            409,
-          ),
+          isA<LoanRequestException>()
+              .having((error) => error.statusCode, 'statusCode', 409)
+              .having(
+                (error) => error.errorResponse?.message,
+                'message',
+                'Aluguel já devolvido.',
+              ),
         ),
       );
     } finally {

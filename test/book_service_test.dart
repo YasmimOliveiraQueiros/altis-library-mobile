@@ -14,7 +14,7 @@ void main() {
     'author': 'Ana Silva',
     'publisherId': 73,
     'quantity': 0,
-    'status': 'AVAILABLE',
+    'status': 'RENTED',
     'observations': null,
   };
 
@@ -27,7 +27,7 @@ void main() {
       quantity: 0,
     );
 
-    expect(book.status, BookStatus.available);
+    expect(book.status, BookStatus.rented);
     expect(book.publisherId, 73);
     expect(book.quantity, 0);
     expect(book.observations, isNull);
@@ -37,6 +37,13 @@ void main() {
       'publisherId': 73,
       'quantity': 0,
     });
+    final availableBook = Book.fromJson({
+      ...bookJson,
+      'quantity': 2,
+      'status': 'AVAILABLE',
+    });
+    expect(availableBook.quantity, 2);
+    expect(availableBook.status, BookStatus.available);
   });
 
   test(
@@ -64,7 +71,12 @@ void main() {
           if (request.method == 'GET') {
             return http.Response(jsonEncode(bookJson), 200);
           }
-          return http.Response('', 200);
+          return http.Response('', switch (request.method) {
+            'POST' => 201,
+            'PUT' => 200,
+            'DELETE' => 204,
+            _ => 500,
+          });
         }),
       );
       client.setToken('test-token');
@@ -92,7 +104,7 @@ void main() {
 
         expect(page.content.single.title, 'A Biblioteca');
         expect(page.totalElements, 11);
-        expect(book.status, BookStatus.available);
+        expect(book.status, BookStatus.rented);
         expect(requests.map((request) => request.method), [
           'GET',
           'GET',

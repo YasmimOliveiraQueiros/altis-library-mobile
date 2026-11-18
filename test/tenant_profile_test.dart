@@ -5,7 +5,6 @@ import 'package:altis_library_mobile/core/services/http/api_client.dart';
 import 'package:altis_library_mobile/core/theme/app_theme.dart';
 import 'package:altis_library_mobile/l10n/app_localizations.dart';
 import 'package:altis_library_mobile/main.dart';
-import 'package:altis_library_mobile/modules/tenant/pages/tenant_dashboard_page.dart';
 import 'package:altis_library_mobile/modules/tenant/pages/tenant_password_page.dart';
 import 'package:altis_library_mobile/modules/tenant/pages/tenant_profile_page.dart';
 import 'package:altis_library_mobile/modules/users/services/user_service.dart';
@@ -52,6 +51,21 @@ Widget _app(Widget home) => MaterialApp(
   supportedLocales: AppLocalizations.supportedLocales,
   home: home,
 );
+
+Future<void> _openProfileFromAvatar(WidgetTester tester) async {
+  await tester.tap(find.byType(CircleAvatar));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Editar perfil'));
+  await tester.pumpAndSettle();
+  expect(find.byKey(const ValueKey('tenant-current-password')), findsNothing);
+}
+
+Future<void> _expandPasswordSection(WidgetTester tester) async {
+  expect(find.byKey(const ValueKey('tenant-current-password')), findsNothing);
+  await tester.tap(find.text('Alterar senha'));
+  await tester.pumpAndSettle();
+  expect(find.byKey(const ValueKey('tenant-current-password')), findsOneWidget);
+}
 
 void main() {
   test(
@@ -170,10 +184,11 @@ void main() {
       client.setSession(token: 'user-jwt', role: AppRole.user);
       addTearDown(client.dispose);
 
-      await tester.pumpWidget(_app(TenantDashboardPage(apiClient: client)));
+      await tester.pumpWidget(
+        MyApp(apiClient: client, locale: const Locale('pt')),
+      );
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Editar perfil'));
-      await tester.pumpAndSettle();
+      await _openProfileFromAvatar(tester);
 
       expect(
         tester
@@ -277,10 +292,11 @@ void main() {
     client.setSession(token: 'user-jwt', role: AppRole.user);
     addTearDown(client.dispose);
 
-    await tester.pumpWidget(_app(TenantDashboardPage(apiClient: client)));
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Editar perfil'));
-    await tester.pumpAndSettle();
+    await _openProfileFromAvatar(tester);
     await tester.ensureVisible(
       find.byKey(const ValueKey('tenant-profile-submit')),
     );
@@ -323,10 +339,8 @@ void main() {
       MyApp(apiClient: client, locale: const Locale('pt')),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Abrir menu'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Alterar Senha'));
-    await tester.pumpAndSettle();
+    await _openProfileFromAvatar(tester);
+    await _expandPasswordSection(tester);
 
     final fields = [
       find.byKey(const ValueKey('tenant-current-password')),
@@ -415,10 +429,12 @@ void main() {
     client.setSession(token: 'user-jwt', role: AppRole.user);
     addTearDown(client.dispose);
 
-    await tester.pumpWidget(_app(TenantDashboardPage(apiClient: client)));
+    await tester.pumpWidget(
+      MyApp(apiClient: client, locale: const Locale('pt')),
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Alterar senha'));
-    await tester.pumpAndSettle();
+    await _openProfileFromAvatar(tester);
+    await _expandPasswordSection(tester);
     await tester.enterText(
       find.byKey(const ValueKey('tenant-current-password')),
       'current-secret',
@@ -466,10 +482,11 @@ void main() {
       client.setSession(token: 'user-jwt', role: AppRole.user);
       addTearDown(client.dispose);
 
-      await tester.pumpWidget(_app(TenantDashboardPage(apiClient: client)));
+      await tester.pumpWidget(
+        MyApp(apiClient: client, locale: const Locale('pt')),
+      );
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Editar perfil'));
-      await tester.pumpAndSettle();
+      await _openProfileFromAvatar(tester);
       await tester.ensureVisible(
         find.byKey(const ValueKey('tenant-profile-submit')),
       );

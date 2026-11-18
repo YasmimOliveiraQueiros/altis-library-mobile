@@ -153,36 +153,6 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
     }
   }
 
-  Future<void> _openProfile() async {
-    final saved = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => TenantProfilePage(apiClient: widget.apiClient),
-      ),
-    );
-    if (saved != true || !mounted) return;
-
-    await _loadDashboard();
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context)!.tenantProfileSaved)),
-    );
-  }
-
-  Future<void> _openPasswordForm() async {
-    final changed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => TenantPasswordPage(apiClient: widget.apiClient),
-      ),
-    );
-    if (changed != true || !mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.tenantPasswordChanged),
-      ),
-    );
-  }
-
   String _statusLabel(AppLocalizations l10n, LoanStatus status) {
     return switch (status) {
       LoanStatus.pending => l10n.loanPending,
@@ -318,23 +288,6 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
                             const SizedBox(height: 4),
                             Text('${l10n.tenantPhone}: ${user.phone}'),
                           ],
-                          const SizedBox(height: 16),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              OutlinedButton.icon(
-                                onPressed: _openProfile,
-                                icon: const Icon(Icons.edit_outlined),
-                                label: Text(l10n.tenantEditProfile),
-                              ),
-                              OutlinedButton.icon(
-                                onPressed: _openPasswordForm,
-                                icon: const Icon(Icons.lock_outline),
-                                label: Text(l10n.tenantChangePassword),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),

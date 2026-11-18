@@ -89,16 +89,6 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
         l10n.navDashboard,
         Icons.dashboard_outlined,
       ),
-      _NavigationItem(
-        AppRoutes.tenantProfile,
-        l10n.navEditProfile,
-        Icons.person_outline,
-      ),
-      _NavigationItem(
-        AppRoutes.tenantPassword,
-        l10n.navChangePassword,
-        Icons.lock_outline,
-      ),
     ];
   }
 

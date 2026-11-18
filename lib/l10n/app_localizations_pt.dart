@@ -55,6 +55,40 @@ class AppLocalizationsPt extends AppLocalizations {
   String get navClose => 'Fechar menu';
 
   @override
+  String get userMenu => 'Menu do usuário';
+
+  @override
+  String get changeLanguage => 'Alterar idioma';
+
+  @override
+  String get editProfile => 'Editar perfil';
+
+  @override
+  String get signOut => 'Sair';
+
+  @override
+  String get closeAccount => 'Encerrar conta';
+
+  @override
+  String get closeAccountInfo =>
+      'O encerramento da conta ainda não está disponível. Nenhuma alteração será feita agora.';
+
+  @override
+  String get close => 'Fechar';
+
+  @override
+  String get portuguese => 'Português';
+
+  @override
+  String get english => 'Inglês';
+
+  @override
+  String get spanish => 'Espanhol';
+
+  @override
+  String get profilePersonalData => 'Dados pessoais';
+
+  @override
   String get dashboardBrand => 'Altis+ Biblioteca';
 
   @override

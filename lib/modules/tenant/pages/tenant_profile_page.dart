@@ -6,6 +6,7 @@ import '../../../core/widgets/app_navigation_shell.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../users/models/user.dart';
 import '../../users/services/user_service.dart';
+import '../widgets/tenant_password_form.dart';
 
 class TenantProfilePage extends StatefulWidget {
   const TenantProfilePage({super.key, required this.apiClient});
@@ -253,6 +254,14 @@ class _TenantProfilePageState extends State<TenantProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text(
+                    l10n.profilePersonalData,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   _textField(
                     key: const ValueKey('tenant-profile-name'),
                     controller: _nameController,
@@ -313,6 +322,20 @@ class _TenantProfilePageState extends State<TenantProfilePage> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : Text(l10n.save),
+                  ),
+                  const SizedBox(height: 16),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: ExpansionTile(
+                      key: const ValueKey('tenant-profile-password-section'),
+                      initiallyExpanded: false,
+                      leading: const Icon(Icons.lock_outline),
+                      title: Text(l10n.tenantChangePassword),
+                      childrenPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      children: [
+                        TenantPasswordForm(apiClient: widget.apiClient),
+                      ],
+                    ),
                   ),
                 ],
               ),

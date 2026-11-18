@@ -118,15 +118,20 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Dashboard'), findsOneWidget);
-    expect(find.text('Editar Perfil'), findsOneWidget);
-    expect(find.text('Alterar Senha'), findsOneWidget);
+    expect(find.text('Editar Perfil'), findsNothing);
+    expect(find.text('Alterar Senha'), findsNothing);
     expect(find.text('Sair'), findsOneWidget);
     expect(find.text('Aluguéis'), findsNothing);
     expect(find.text('Livros'), findsNothing);
     expect(find.text('Editoras'), findsNothing);
     expect(find.text('Usuários'), findsNothing);
 
-    await tester.tap(find.text('Editar Perfil'));
+    await tester.tap(find.byTooltip('Menu do usuário'));
+    await tester.pumpAndSettle();
+    expect(find.text('Editar perfil'), findsOneWidget);
+    expect(find.text('Alterar senha'), findsNothing);
+    expect(find.text('Encerrar conta'), findsOneWidget);
+    await tester.tap(find.text('Editar perfil'));
     await tester.pumpAndSettle();
     expect(find.text('Editar perfil'), findsOneWidget);
     expect(client.hasUserSession, isTrue);

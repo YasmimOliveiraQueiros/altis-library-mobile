@@ -176,6 +176,8 @@ void main() {
       expect(find.text('Ana Silva'), findsOneWidget);
       expect(find.textContaining('ana@example.test'), findsOneWidget);
       expect(find.textContaining('555-1234'), findsOneWidget);
+      expect(find.text('Editar perfil'), findsNothing);
+      expect(find.text('Alterar senha'), findsNothing);
       expect(find.text('Total de empréstimos'), findsOneWidget);
       expect(find.text('4'), findsWidgets);
       expect(find.text('Empréstimos nesta página'), findsOneWidget);
@@ -445,7 +447,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Ana Silva'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Encerrar sessão'));
+    await tester.tap(find.byTooltip('Menu do usuário'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sair'));
     await tester.pumpAndSettle();
 
     expect(client.hasToken, isFalse);

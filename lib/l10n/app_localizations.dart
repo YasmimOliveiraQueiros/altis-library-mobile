@@ -190,6 +190,72 @@ abstract class AppLocalizations {
   /// **'Fechar menu'**
   String get navClose;
 
+  /// No description provided for @userMenu.
+  ///
+  /// In pt, this message translates to:
+  /// **'Menu do usuário'**
+  String get userMenu;
+
+  /// No description provided for @changeLanguage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alterar idioma'**
+  String get changeLanguage;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar perfil'**
+  String get editProfile;
+
+  /// No description provided for @signOut.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair'**
+  String get signOut;
+
+  /// No description provided for @closeAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Encerrar conta'**
+  String get closeAccount;
+
+  /// No description provided for @closeAccountInfo.
+  ///
+  /// In pt, this message translates to:
+  /// **'O encerramento da conta ainda não está disponível. Nenhuma alteração será feita agora.'**
+  String get closeAccountInfo;
+
+  /// No description provided for @close.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar'**
+  String get close;
+
+  /// No description provided for @portuguese.
+  ///
+  /// In pt, this message translates to:
+  /// **'Português'**
+  String get portuguese;
+
+  /// No description provided for @english.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inglês'**
+  String get english;
+
+  /// No description provided for @spanish.
+  ///
+  /// In pt, this message translates to:
+  /// **'Espanhol'**
+  String get spanish;
+
+  /// No description provided for @profilePersonalData.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dados pessoais'**
+  String get profilePersonalData;
+
   /// No description provided for @dashboardBrand.
   ///
   /// In pt, this message translates to:

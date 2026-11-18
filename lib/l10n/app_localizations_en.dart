@@ -55,6 +55,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navClose => 'Close menu';
 
   @override
+  String get userMenu => 'User menu';
+
+  @override
+  String get changeLanguage => 'Change language';
+
+  @override
+  String get editProfile => 'Edit profile';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get closeAccount => 'Close account';
+
+  @override
+  String get closeAccountInfo =>
+      'Account closure is not available yet. No changes will be made now.';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get portuguese => 'Portuguese';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get spanish => 'Spanish';
+
+  @override
+  String get profilePersonalData => 'Personal details';
+
+  @override
   String get dashboardBrand => 'Altis+ Library';
 
   @override

@@ -163,7 +163,9 @@ void main() {
     expect(client.hasAdminSession, isFalse);
     expect(find.text('Ana Silva'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Encerrar sessão'));
+    await tester.tap(find.byTooltip('Menu do usuário'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sair'));
     await tester.pumpAndSettle();
 
     expect(client.hasToken, isFalse);

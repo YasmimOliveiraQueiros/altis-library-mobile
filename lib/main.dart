@@ -6,6 +6,7 @@ import 'core/services/http/api_client.dart';
 import 'core/services/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_navigation_shell.dart';
+import 'core/widgets/app_locale_scope.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/auth/pages/auth_gate.dart';
 import 'modules/auth/pages/login_page.dart';
@@ -39,6 +40,17 @@ class _MyAppState extends State<MyApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   int _handledSessionExpiration = 0;
+  late Locale _locale = widget.locale ?? const Locale('pt');
+
+  void _setLocale(Locale locale) => setState(() => _locale = locale);
+
+  @override
+  void didUpdateWidget(covariant MyApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.locale != widget.locale && widget.locale != null) {
+      _locale = widget.locale!;
+    }
+  }
 
   @override
   void initState() {
@@ -138,6 +150,9 @@ class _MyAppState extends State<MyApp> {
         break;
     }
 
+    if (name == AppRoutes.tenantProfile) {
+      return MaterialPageRoute<bool>(builder: builder, settings: settings);
+    }
     return MaterialPageRoute<void>(builder: builder, settings: settings);
   }
 
@@ -170,7 +185,7 @@ class _MyAppState extends State<MyApp> {
       scaffoldMessengerKey: _scaffoldMessengerKey,
       title: 'Altis+ Biblioteca',
       debugShowCheckedModeBanner: false,
-      locale: widget.locale,
+      locale: _locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -179,6 +194,11 @@ class _MyAppState extends State<MyApp> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: AppTheme.lightTheme,
+      builder: (context, child) => AppLocaleScope(
+        locale: _locale,
+        setLocale: _setLocale,
+        child: child ?? const SizedBox.shrink(),
+      ),
       initialRoute: AppRoutes.home,
       onGenerateRoute: _buildRoute,
     );

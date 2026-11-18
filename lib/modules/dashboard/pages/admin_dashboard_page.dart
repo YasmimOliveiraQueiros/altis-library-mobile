@@ -5,6 +5,7 @@ import '../../../core/services/http/api_errors.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
+import '../../../core/widgets/user_avatar_menu.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/widgets/admin_access_required.dart';
 import '../../users/models/user.dart';
@@ -263,7 +264,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                                       dotColor: metrics[index + 1].color,
                                     )
                                   : const SizedBox.shrink(),
-                              ),
+                            ),
                           ],
                         ],
                       ),
@@ -404,26 +405,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                 onPressed: _isLoading ? null : _loadDashboard,
                 icon: const Icon(Icons.refresh),
               ),
-            if (_canUseAdminSession &&
-                (!isMenuOpen || MediaQuery.sizeOf(context).width >= 420))
-              IconButton(
-                tooltip: l10n.logout,
-                onPressed: () =>
-                    AppNavigationShell.logout(context, widget.apiClient),
-                icon: const Icon(Icons.logout),
-              ),
             if (!isMenuOpen || MediaQuery.sizeOf(context).width >= 520)
-              const Padding(
-                padding: EdgeInsets.only(left: 4, right: 12),
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Color(0xFFE7EDF2),
-                  child: Icon(
-                    Icons.person_outline,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
-              ),
+              UserAvatarMenu(apiClient: widget.apiClient),
           ],
         ),
         body: _canUseAdminSession

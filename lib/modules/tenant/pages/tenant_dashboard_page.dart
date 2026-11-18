@@ -6,14 +6,13 @@ import '../../../core/services/http/api_errors.dart';
 import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_navigation_shell.dart';
+import '../../../core/widgets/user_avatar_menu.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/pages/login_page.dart';
 import '../../loans/models/loan.dart';
 import '../../loans/services/loan_service.dart';
 import '../../users/models/user.dart';
 import '../../users/services/user_service.dart';
-import 'tenant_password_page.dart';
-import 'tenant_profile_page.dart';
 
 class TenantDashboardPage extends StatefulWidget {
   const TenantDashboardPage({super.key, required this.apiClient});
@@ -103,6 +102,14 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> _onProfileUpdated() async {
+    await _loadDashboard();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context)!.tenantProfileSaved)),
+    );
   }
 
   Future<void> _loadLoanPage(int page) async {
@@ -514,21 +521,20 @@ class _TenantDashboardPageState extends State<TenantDashboardPage> {
                 ),
               ],
             ),
-            actions: !isMenuOpen || MediaQuery.sizeOf(context).width >= 420
-                ? [
-                    IconButton(
-                      tooltip: l10n.dashboardRefresh,
-                      onPressed: _isLoading ? null : _loadDashboard,
-                      icon: const Icon(Icons.refresh),
-                    ),
-                    IconButton(
-                      tooltip: l10n.logout,
-                      onPressed: () =>
-                          AppNavigationShell.logout(context, widget.apiClient),
-                      icon: const Icon(Icons.logout),
-                    ),
-                  ]
-                : null,
+            actions: [
+              if (!isMenuOpen || MediaQuery.sizeOf(context).width >= 420)
+                IconButton(
+                  tooltip: l10n.dashboardRefresh,
+                  onPressed: _isLoading ? null : _loadDashboard,
+                  icon: const Icon(Icons.refresh),
+                ),
+              if (!isMenuOpen || MediaQuery.sizeOf(context).width >= 520)
+                UserAvatarMenu(
+                  apiClient: widget.apiClient,
+                  userName: _user?.name,
+                  onProfileUpdated: _onProfileUpdated,
+                ),
+            ],
           ),
           body: _buildContent(context),
         );

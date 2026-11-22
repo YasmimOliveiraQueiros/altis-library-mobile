@@ -223,8 +223,38 @@ abstract class AppLocalizations {
   /// No description provided for @closeAccountInfo.
   ///
   /// In pt, this message translates to:
-  /// **'O encerramento da conta ainda não está disponível. Nenhuma alteração será feita agora.'**
+  /// **'Sua conta será desativada e você perderá o acesso ao aplicativo. Essa ação não exclui fisicamente seus dados.'**
   String get closeAccountInfo;
+
+  /// No description provided for @closeAccountActiveLoans.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não será possível encerrar a conta enquanto houver empréstimos ativos.'**
+  String get closeAccountActiveLoans;
+
+  /// No description provided for @closeAccountSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta encerrada com sucesso. Você saiu do aplicativo.'**
+  String get closeAccountSuccess;
+
+  /// No description provided for @closeAccountFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível encerrar sua conta. Tente novamente.'**
+  String get closeAccountFailed;
+
+  /// No description provided for @closeAccountForbidden.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua conta não tem permissão para esta ação.'**
+  String get closeAccountForbidden;
+
+  /// No description provided for @cancel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar'**
+  String get cancel;
 
   /// No description provided for @close.
   ///
@@ -1377,12 +1407,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'desativar'**
   String get deactivateAction;
-
-  /// No description provided for @cancel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cancelar'**
-  String get cancel;
 
   /// No description provided for @confirm.
   ///

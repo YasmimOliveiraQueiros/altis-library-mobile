@@ -71,7 +71,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closeAccountInfo =>
-      'Account closure is not available yet. No changes will be made now.';
+      'Your account will be deactivated and you will lose access to the app. This does not physically delete your data.';
+
+  @override
+  String get closeAccountActiveLoans =>
+      'You cannot close your account while you have active loans.';
+
+  @override
+  String get closeAccountSuccess =>
+      'Your account was closed successfully. You have been signed out.';
+
+  @override
+  String get closeAccountFailed =>
+      'We could not close your account. Please try again.';
+
+  @override
+  String get closeAccountForbidden =>
+      'Your account is not allowed to perform this action.';
+
+  @override
+  String get cancel => 'Cancel';
 
   @override
   String get close => 'Close';
@@ -684,9 +703,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deactivateAction => 'deactivate';
-
-  @override
-  String get cancel => 'Cancel';
 
   @override
   String get confirm => 'Confirm';

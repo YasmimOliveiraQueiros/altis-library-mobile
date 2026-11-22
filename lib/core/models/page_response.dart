@@ -20,8 +20,9 @@ class PageResponse<T> {
   });
 
   factory PageResponse.fromJson(
-    Map<String, dynamic> json, 
-    T Function(Map<String, dynamic>) fromJsonT) {
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) fromJsonT,
+  ) {
     return PageResponse(
       content: (json['content'] as List<dynamic>)
           .map((item) => fromJsonT(item as Map<String, dynamic>))

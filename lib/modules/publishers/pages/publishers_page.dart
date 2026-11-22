@@ -323,9 +323,7 @@ class _PublishersPageState extends State<PublishersPage> {
                 ? null
                 : () {
                     setState(() {
-                      _sortDirection = _sortDirection == 'ASC'
-                          ? 'DESC'
-                          : 'ASC';
+                      _sortDirection = _sortDirection == 'ASC' ? 'DESC' : 'ASC';
                     });
                     _loadPublishers(page: 0);
                   },

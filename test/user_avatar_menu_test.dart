@@ -34,9 +34,11 @@ void main() {
 
     await tester.tap(find.text('Encerrar conta'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Nenhuma alteração será feita'), findsOneWidget);
+    expect(find.textContaining('Sua conta será desativada'), findsOneWidget);
+    expect(find.text('Cancelar'), findsOneWidget);
+    expect(find.text('Encerrar conta'), findsNWidgets(2));
     expect(requests.any((request) => request.method == 'DELETE'), isFalse);
-    await tester.tap(find.text('Fechar'));
+    await tester.tap(find.text('Cancelar'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Menu do usuário'));

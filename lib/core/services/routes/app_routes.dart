@@ -12,5 +12,6 @@ class AppRoutes {
   static const String tenantProfile = '/tenant/profile';
   static const String tenantPassword = '/tenant/password';
   static const String passwordRecovery = '/password-recovery';
+  static const String adminPasswordRecovery = '/password-recovery/admin';
   static const String register = '/register';
 }

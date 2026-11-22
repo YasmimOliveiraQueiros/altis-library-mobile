@@ -1021,8 +1021,14 @@ abstract class AppLocalizations {
   /// No description provided for @recoveryAdminBlocked.
   ///
   /// In pt, this message translates to:
-  /// **'A recuperação de senha não está disponível para contas de administrador. Volte ao login.'**
+  /// **'A recuperação de senha de administrador exige contato com o responsável pelo sistema. Volte ao login.'**
   String get recoveryAdminBlocked;
+
+  /// No description provided for @recoveryAdminQuestion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você é usuário administrador?'**
+  String get recoveryAdminQuestion;
 
   /// No description provided for @recoveryResetFailed.
   ///

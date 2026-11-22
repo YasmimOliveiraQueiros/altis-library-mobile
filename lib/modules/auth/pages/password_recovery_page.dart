@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/http/api_client.dart';
+import '../../../core/services/routes/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../services/password_recovery_service.dart';
@@ -445,6 +446,15 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                 child: TextButton(
                                   onPressed: () => Navigator.of(context).pop(),
                                   child: Text(l10n.backToLogin),
+                                ),
+                              ),
+                              Center(
+                                child: TextButton(
+                                  key: const ValueKey('recovery-admin-link'),
+                                  onPressed: () => Navigator.of(
+                                    context,
+                                  ).pushNamed(AppRoutes.adminPasswordRecovery),
+                                  child: Text(l10n.recoveryAdminQuestion),
                                 ),
                               ),
                             ],

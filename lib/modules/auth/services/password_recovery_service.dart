@@ -56,10 +56,7 @@ class PasswordRecoveryService {
 
     final error = ApiErrorResponse.fromResponse(response);
     final message = error?.message;
-    if (message?.contains(
-          'Não é permitido alterar a senha do administrador por este fluxo',
-        ) ??
-        false) {
+    if (_isAdminBlocked(message)) {
       throw const PasswordRecoveryException(
         PasswordRecoveryFailure.adminBlocked,
       );
@@ -69,6 +66,14 @@ class PasswordRecoveryService {
       message: error?.message,
       fieldErrors: error?.fieldErrors ?? const {},
     );
+  }
+
+  bool _isAdminBlocked(String? message) {
+    if (message == null) return false;
+    const backendMessage =
+        'Não é permitido alterar a senha do administrador por este fluxo';
+    final normalized = message.trim().replaceFirst(RegExp(r'[.!?]+$'), '');
+    return normalized == backendMessage;
   }
 }
 

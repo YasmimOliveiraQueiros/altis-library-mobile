@@ -495,7 +495,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get recoveryAdminBlocked =>
-      'A recuperação de senha não está disponível para contas de administrador. Volte ao login.';
+      'A recuperação de senha de administrador exige contato com o responsável pelo sistema. Volte ao login.';
+
+  @override
+  String get recoveryAdminQuestion => 'Você é usuário administrador?';
 
   @override
   String get recoveryResetFailed =>

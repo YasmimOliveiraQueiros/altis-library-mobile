@@ -481,6 +481,36 @@ void main() {
     expect(find.text('Bem-vindo de volta!'), findsOneWidget);
   });
 
+  testWidgets('administrator link opens guidance page and returns to login', (
+    tester,
+  ) async {
+    final client = ApiClient(
+      client: MockClient((_) async => http.Response('', 204)),
+    );
+    addTearDown(client.dispose);
+
+    await _openRecovery(tester, client);
+    await _tapVisible(
+      tester,
+      find.byKey(const ValueKey('recovery-admin-link')),
+    );
+
+    expect(
+      find.byKey(const ValueKey('admin-recovery-guidance')),
+      findsOneWidget,
+    );
+    expect(find.text('Você é usuário administrador?'), findsOneWidget);
+    expect(find.byKey(const ValueKey('recovery-email')), findsNothing);
+    expect(find.byKey(const ValueKey('recovery-password')), findsNothing);
+
+    await _tapVisible(
+      tester,
+      find.byKey(const ValueKey('admin-recovery-back-to-login')),
+    );
+    expect(find.text('Bem-vindo de volta!'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('ADMIN reset rejection hides password fields and values', (
     tester,
   ) async {

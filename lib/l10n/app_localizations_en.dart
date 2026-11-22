@@ -492,7 +492,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recoveryAdminBlocked =>
-      'Password recovery is not available for administrator accounts. Return to sign in.';
+      'Administrator password recovery requires contacting the person responsible for the system. Return to sign in.';
+
+  @override
+  String get recoveryAdminQuestion => 'Are you an administrator?';
 
   @override
   String get recoveryResetFailed =>

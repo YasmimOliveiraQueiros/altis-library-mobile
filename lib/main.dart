@@ -11,6 +11,7 @@ import 'l10n/app_localizations.dart';
 import 'modules/auth/pages/auth_gate.dart';
 import 'modules/auth/pages/login_page.dart';
 import 'modules/auth/pages/password_recovery_page.dart';
+import 'modules/auth/pages/admin_password_recovery_page.dart';
 import 'modules/auth/pages/registration_page.dart';
 import 'modules/books/pages/books_page.dart';
 import 'modules/dashboard/pages/admin_dashboard_page.dart';
@@ -141,6 +142,9 @@ class _MyAppState extends State<MyApp> {
         break;
       case AppRoutes.passwordRecovery:
         builder = (_) => PasswordRecoveryPage(apiClient: _apiClient);
+        break;
+      case AppRoutes.adminPasswordRecovery:
+        builder = (_) => const AdminPasswordRecoveryPage();
         break;
       case AppRoutes.register:
         builder = (_) => RegistrationPage(apiClient: _apiClient);

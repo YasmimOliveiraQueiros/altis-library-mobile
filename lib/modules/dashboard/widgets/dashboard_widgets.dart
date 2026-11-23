@@ -258,37 +258,26 @@ class RecentLoansSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
         ],
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columnSpacing: 20,
-            horizontalMargin: 8,
-            columns: [
-              DataColumn(label: Text(l10n.loanBook)),
-              DataColumn(label: Text(l10n.loanBorrower)),
-              DataColumn(label: Text(l10n.loanDueDate)),
-            ],
-            rows: [
-              for (final loan in loans)
-                DataRow(
-                  cells: [
-                    DataCell(
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 180),
-                        child: Text(
-                          loan.bookTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    DataCell(Text(usersById[loan.userId]?.name ?? '—')),
-                    DataCell(Text(loan.returnDate)),
-                  ],
-                ),
-            ],
+        for (final loan in loans)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    loan.bookTitle,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${l10n.loanBorrower}: ${usersById[loan.userId]?.name ?? '—'}',
+                  ),
+                  Text('${l10n.loanDueDate}: ${loan.returnDate}'),
+                ],
+              ),
+            ),
           ),
-        ),
       ],
     );
   }

@@ -71,7 +71,9 @@ class LoanListItem extends StatelessWidget {
     final statusColor = _statusColor(context);
     final canReturn =
         loan.status == LoanStatus.pending || loan.status == LoanStatus.overdue;
+    final borrower = userName ?? '${l10n.loanBorrower} #${loan.userId}';
     return Card(
+      key: ValueKey('loan-card-${loan.id}'),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -106,9 +108,7 @@ class LoanListItem extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text(
-              '${l10n.loanBorrower}: ${userName ?? '${l10n.loanBorrower} #${loan.userId}'}',
-            ),
+            Text('${l10n.loanBorrower}: $borrower'),
             Text('${l10n.loanDate}: ${loan.loanDate}'),
             Text('${l10n.loanDueDate}: ${loan.returnDate}'),
             const SizedBox(height: 8),

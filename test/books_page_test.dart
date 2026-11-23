@@ -221,7 +221,49 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Livro de teste'), findsOneWidget);
-    expect(find.text('4'), findsNWidgets(2));
+    final bookCard = find.byKey(const ValueKey('book-card-1'));
+    expect(bookCard, findsOneWidget);
+    expect(
+      find.descendant(of: bookCard, matching: find.textContaining('Autora')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: bookCard,
+        matching: find.textContaining('Editora #73'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bookCard, matching: find.textContaining('4')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: bookCard,
+        matching: find.textContaining('Disponível'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: bookCard,
+        matching: find.textContaining('Observações: —'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bookCard, matching: find.byIcon(Icons.edit_outlined)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: bookCard,
+        matching: find.byIcon(Icons.delete_outline),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('4'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
     expect(find.text('3'), findsOneWidget);
     expect(tester.takeException(), isNull);

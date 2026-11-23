@@ -125,8 +125,31 @@ void main() {
       expect(find.text('Visão geral do sistema'), findsOneWidget);
       expect(find.byType(CircleAvatar), findsOneWidget);
       expect(find.text('A Biblioteca'), findsOneWidget);
-      expect(find.text('Ana Silva'), findsOneWidget);
-      expect(find.text('2026-03-20'), findsOneWidget);
+      final recentLoanCard = find.byKey(
+        const ValueKey('dashboard-recent-loan-31'),
+      );
+      expect(recentLoanCard, findsOneWidget);
+      expect(
+        find.descendant(
+          of: recentLoanCard,
+          matching: find.textContaining('Ana Silva'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: recentLoanCard,
+          matching: find.text('A Biblioteca'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: recentLoanCard,
+          matching: find.textContaining('2026-03-20'),
+        ),
+        findsOneWidget,
+      );
       for (final value in ['24', '8', '61', '9', '3', '21']) {
         expect(find.text(value), findsWidgets);
       }

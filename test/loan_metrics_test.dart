@@ -151,10 +151,64 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('A Biblioteca'), findsOneWidget);
-    expect(find.text('Ana Silva'), findsOneWidget);
+    final loanCard = find.byKey(const ValueKey('loan-card-31'));
+    expect(loanCard, findsOneWidget);
+    expect(
+      find.descendant(of: loanCard, matching: find.textContaining('Ana Silva')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: loanCard,
+        matching: find.textContaining('2026-03-10'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: loanCard,
+        matching: find.textContaining('2026-03-20'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: loanCard, matching: find.textContaining('Pendente')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: loanCard, matching: find.byIcon(Icons.edit_outlined)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: loanCard,
+        matching: find.byIcon(Icons.assignment_return_outlined),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('4'), findsNWidgets(2));
     expect(find.text('2'), findsOneWidget);
-    expect(find.text('10'), findsNWidgets(2));
+    final pageContext = tester.element(find.byType(LoansPage));
+    final l10n = AppLocalizations.of(pageContext)!;
+    final totalMetric = find.ancestor(
+      of: find.text(l10n.loanTotalMetric),
+      matching: find.byType(Card),
+    );
+    expect(totalMetric, findsOneWidget);
+    expect(
+      find.descendant(of: totalMetric, matching: find.text('10')),
+      findsOneWidget,
+    );
+
+    await tester.drag(find.byType(ListView), const Offset(0, -600));
+    await tester.pumpAndSettle();
+
+    final pageSizeDropdown = find.byType(DropdownButton<int>);
+    expect(pageSizeDropdown, findsOneWidget);
+    expect(
+      find.descendant(of: pageSizeDropdown, matching: find.text('10')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 }

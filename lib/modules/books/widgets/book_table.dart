@@ -49,7 +49,16 @@ class BookListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final publisher =
+        publisherName ?? '${l10n.bookPublisher} #${book.publisherId}';
+    final status = book.status == BookStatus.available
+        ? l10n.bookAvailable
+        : l10n.bookRented;
+    final observations = book.observations?.isNotEmpty == true
+        ? book.observations!
+        : '—';
     return Card(
+      key: ValueKey('book-card-${book.id}'),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -75,15 +84,10 @@ class BookListItem extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text('${l10n.bookAuthor}: ${book.author}'),
-            Text(
-              '${l10n.bookPublisher}: ${publisherName ?? '${l10n.bookPublisher} #${book.publisherId}'}',
-            ),
+            Text('${l10n.bookPublisher}: $publisher'),
             Text('${l10n.bookQuantity}: ${book.quantity}'),
-            Text(
-              '${l10n.bookStatus}: ${book.status == BookStatus.available ? l10n.bookAvailable : l10n.bookRented}',
-            ),
-            if (book.observations?.isNotEmpty == true)
-              Text('${l10n.bookObservations}: ${book.observations}'),
+            Text('${l10n.bookStatus}: $status'),
+            Text('${l10n.bookObservations}: $observations'),
           ],
         ),
       ),

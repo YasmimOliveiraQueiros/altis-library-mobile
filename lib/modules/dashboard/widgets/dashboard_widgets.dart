@@ -260,6 +260,7 @@ class RecentLoansSection extends StatelessWidget {
         ],
         for (final loan in loans)
           Card(
+            key: ValueKey('dashboard-recent-loan-${loan.id}'),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -271,7 +272,8 @@ class RecentLoansSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${l10n.loanBorrower}: ${usersById[loan.userId]?.name ?? '—'}',
+                    '${l10n.loanBorrower}: '
+                    '${usersById[loan.userId]?.name ?? '—'}',
                   ),
                   Text('${l10n.loanDueDate}: ${loan.returnDate}'),
                 ],

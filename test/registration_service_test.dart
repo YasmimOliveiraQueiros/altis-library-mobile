@@ -34,7 +34,10 @@ void main() {
 
       final request = requests.single;
       expect(request.method, 'POST');
-      final baseUrl = ApiConfig.baseUrl.replaceFirst(RegExp(r'/$'), '');
+      final configuredBaseUrl = ApiConfig.isConfigured
+          ? ApiConfig.baseUrl
+          : 'http://mock.local';
+      final baseUrl = configuredBaseUrl.replaceFirst(RegExp(r'/$'), '');
       expect(request.url, Uri.parse('$baseUrl/users'));
       expect(request.headers.containsKey('authorization'), isFalse);
       expect(jsonDecode(request.body), {

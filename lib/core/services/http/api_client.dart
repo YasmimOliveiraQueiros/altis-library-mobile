@@ -10,9 +10,11 @@ import 'api_config.dart';
 
 class ApiClient {
   ApiClient({http.Client? client, this._timeout = const Duration(seconds: 30)})
-    : _client = client ?? http.Client();
+    : _client = client ?? http.Client(),
+      _hasInjectedClient = client != null;
 
   final http.Client _client;
+  final bool _hasInjectedClient;
   final Duration _timeout;
   String? _token;
   AppRole? _role;
@@ -50,7 +52,13 @@ class ApiClient {
   }
 
   Uri _buildUri(String endpoint) {
-    final baseUrl = ApiConfig.baseUrl.replaceFirst(RegExp(r'/$'), '');
+    if (!ApiConfig.isConfigured && !_hasInjectedClient) {
+      throw StateError(ApiConfig.configurationError);
+    }
+    final configuredBaseUrl = ApiConfig.isConfigured
+        ? ApiConfig.baseUrl
+        : 'http://mock.local';
+    final baseUrl = configuredBaseUrl.replaceFirst(RegExp(r'/$'), '');
     final path = endpoint.startsWith('/') ? endpoint : '/$endpoint';
     return Uri.parse('$baseUrl$path');
   }

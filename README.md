@@ -2,6 +2,23 @@
 
 A new Flutter project.
 
+## API configuration
+
+Copy `.env.example` to `.env` and set `API_BASE_URL` to an address reachable
+from the device. The example uses `http://10.0.2.2:8080`, which reaches the host
+machine from the default Android emulator. On a physical device, use the
+development machine's reachable network address instead. Build-time defines
+are included in the application, so do not put passwords, tokens, private keys,
+or other secrets in this file.
+
+Run the app with:
+
+```sh
+flutter run --dart-define-from-file=.env
+```
+
+The included VS Code launch configuration passes the same define automatically.
+
 ## Account registration
 
 The mobile registration form is available, but account creation is disabled

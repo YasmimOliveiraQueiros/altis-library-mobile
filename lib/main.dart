@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/models/app_role.dart';
 import 'core/services/http/api_client.dart';
+import 'core/services/http/api_config.dart';
 import 'core/services/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_navigation_shell.dart';
@@ -204,7 +205,26 @@ class _MyAppState extends State<MyApp> {
         child: child ?? const SizedBox.shrink(),
       ),
       initialRoute: AppRoutes.home,
-      onGenerateRoute: _buildRoute,
+      onGenerateRoute: (settings) {
+        if (widget.apiClient == null && !ApiConfig.isConfigured) {
+          return MaterialPageRoute<void>(
+            builder: (_) => Scaffold(
+              appBar: AppBar(title: const Text('Altis+ Biblioteca')),
+              body: const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    '${ApiConfig.configurationError} Android emulators use '
+                    '10.0.2.2; physical devices need a reachable network URL.',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+        return _buildRoute(settings);
+      },
     );
   }
 
